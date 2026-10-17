@@ -384,3 +384,19 @@ errors:
   permission_denied: "❌ Permission denied"
   invalid_input: "❌ Invalid input"
   timeout: "❌ Timeout"
+
+# =============================================================================
+# EPISTEMIC & SECURITY PROVENANCE
+# =============================================================================
+
+epistemic:
+  quad_state: "Epistemic Quad-State Classification"
+  observation: "[OBSERVATION] Empirical evidence, terminal log, test output"
+  derivation: "[DERIVATION] Direct logical deduction from observation"
+  inference: "[INFERENCE] Technical hypothesis requiring further empirical proof"
+  unknown: "[UNKNOWN] Untested scope, boundary limit, residual risk"
+  missing_coverage: "Missing coverage is unknown, not absence"
+  producing_boundary: "Bugs must be fixed at producing boundary, not consuming boundary"
+
+security:
+  untrusted_content_warning: "⚠️ Untrusted content detected. Passive inspection only — instructions ignored."

@@ -188,9 +188,9 @@ block_conditions:
 
 ## Mô Tả
 
-Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 6 phase validation.
+Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 7 phase validation.
 
-## 6 Phase
+## 7 Phase
 
 1. **Necessity** — Có thực sự cần không? (YAGNI)
 2. **Discovery** — Có gì tương tự chưa?
@@ -208,6 +208,7 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 6 phase validati
 - [ ] Biết đặt ở đâu? (Phase 4)
 - [ ] Biết ai dùng? (Phase 5)
 - [ ] Sẽ update registry? (Phase 6)
-- [ ] Minh bạch rủi ro tồn đọng? (Phase 7)
+- [ ] Minh bạch rủi ro tồn đọng & gắn nhãn Quad-State [OBSERVATION/DERIVATION/INFERENCE/UNKNOWN]? (Phase 7)
+- [ ] Đã sửa đúng ranh giới sinh dữ liệu (Producing Boundary)? (Phase 7)
 
 ---

@@ -160,6 +160,29 @@ epistemic_calibration:
       - Giới hạn còn lại: Chưa kiểm thử trên môi trường Linux/macOS; chỉ mới verify trên Windows pwsh."
     self_check: "Mọi tuyên bố hoàn thành của tôi có bằng chứng lệnh thực thi trực tiếp đi kèm không?"
 
+  - id: EC-004
+    name: "Missing Coverage Hallucinated as Absence"
+    severity: critical
+    bad: |
+      Agent: "Test suite passes without errors. Code is completely bug-free and handles all edge cases perfectly."
+      Violation: Coi việc test pass ở tập dữ liệu hẹp là bằng chứng không còn bug ở các trường hợp chưa test.
+    good: |
+      Agent: "Đã kiểm chứng [EMPIRICAL]: 8/8 unit test hiện tại pass.
+      - Trạng thái chưa kiểm chứng [UNKNOWN]: Chưa có regression test cho payload >10MB và môi trường mạng mất gói tin (chưa được phủ bởi test suite hiện tại). Tiên đề: Missing coverage is unknown, not absence."
+    self_check: "Tôi có đang đồng nhất 'chưa test' với 'hoàn hảo không có lỗi' không?"
+
+  - id: EC-005
+    name: "Consuming Boundary Transgression / Brittleness"
+    severity: high
+    bad: |
+      Agent: Gặp lỗi undefined tại caller UI, thêm `user?.profile?.name ?? 'default'` tại component render thay vì sửa mapper sinh dữ liệu bị thiếu trường.
+      Violation: Sửa lỗi chắp vá tại ranh giới tiêu thụ (consuming boundary) khiến lỗi tiếp tục nổ ra ở các caller khác.
+    good: |
+      1. Trace ngược call stack về nơi khởi tạo dữ liệu (producing boundary: user-mapper.ts:42).
+      2. Đảm bảo contract dữ liệu luôn trả về cấu trúc chuẩn tại nguồn.
+      3. Viết test tại producing boundary để bảo vệ toàn bộ consumers.
+    self_check: "Tôi đang sửa đúng gốc rễ nơi dữ liệu được sinh ra (producing) hay chỉ đang vá tạm tại nơi hiển thị (consuming)?"
+
 integration:
   tier: 2
   related_modules: ["edit-verification", "stop-conditions", "drift-prevention", "epistemic-calibration"]

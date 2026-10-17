@@ -203,6 +203,11 @@ Before ADDING a dependency:
 
 Self-check: "If a teammate searched for this, would they find existing code first?"
 
+### 12.1. Brittleness Assessment (Producing vs Consuming Boundary)
+- **Producing Boundary Mandate**: Always trace data anomalies back to the producing boundary where the invalid, malformed, or missing value was instantiated.
+- **Forbidden Consuming Patches**: NEVER patch bugs merely by adding defensive guards (`?.`, fallback defaults, silent try/catch) at the consuming component or downstream caller.
+- **Invariance Rule**: Test pass is necessary but INSUFFICIENT to prove non-brittleness. A fix is non-brittle ONLY when it prevents the entire class of defects across all present and future consumers.
+
 ---
 
 ## 13. MCP Fallback Schema (when HSA unavailable)

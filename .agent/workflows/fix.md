@@ -12,11 +12,12 @@ success_criteria: "Error resolved, build passes, no regressions"
 - R2: Minimal changes only — preserve existing behavior
 - R3: Max 2 retry attempts — then escalate
 - R4: Run affected tests after every fix
+- R5: Brittleness Check: Fix at producing boundary, never via defensive patch at consuming boundary
 
 ## FIX FLOW
 
 1. **DETECT** (5s) — hsa_session, parse error, hsa_detect(stack), locate file:line, read surrounding code, classify category
-2. **EXECUTE** (30s) — LOCATE > UNDERSTAND > SIZE > WRITE > VERIFY. Minimal changes only.
+2. **EXECUTE** (30s) — LOCATE > UNDERSTAND (producing root) > SIZE > WRITE > VERIFY. Minimal changes only.
 3. **VERIFY** (15s) — Build check, run affected tests. If FAIL: retry (max 2) then escalate to /debug
 4. **SYNC** — hsa_check_changes to update index
 
