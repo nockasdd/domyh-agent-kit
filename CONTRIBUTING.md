@@ -5,7 +5,7 @@ Thank you for your interest in contributing! 🎉
 ## Quick Start
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/domyh-awf-code.git`
+2. Clone your fork: `git clone https://github.com/YOUR_USERNAME/domyh-agent-kit.git`
 3. Create a feature branch: `git checkout -b feat/your-feature`
 4. Make your changes
 5. Submit a Pull Request

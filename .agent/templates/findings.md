@@ -12,9 +12,9 @@ used_by: ["all"]
 
 ## Description / Mô Tả
 
-Standard format for each detected finding.
+Standard format for each detected finding with Epistemic Quad-State, Proof Grade, and Producing Boundary traceability.
 
-_Format chuẩn cho mỗi finding được phát hiện._
+_Format chuẩn cho mỗi finding được phát hiện kèm nhãn Epistemic Quad-State, Proof Grade và Producing Boundary._
 
 ---
 
@@ -24,8 +24,11 @@ _Format chuẩn cho mỗi finding được phát hiện._
 ### [Severity Icon] [Finding Title]
 
 **File:** `path/to/file.ext:line`
+**Producing Boundary:** `path/to/producer.ext:line`
 **Type:** [Security | Quality | Performance | DevOps]
 **Severity:** [P0 🔴 | P1 🟠 | P2 🟡 | P3 🟢]
+**Epistemic State & Proof Grade:** `[OBSERVATION]` (Grade 1/2) | `[DERIVATION]` (Grade 3) | `[INFERENCE]` (Grade 4) | `[UNKNOWN]` (Grade 5)
+**6-Axis Obligation:** `[structural | behavioral | boundary | state | error | resource]`
 **CWE/OWASP:** [CWE-XX hoặc OWASP-XX nếu có]
 **Confidence:** [🟢 High | 🟡 Medium | 🔴 Low]
 
@@ -38,21 +41,19 @@ _Format chuẩn cho mỗi finding được phát hiện._
 // Line [X-Y]
 [Code snippet - 3-7 lines]
 ```
-````
 
-**Đề xuất:**
+**Đề xuất (Sửa tại Producing Boundary):**
 
 ```[language]
-[Fixed code]
+[Fixed code at producing boundary]
 ```
 
 **Giải thích:**
-[Tại sao đây là vấn đề, impact, best practice]
+[Tại sao đây là vấn đề, impact, cách sửa tại Producing Boundary triệt tiêu lỗi cho mọi consumers]
 
 **References:**
 
 - [Link to docs/CWE/OWASP nếu có]
-
 ````
 
 ---
@@ -86,8 +87,11 @@ _Format chuẩn cho mỗi finding được phát hiện._
 ### 🔴 SQL Injection trong Login Handler
 
 **File:** `internal/handlers/auth.go:45`
+**Producing Boundary:** `internal/handlers/auth.go:45`
 **Type:** Security 🔐
 **Severity:** P0 🔴
+**Epistemic State & Proof Grade:** `[DERIVATION]` (Grade 3 `[DEDUCTIVE-LOGIC]`)
+**6-Axis Obligation:** `boundary`, `error`
 **CWE:** CWE-89
 **Confidence:** 🟢 High
 
@@ -95,13 +99,14 @@ _Format chuẩn cho mỗi finding được phát hiện._
 Query SQL được xây dựng bằng string concatenation, cho phép attacker inject SQL.
 
 **Code hiện tại:**
+
 ```go
 // Line 45
 query := "SELECT * FROM users WHERE email = '" + email + "'"
 db.Query(query)
-````
+```
 
-**Đề xuất:**
+**Đề xuất (Sửa tại Producing Boundary):**
 
 ```go
 query := "SELECT * FROM users WHERE email = $1"
@@ -110,7 +115,7 @@ db.Query(query, email)
 
 **Giải thích:**
 String concatenation cho phép attacker nhập `' OR '1'='1` để bypass auth.
-Parameterized queries ngăn chặn hoàn toàn SQL injection.
+Parameterized queries ngăn chặn SQL injection ngay tại ranh giới tạo truy vấn.
 
 **References:**
 

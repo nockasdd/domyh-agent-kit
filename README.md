@@ -54,7 +54,7 @@ nock awf init                 # Initialize & install for your project
 | :---------- | :--------------------------------------------------------- | :------------------------ |
 | **npm**     | `npm install -g @nockdev/cli`                              | Recommended (global)      |
 | **npx**     | `npx -y @nockdev/cli awf init`                             | No install needed         |
-| **git**     | `git clone https://github.com/nockasdd/domyh-awf-code.git` | Manual setup              |
+| **git**     | `git clone https://github.com/nockasdd/domyh-agent-kit.git` | Manual setup              |
 
 </details>
 
@@ -622,14 +622,14 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
   <a href="CONTRIBUTING.md">
     <img src="https://img.shields.io/badge/PRs-welcome-10B981?style=for-the-badge" />
   </a>
-  <a href="https://github.com/nockasdd/domyh-awf-code/issues">
+  <a href="https://github.com/nockasdd/domyh-agent-kit/issues">
     <img src="https://img.shields.io/badge/Issues-welcome-3B82F6?style=for-the-badge" />
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/nockasdd/domyh-awf-code/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=nockasdd/domyh-awf-code&max=8" />
+  <a href="https://github.com/nockasdd/domyh-agent-kit/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=nockasdd/domyh-agent-kit&max=8" />
   </a>
 </p>
 

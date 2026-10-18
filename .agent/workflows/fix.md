@@ -9,17 +9,18 @@ success_criteria: "Error resolved, build passes, no regressions"
 ## RULES
 
 - R1: Max 60s total — escalate to /debug if exceeded
-- R2: Minimal changes only — preserve existing behavior
+- R2: Minimal surgical changes only — preserve existing behavior (`view_file` + `hsa_trace_flow` before edit ➔ edit ➔ `view_file` read-back)
 - R3: Max 2 retry attempts — then escalate
-- R4: Run affected tests after every fix
-- R5: Brittleness Check: Fix at producing boundary, never via defensive patch at consuming boundary
+- R4: Run affected tests after every fix (`[OBSERVATION]` Grade 1) and verify across the **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`)
+- R5: Brittleness Check: Fix at **Producing Boundary**, never via defensive patch at **Consuming Boundary**
+- R6: Epistemic Honesty: Tag all verification results with Epistemic Quad-State (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`) and disclose any untested paths as `[UNKNOWN]` (Grade 5)
 
 ## FIX FLOW
 
-1. **DETECT** (5s) — hsa_session, parse error, hsa_detect(stack), locate file:line, read surrounding code, classify category
-2. **EXECUTE** (30s) — LOCATE > UNDERSTAND (producing root) > SIZE > WRITE > VERIFY. Minimal changes only.
-3. **VERIFY** (15s) — Build check, run affected tests. If FAIL: retry (max 2) then escalate to /debug
-4. **SYNC** — hsa_check_changes to update index
+1. **DETECT** (5s) — `hsa_session`, parse error, `hsa_detect(stack)`, locate `file:line`, read surrounding code (`view_file`) + trace callers (`hsa_trace_flow`), classify category
+2. **EXECUTE** (30s) — LOCATE > UNDERSTAND (**Producing Boundary** root) > SIZE > WRITE > READ-BACK (`view_file`). Minimal surgical changes only.
+3. **VERIFY** (15s) — Build check, run affected tests across the 6-Axis Ledger (`[OBSERVATION]` Grade 1). If FAIL: retry (max 2) then escalate to `/debug`
+4. **SYNC** — `hsa_check_changes` to update index
 
 ## COMMANDS
 
@@ -61,5 +62,5 @@ After 2 retries fail, activate progressive escalation:
 
 ## CHECKPOINT
 
-1. Verify success_criteria met
+1. Verify `success_criteria` met at the Producing Boundary with `[OBSERVATION]` (Grade 1) evidence and `[UNKNOWN]` disclosures
 2. `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})`

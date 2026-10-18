@@ -2,9 +2,12 @@ id: INST-SRG-001
 name: surgical-scope
 trigger: "bug|fix|error|modify|patch|refactor|update"
 directive: |
-  Modify ONLY the exact lines and files requested.
+  Modify ONLY the exact lines and files requested, fixing defects at the Producing Boundary:
+  - Fix at the Producing Boundary (where invalid data/state is emitted), NEVER patch with defensive workarounds at the consuming boundary.
   - DO NOT reformat adjacent code or fix unrelated lint errors ("clean only your own mess").
   - DO NOT change quotation style (' -> ") or add unsolicited type hints.
   - Every modified character must trace directly to the user's objective.
-banned_actions: ["unsolicited_refactor", "adjacent_formatting_change", "quote_style_churn"]
-self_check: "Does every changed line trace directly to user request?"
+action: "Modify only requested lines, match existing style exactly, and fix bugs at the Producing Boundary (never patch at the consuming boundary)."
+negative_constraint: "NEVER patch bugs with defensive workarounds at the consuming boundary or touch code outside declared scope."
+banned_actions: ["unsolicited_refactor", "adjacent_formatting_change", "quote_style_churn", "consuming_boundary_patch"]
+self_check: "Does every changed line trace directly to user request and fix the root cause at the Producing Boundary?"

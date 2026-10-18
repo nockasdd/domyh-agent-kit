@@ -15,13 +15,13 @@ success_criteria: "All ACs verified via traceability matrix, phase docs complete
 ${RULES_FEATURE}
 ## FEATURE FLOW
 
-1. **PHASE 0: CONTEXT** — `hsa_session("implement feature: {name}")`, detect stack via HSA (`hsa_detect`), gather codebase context (`hsa_search`), repo map (`hsa_explore`), understand existing patterns
+1. **PHASE 0: CONTEXT** — `hsa_session("implement feature: {name}")`, detect stack via HSA (`hsa_detect`), gather codebase context (`hsa_search`), repo map (`hsa_explore`), trace Producing Boundaries (`hsa_trace_flow(detail:"summary")`)
 2. **PHASE 1: REQUIREMENTS** — Define problem, user stories (INVEST), acceptance criteria (AC-xxx), constraints, out-of-scope → Scaffold `docs/features/{slug}/requirements.md` → ⛔ STOP for user approval
-3. **PHASE 2: DESIGN** — Architecture decisions (ADR-xxx format), data models, API contracts, risk matrix → Create `design.md` with decision records → ⛔ STOP if breaking changes
+3. **PHASE 2: DESIGN** — Architecture decisions (ADR-xxx format), data models, **Producing Boundary** contracts, **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`), risk matrix → Create `design.md` with decision records → ⛔ STOP if breaking changes
 4. **PHASE 3: PLANNING** — Task breakdown with traceability (T-xxx → AC-xxx), effort estimation (XS-XXL), dependency graph, RICE scoring → Create `planning.md` → ⛔ STOP for user approval
-5. **PHASE 4: IMPLEMENTATION** — Execute tasks per plan, log decisions in `implementation.md`, `hsa_check_changes` after each milestone. Each code change references task ID (T-xxx)
-6. **PHASE 5: TESTING** — Write tests per `testing.md` strategy, run coverage check, validate all ACs met → Update test results
-7. **PHASE 6: SHIP** — Create summary, update `implementation.md` with final status, verify all phase docs complete, run `/verify` for final gate
+5. **PHASE 4: IMPLEMENTATION** — Execute tasks per plan at the **Producing Boundary** (never patch at consuming boundary), log decisions in `implementation.md`, `hsa_check_changes` after each milestone. Each code change references task ID (T-xxx)
+6. **PHASE 5: TESTING** — Write tests per `testing.md` strategy across all 6 behavioral obligation axes, run coverage check (`[OBSERVATION]` Grade 1), disclose untested edge cases as `[UNKNOWN]` (**Missing coverage is unknown, not absence**)
+7. **PHASE 6: SHIP** — Create summary with **Epistemic Quad-State** (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`) ↔ Proof Grades (1–5), update `implementation.md`, run `/verify` for final gate
 8. **PHASE 7: SYNC** — `hsa_check_changes` to update index after all feature files created
 
 ---

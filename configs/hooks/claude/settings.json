@@ -20,6 +20,12 @@
             "command": ".claude/hooks/scripts/path-guard.sh",
             "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\path-guard.ps1",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/scripts/surgical-guard.sh",
+            "windows": "powershell -ExecutionPolicy Bypass -File .claude\\hooks\\scripts\\surgical-guard.ps1",
+            "timeout": 5
           }
         ]
       }

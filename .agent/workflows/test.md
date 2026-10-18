@@ -12,13 +12,20 @@ success_criteria: "Tests written, all pass, coverage meets target"
 ---
 
 ${RULES_TEST}
-## TEST FLOW
+## TEST FLOW & 6-AXIS BEHAVIORAL OBLIGATION LEDGER
 
-1. **DETECT** — `hsa_session("testing: {scope}")`, identify stack via HSA (`hsa_detect`), load test context (`hsa_search`), find test framework, existing tests. Show: `[Step 1/6] Detecting test setup...`
-2. **RUN** — Execute tests, collect coverage. Show: `[Step 2/6] Running 42 tests... ✅ 40 passed, ❌ 2 failed`
-3. **ANALYZE** — Identify failures, coverage gaps, suggest missing test categories
-4. **WRITE** — Generate missing tests (TDD cycle). Show progress: `[Step 4/6] Writing tests for UserService (3/5 cases)`
-5. **VERIFY** — Re-run, confirm coverage improved. Show: `Coverage: 68% → 82% (+14%)`
+1. **DETECT** — `hsa_session("testing: {scope}")`, identify stack via HSA (`hsa_detect`), load test context (`hsa_search`), trace upstream/downstream via `hsa_trace_flow(entry, direction: "both")` to identify the **Producing Boundary**, find test framework and existing tests. Show: `[Step 1/6] Detecting test setup...`
+2. **RUN** — Execute tests, collect coverage (`[OBSERVATION]` Grade 1). Show: `[Step 2/6] Running 42 tests... ✅ 40 passed, ❌ 2 failed`
+3. **ANALYZE (6-AXIS LEDGER & MISSING COVERAGE INVARIANT)** — Identify failures, coverage gaps, and audit obligations across all **6 axes of the Behavioral Obligation Ledger**:
+   - `structural`: Exports, signatures, type contracts
+   - `behavioral`: Core happy-path business logic at the **Producing Boundary**
+   - `boundary`: Null/empty, min/max, off-by-one, malformed inputs
+   - `state`: State transitions, idempotency, race conditions, ordering
+   - `error`: Explicit error throwing, rejection handling, fallback recovery
+   - `resource`: Cleanup, timeouts, memory/handle release
+   *Any unverified axis or untested code path MUST be explicitly declared as `[UNKNOWN]` (Grade 5).*
+4. **WRITE** — Generate missing tests (TDD cycle) targeting the **Producing Boundary** and all 6 obligation axes. Show progress: `[Step 4/6] Writing tests for UserService (3/5 cases)`
+5. **VERIFY** — Re-run, confirm coverage improved with `[OBSERVATION]` (Grade 1) test output. Never launder unexecuted test code (`[INFERENCE]` Grade 4) as passing (`[OBSERVATION]`). Show: `Coverage: 68% → 82% (+14%)`
 6. **SYNC** — `hsa_check_changes` to update index after test file creation
 
 ---

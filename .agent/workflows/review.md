@@ -15,20 +15,20 @@ success_criteria: "All findings documented with file:line evidence"
 
 | # | Rule | Category |
 |:--|:-----|:---------|
-| R1 | All findings MUST have file:line evidence | Quality |
-| R2 | Self-review own findings — remove false positives | Quality |
-| R3 | Focus on high-risk areas: auth, payments, data | Security |
-| R4 | Never approve without running tests | Safety |
+| R1 | All findings MUST have `file:line` evidence and **Epistemic Quad-State** (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`) ↔ Proof Grades (1–5) | Quality |
+| R2 | Self-review own findings — remove false positives and prevent **Authority Laundering** (`[INFERENCE]`/`[UNKNOWN]` $\nrightarrow$ `[OBSERVATION]`) | Epistemic |
+| R3 | Enforce **Producing Boundary** fixes — reject defensive workarounds at the consuming boundary | Architecture |
+| R4 | Never approve without running tests and checking the **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`); **Missing coverage is unknown, not absence** | Safety |
 
 ---
 
 ## REVIEW FLOW
 
 1. **CONTEXT** — Detect stack via HSA (`hsa_detect`), load review context (`hsa_search`), `hsa_prefetch` changed files. Auto-detect review scope: staged changes, uncommitted, or PR
-2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Use `hsa_trace_flow` to trace impact of changed functions. Show: `[Analyzing] 12 files changed, 3 high-risk`
-3. **REVIEW** — Apply 5-category checklist on changed code, inline comments with severity
+2. **DIFF ANALYSIS** — Parse `git diff --staged` or PR diff, classify change types, identify high-risk areas (auth, payments, data). Use `hsa_trace_flow(detail:"summary")` to trace Producing vs Consuming Boundaries of changed functions. Show: `[Analyzing] 12 files changed, 3 high-risk`
+3. **REVIEW** — Apply 5-category + 6-Axis Obligation checklist on changed code, inline comments with severity and Proof Grade
 4. **SELF-REVIEW** — Agent re-reads own findings, removes false positives, verifies evidence accuracy
-5. **REPORT** — Structured feedback with severity, approve/comment/request changes decision
+5. **REPORT** — Structured feedback with severity, Epistemic Quad-State tags, Producing Boundary remedies, and approve/comment/request changes decision
 6. **PERSIST** — Save review findings to `.domyh/reviews/review_YYYY-MM-DD.md`
 7. **SYNC** — `hsa_check_changes` to update index, `hsa_feedback` on reviewed files
 
@@ -47,27 +47,27 @@ success_criteria: "All findings documented with file:line evidence"
 
 ---
 
-## 5-CATEGORY CHECKLIST
+## 5-CATEGORY & 6-AXIS CHECKLIST
 
-### 1️⃣ Logic & Correctness
+### 1️⃣ Logic, Behavioral & Producing Boundary (`behavioral`, `boundary`, `state`)
 
-- Edge cases handled? Off-by-one errors? Null/nil safety? Race conditions? Error propagation?
+- Fixed at the **Producing Boundary** (not patched at the consuming boundary)? Edge cases handled? Off-by-one errors? Null/nil safety? State transitions & race conditions? Error propagation (`error`)?
 
-### 2️⃣ Code Quality
+### 2️⃣ Code Quality & Structural (`structural`)
 
-- DRY (no duplication)? Single responsibility? Clear naming? Appropriate comments? Consistent style?
+- DRY (no duplication)? Single responsibility? Clear naming? Zero redundant WHAT comments? Consistent style?
 
 ### 3️⃣ Security
 
-- Input validation? SQL injection safe? XSS prevention? Auth/authz checked? Secrets in code? OWASP Top 10?
+- Input validation? SQL injection safe? XSS prevention? Auth/authz checked? Secrets in code? Untrusted content (`_meta.provenance.untrusted_content`) isolated?
 
-### 4️⃣ Performance
+### 4️⃣ Performance & Resource (`resource`)
 
-- N+1 queries? Unnecessary computation? Large datasets handled? Caching considered? Memory leaks?
+- N+1 queries? Unnecessary computation? Large datasets handled? Caching considered? Memory, file handles, timers, and child processes cleaned up?
 
-### 5️⃣ Tests
+### 5️⃣ Tests & Epistemic Coverage
 
-- Tests for new code? Edge cases covered? Meaningful (not just coverage)? All tests pass? Mocking appropriate?
+- Tests for new code (`[OBSERVATION]` Grade 1)? Edge cases covered? Untested paths explicitly disclosed as `[UNKNOWN]` (**Missing coverage is unknown, not absence**)?
 
 ---
 

@@ -1,4 +1,4 @@
-﻿---
+---
 trigger: always_on
 ---
 
@@ -13,14 +13,14 @@ trigger: always_on
 The rules system uses a **constitutional hierarchy** with five tiers (enforced in `SACRED_RULES.xml`):
 
 - **Tier 0: Core** — Immutable principles: CORE_001-003 (3 rules)
-- **Tier 1: Safety & Environment** — LANG_001, ENV_001, SAFE_001, PERF_001 (4 rules)
+- **Tier 1: Safety, Epistemic & Instincts** — LANG_001, ENV_001, SAFE_001, EPISTEMIC_001, INSTINCT_001, OUTPUT_DISCIPLINE_001, PERF_001 (7 rules)
 - **Tier 2: MCP Tool + Behavioral Enforcement** — MCP_001-003 + SURGICAL_001 (4 rules)
 - **Tier 3: Session & Memory** — SESSION_001-005 (5 rules)
 - **Tier 4: Workflow & Execution** — EXEC_001-006 (6 rules)
 
 Additional **modular rules** can be composed for specific use cases.
 
-> **Note**: The `archive/constitutional/` YAML files (tier-0-core.yaml, etc.) contain an expanded aspirational rule set using C0/C1/C2 notation. The actual enforced rules are in `SACRED_RULES.xml` using CORE/LANG/ENV/SAFE/PERF/MCP/SESSION/EXEC IDs.
+> **Note**: The `archive/constitutional/` YAML files (tier-0-core.yaml, etc.) contain an expanded aspirational rule set using C0/C1/C2 notation. The actual enforced rules are in `SACRED_RULES.xml` using CORE/LANG/ENV/SAFE/EPISTEMIC/INSTINCT/OUTPUT_DISCIPLINE/PERF/MCP/SESSION/EXEC IDs.
 
 ---
 
@@ -36,14 +36,17 @@ Additional **modular rules** can be composed for specific use cases.
 | CORE_002  | **Truthfulness** — Verify claims against evidence                |
 | CORE_003  | **User Sovereignty** — User has ultimate control                 |
 
-### Tier 1: Safety & Environment
+### Tier 1: Safety, Epistemic & Instincts
 
-| Rule ID   | Description                                                      |
-| --------- | ---------------------------------------------------------------- |
-| LANG_001  | **Language** — Respond in configured language from state.json    |
-| ENV_001   | **Install Mode** — Detect global vs project mode from config    |
-| SAFE_001  | **Destructive Action Prevention** — Confirm before deleting     |
-| PERF_001  | **Token Efficiency** — Minimize context usage                   |
+| Rule ID               | Description                                                      |
+| --------------------- | ---------------------------------------------------------------- |
+| LANG_001              | **Language** — Respond in configured language from state.json    |
+| ENV_001               | **Install Mode** — Detect global vs project mode from config    |
+| SAFE_001              | **Destructive Action Prevention** — Confirm before deleting     |
+| EPISTEMIC_001         | **Epistemic Calibration** — Unified Quad-State ↔ Proof Grades 1–5, Missing Coverage Invariant, Anti-Authority-Laundering |
+| INSTINCT_001          | **Instinct Reflexes** — Fast-path guardrails (Terminal, Producing Boundary, DRY, Zero-comment, Evidence, Humility) |
+| OUTPUT_DISCIPLINE_001 | **Output Token Economics** — Zero conversational filler, structured output, Recency Invariant Anchor |
+| PERF_001              | **Token Efficiency** — Minimize context usage                   |
 
 ### Tier 2: MCP Tool + Behavioral Enforcement
 
@@ -52,7 +55,7 @@ Additional **modular rules** can be composed for specific use cases.
 | MCP_001     | **HSA Priority** — Use HSA tools for code operations            |
 | MCP_002     | **HSA Delegation** — Use handoff tools for sub-agents           |
 | MCP_003     | **HSA Observability** — Use repo map, env detect, skill search  |
-| SURGICAL_001 | **Surgical Changes** — Touch only scope, match style, no drive-by improvements |
+| SURGICAL_001 | **Surgical Changes** — Touch only scope, fix at Producing Boundary, match style, no drive-by improvements |
 
 ### Tier 3: Session & Memory
 
@@ -120,7 +123,7 @@ Data files in `data/`:
 ├── SACRED_RULES.xml                # Core XML rules (always active)
 ├── AGENT_RULES.md                  # Full agent protocol (Markdown fallback for non-MCP)
 ├── prompt-injection-guard.md       # Security: prompt injection patterns
-├── validation-framework.md         # 6-phase pre-implementation validation
+├── validation-framework.md         # 7-phase pre & post implementation validation
 ├── modules/                        # Composable rules (5 active)
 │   ├── complexity-scoring.yaml
 │   ├── progressive-escalation.yaml

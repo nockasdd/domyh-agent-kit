@@ -134,21 +134,21 @@ Apply Factory, Strategy, Repository, etc.
 
 ---
 
-## Safety Checklist
+## Safety & Epistemic Checklist
 
 Before refactoring:
-- [ ] Tests exist and pass
-- [ ] Understand current behavior
-- [ ] Identify all callers
+- [ ] Tests exist and pass (`[OBSERVATION]` Grade 1 `[EMPIRICAL]`)
+- [ ] Understand current behavior and trace **Producing Boundaries** vs **Consuming Boundaries**
+- [ ] Identify all callers via `hsa_trace_flow(entry, direction:"both", detail:"summary")`
 
 During refactoring:
-- [ ] Small incremental changes
+- [ ] Small incremental changes at the **Producing Boundary** (never add defensive workarounds at consuming boundaries)
 - [ ] Run tests after each change
-- [ ] Keep behavior identical
+- [ ] Verify the **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`)
 
 After refactoring:
-- [ ] All tests still pass
-- [ ] Coverage maintained
+- [ ] All tests still pass (`[OBSERVATION]` Grade 1)
+- [ ] Coverage maintained; untested paths disclosed as `[UNKNOWN]` (**Missing coverage is unknown, not absence**)
 - [ ] No new warnings
 
 ---

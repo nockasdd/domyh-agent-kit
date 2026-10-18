@@ -10,18 +10,18 @@ success_criteria: "Issues fixed, lint/type/test pass, debt score improved"
 
 - R1: STOP after PLAN — confirm scope with user before executing
 - R2: Never modify production config without backup
-- R3: Run lint/type check after every change batch
-- R4: Preserve existing behavior unless explicitly asked to change
-- R5: Document breaking changes in commit message
+- R3: Run lint/type check after every change batch (`[OBSERVATION]` Grade 2 `[STATIC-ANALYSIS]`)
+- R4: Fix issues at the **Producing Boundary** (never patch with defensive workarounds at the consuming boundary) and preserve existing behavior unless explicitly asked to change
+- R5: Tag completion claims with **Epistemic Quad-State** (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`) ↔ Proof Grades (1–5); **Missing coverage is unknown, not absence**
 
 ## MODIFICATION FLOW
 
-1. **DETECT** — hsa_session, hsa_detect, identify architecture, map structure
-2. **ANALYZE** — Scan by priority: Security P0 > Dependencies P0-P1 > Quality P1-P2 > Performance P2 > Tests P2 > Debt P2-P3
-3. **PLAN** — Group by priority with file:line refs. STOP: "Select scope: [1] Fix ALL | [2] P0+P1 | [3] P0 only | [4] Interactive"
-4. **EXECUTE** — Apply fixes per approved scope. Track: issue > file:line > before/after > reason.
-5. **VERIFY** — Lint > type check > tests > build. Show pass/fail summary.
-6. **REPORT** — Fixed count, files changed, lines +/-, debt score before/after. hsa_check_changes.
+1. **DETECT** — `hsa_session`, `hsa_detect`, identify architecture, map structure
+2. **ANALYZE** — Scan by priority: Security P0 > Dependencies P0-P1 > Quality P1-P2 > Performance P2 > Tests P2 > Debt P2-P3. Trace Producing Boundaries via `hsa_trace_flow(detail:"summary")`.
+3. **PLAN** — Group by priority with `file:line` refs. STOP: "Select scope: [1] Fix ALL | [2] P0+P1 | [3] P0 only | [4] Interactive"
+4. **EXECUTE** — Apply fixes at the **Producing Boundary** per approved scope. Track: issue > `file:line` > before/after > reason.
+5. **VERIFY** — Lint > type check > tests > build (`[OBSERVATION]`) + check **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`).
+6. **REPORT** — Fixed count, files changed, lines +/-, Epistemic Quad-State tags, untested `[UNKNOWN]` paths, debt score before/after. `hsa_check_changes`.
 
 ## COMMANDS
 
@@ -58,5 +58,5 @@ success_criteria: "Issues fixed, lint/type/test pass, debt score improved"
 
 ## CHECKPOINT
 
-1. Verify success_criteria met
+1. Verify `success_criteria` met across 6-Axis Ledger and disclose `[UNKNOWN]` risks
 2. `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})`

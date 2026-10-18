@@ -1,4 +1,4 @@
-# Agent Communication Protocol v7.1.0
+# Agent Communication Protocol v7.2.0
 # Protocol for agent-to-agent communication during orchestration
 # Source: A2A JSON-RPC, AutoGen messaging, OpenAI Swarm handoffs
 ---
@@ -6,8 +6,9 @@ name: agent-communication
 rule_id: "MOD-COM-001"
 
 description: |
-  Defines how agents communicate during orchestration.
-  Three channels: shared state, handoff packets, event log.
+  Defines how agents communicate during orchestration with strict Epistemic Quad-State preservation,
+  Producing Boundary enforcement, and Anti-Authority-Laundering invariants.
+  Four channels: shared state, handoff packets, event log, native subagent dispatch.
 
 category: "workflow"
 
@@ -26,7 +27,7 @@ channels:
     operations:
       read: "Any specialist can read shared_context at any time"
       write_decisions: "Specialist appends to shared_context.decisions[]"
-      write_output: "Specialist writes to own task.output"
+      write_output: "Specialist writes to own task.output with epistemic_state and proof_grade"
       write_blockers: "Specialist adds to shared_context.blockers[]"
 
   # Channel 2: Handoff Packet (one-time injection)
@@ -35,9 +36,9 @@ channels:
     when: "Task assignment in EXECUTE step"
     includes:
       - "Project snapshot (stack, structure)"
-      - "Relevant files for this specific task"
-      - "Constraints and conventions"
-      - "Prior task outputs (if task has dependencies)"
+      - "Relevant files for this specific task (Producing Boundary identified)"
+      - "Constraints, 6-Axis Behavioral Obligation Ledger, and conventions"
+      - "Prior task outputs with preserved epistemic_state ([OBSERVATION]/[DERIVATION]/[INFERENCE]/[UNKNOWN])"
       - "Tool allow/deny list"
     max_tokens: 1500
 
@@ -62,7 +63,7 @@ channels:
     lifecycle:
       1: "hsa_delegate({action:'prepare', task_type:'[type]', focus_files:[...]})"
       2: "Dispatch through the platform's native subagent tool (Agent, invoke_subagent, background agent)"
-      3: "Collect the result when it returns"
+      3: "Collect compact handoff result with epistemic_state and unverified_unknowns"
       4: "hsa_delegate({action:'verify', focus_files:[...], modified_files:[...]})"
     # MANDATORY: evaluate delegation before the EXECUTE step
     mandatory_evaluation:
@@ -72,6 +73,19 @@ channels:
       auto_delegate: "Complexity ≥ 8 (>200 LOC, multi-file, complex algorithm)"
       suggest_delegate: "Complexity 5-7 (>100 LOC, moderate changes)"
       skip: "Complexity < 5 or no subagent tool available"
+
+# ═══ EPISTEMIC & ANTI-AUTHORITY-LAUNDERING INVARIANTS ═══
+
+epistemic_invariants:
+  quad_state_mapping:
+    OBSERVATION: "Grade 1 [EMPIRICAL] (runtime command/test exit 0) & Grade 2 [STATIC-ANALYSIS] (typecheck/lint/AST)"
+    DERIVATION: "Grade 3 [DEDUCTIVE-LOGIC] (direct structural/code deduction with file:line)"
+    INFERENCE: "Grade 4 [THEORETICAL-MODEL] (unverified hypothesis/extrapolation)"
+    UNKNOWN: "Grade 5 [RESIDUAL-RISK] (untested paths, missing coverage, external vectors)"
+  missing_coverage_invariant: "Missing coverage is unknown, not absence."
+  anti_authority_laundering: "Parent/Orchestrator MUST NEVER upgrade a specialist's [INFERENCE] or [UNKNOWN] into [OBSERVATION] or [DERIVATION] without executing independent empirical or deductive verification."
+  producing_boundary_mandate: "All bugfixes and state mutations must be applied at the Producing Boundary, never via defensive workarounds at the consuming boundary."
+  obligation_ledger_6_axis: ["structural", "behavioral", "boundary", "state", "error", "resource"]
 
 # ═══ COMMUNICATION FLOW ═══
 
@@ -83,9 +97,9 @@ flow:
     4: "  b. Orchestrator updates task.status = 'running'"
     5: "  c. Specialist reads: handoff packet + shared_context"
     6: "  d. Specialist executes task using assigned workflow"
-    7: "  e. Specialist writes: task.output + shared_context.decisions[]"
-    8: "  f. Orchestrator reads output → decides next task"
-    9: "After all tasks: Orchestrator synthesizes results"
+    7: "  e. Specialist writes: task.output (with epistemic_state & unverified_unknowns) + shared_context.decisions[]"
+    8: "  f. Orchestrator reads output → preserves epistemic tags → decides next task"
+    9: "After all tasks: Orchestrator synthesizes results without authority laundering"
 
 # ═══ MESSAGE FORMAT ═══
 
@@ -93,6 +107,9 @@ message_format:
   from: "{persona_name}"
   to: "orchestrator | shared_context"
   type: "decision | blocker | output | request"
+  epistemic_state: "[OBSERVATION] | [DERIVATION] | [INFERENCE] | [UNKNOWN]"
+  proof_grade: "1..5"
+  unverified_unknowns: ["{untested paths or edge cases}"]
   content: "{structured data}"
   timestamp: "{ISO}"
 
@@ -108,4 +125,4 @@ permissions:
 
 integration:
   tier: 2
-  related_modules: ["agent-delegation", "complexity-scoring", "stop-conditions"]
+  related_modules: ["agent-delegation", "complexity-scoring", "stop-conditions", "behavioral-patterns"]

@@ -94,18 +94,18 @@ For every identified vulnerability or architectural flaw, classify its impact ac
 
 ---
 
-## 5. Deep SCoT Protocol (Per Checkpoint)
+## 5. Deep SCoT Protocol & 6-Axis Obligation Ledger (Per Checkpoint)
 
 ```yaml
-# 7-step Deep Structured Chain-of-Thought
+# 7-step Deep Structured Chain-of-Thought + Epistemic Calibration
 deep_scot_protocol:
-  1_locate: "Pin exact file:line references using hsa_search"
-  2_trace: "Run hsa_trace_flow to map full Call Graph from Entry Point to Sink"
-  3_contract: "Audit Pre-conditions, Post-conditions, Null-safety, and Error Invariants"
-  4_mutation: "Verify State Mutations, Transaction Rollback safety, and Concurrency"
+  1_locate: "Pin exact file:line references and Producing Boundary using hsa_search"
+  2_trace: "Run hsa_trace_flow(detail:'summary') + view_id/page to map full Call Graph from Entry Point to Sink"
+  3_contract: "Audit Pre-conditions, Post-conditions, Null-safety, and 6-Axis Obligations (structural, behavioral, boundary, state, error, resource)"
+  4_mutation: "Verify State Mutations at the Producing Boundary, Transaction Rollback safety, and Concurrency"
   5_blast_radius: "Quantify Direct, Transitive, and Systemic impact radius"
   6_counter: "Devil's advocate — examine valid engineering trade-offs / MVP rationale"
-  7_verdict: "P0 / P1 / P2 / P3 verdict with calibrated confidence score (1-10)"
+  7_verdict: "P0..P3 verdict with Epistemic Quad-State ([OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN]) <-> Proof Grades (1-5); enforce Anti-Authority-Laundering and 'Missing coverage is unknown, not absence'"
 ```
 
 ---
@@ -115,6 +115,9 @@ deep_scot_protocol:
 ```markdown
 ### 🔴 [P0/P1 - SEVERITY] Finding Title
 - **Entry Point**: `METHOD /route` (`path/to/controller.ts:line`)
+- **Producing Boundary**: `path/to/producer.ts:line`
+- **Epistemic State & Proof Grade**: `[OBSERVATION]` (Grade 1/2) | `[DERIVATION]` (Grade 3) | `[INFERENCE]` (Grade 4) | `[UNKNOWN]` (Grade 5)
+- **6-Axis Obligations Violated**: `[structural | behavioral | boundary | state | error | resource]`
 - **Interprocedural Call Chain**:
   `EntryController.handler()` ➔ `DomainService.execute()` ➔ `Repository.mutate()` ➔ `ExternalAPI.call()`
 - **Contract & Logic Flaw**:
@@ -126,6 +129,6 @@ deep_scot_protocol:
   * *Direct (Callers)*: [Affected immediate consumers]
   * *Transitive (Services)*: [Downstream APIs, background queues, dependencies]
   * *Systemic Risk*: [Data corruption, deadlock, service crash, auth bypass]
-- **Remediation**:
-  [Concrete, actionable refactoring steps to restore contract and transaction safety]
+- **Producing Boundary Remediation**:
+  [Concrete, actionable refactoring steps at the Producing Boundary — never defensive consuming patches]
 ```

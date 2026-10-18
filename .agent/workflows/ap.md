@@ -121,6 +121,9 @@ Sequential execution using 7-step Deep SCoT:
 ```markdown
 ### 🔴 [P0/P1 - SEVERITY] Finding Title
 - **Entry Point**: `METHOD /route` (`path/to/controller.ts:line`)
+- **Producing Boundary**: `path/to/producer.ts:line`
+- **Epistemic State & Proof Grade**: `[OBSERVATION]` (Grade 1/2) | `[DERIVATION]` (Grade 3) | `[INFERENCE]` (Grade 4) | `[UNKNOWN]` (Grade 5)
+- **6-Axis Obligations Violated**: `[structural | behavioral | boundary | state | error | resource]`
 - **Interprocedural Call Chain**:
   `EntryController.handler()` ➔ `DomainService.execute()` ➔ `Repository.mutate()` ➔ `ExternalAPI.call()`
 - **Contract & Logic Flaw**:
@@ -132,8 +135,8 @@ Sequential execution using 7-step Deep SCoT:
   * *Direct (Callers)*: [Affected immediate consumers]
   * *Transitive (Services)*: [Downstream APIs, background queues, dependencies]
   * *Systemic Risk*: [Data corruption, deadlock, service crash, auth bypass]
-- **Remediation**:
-  [Concrete, actionable refactoring steps to restore contract and transaction safety]
+- **Producing Boundary Remediation**:
+  [Concrete, actionable refactoring steps at the Producing Boundary — never defensive consuming patches]
 ```
 
 ---
@@ -142,8 +145,8 @@ Sequential execution using 7-step Deep SCoT:
 
 Before delivering the audit report, MUST verify:
 1.  ✅ **Was Subagent Delegation triggered if the repo has ≥20 files to keep context unpolluted?**
-2.  ✅ **Does every P0/P1 finding contain a complete Interprocedural Call Chain (`hsa_trace_flow`)?**
-3.  ✅ **Are API and Function Contract Invariants explicitly checked (not just syntax)?**
+2.  ✅ **Does every P0/P1 finding contain a complete Interprocedural Call Chain (`hsa_trace_flow`) and Producing Boundary citation?**
+3.  ✅ **Are the 6-Axis Behavioral Obligation Ledger (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`) and Contract Invariants checked?**
 4.  ✅ **Is the Blast Radius quantified across Direct, Transitive, and Systemic layers?**
 5.  ✅ **Has the report been saved to `.domyh/audits/` and persisted in session memory?**
-6.  ✅ **Are Proof Grades tagged on all conclusions and are known limitations/residual risks clearly bound?** *(Zero overclaiming)*
+6.  ✅ **Are Epistemic Quad-State (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`) ↔ Proof Grades (1–5) tagged, Anti-Authority-Laundering respected, and `"Missing coverage is unknown, not absence"` enforced?** *(Zero overclaiming)*

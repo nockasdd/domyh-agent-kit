@@ -5,5 +5,7 @@ directive: |
   Search existing project libraries before creating new functions or utilities.
   - Call hsa_search(query) or view_file on utils/, lib/, shared/ directories first.
   - If a similar utility exists, import and extend it. Never duplicate utility logic.
+action: "Search utils/, lib/, and shared/ via hsa_search before creating any new helper or utility function."
+negative_constraint: "NEVER create a new utility or helper function without searching existing utils/lib/shared first."
 banned_actions: ["create_without_search", "duplicate_helper_function"]
 self_check: "Did I search utils/lib/shared before implementing this function?"

@@ -15,30 +15,31 @@ reviews:
   path_instructions:
     - path: "**/*.ts"
       instructions: |
-        Principles: simplicity first, surgical changes, verify before done.
-        TypeScript strict mode, explicit types, proper error handling.
+        Principles: simplicity first, surgical changes (fix at Producing Boundary, never patch at consuming boundary), verify before done.
+        Epistemic Quad-State: tag claims with [OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN] + Proof Grades (1-5). Missing coverage is unknown, not absence.
+        TypeScript strict mode, explicit types, proper error handling, 6-Axis Behavioral Obligation Ledger (structural, behavioral, boundary, state, error, resource).
         Skill: `.agent/skills/languages/typescript/SKILL.md`
 
     - path: "**/*.vue"
       instructions: |
-        Vue 3 Composition API with <script setup>, type-safe props/emits.
+        Vue 3 Composition API with <script setup>, type-safe props/emits, fix state defects at the Producing Boundary.
         Skill: `.agent/skills/frameworks/vue/SKILL.md`
 
     - path: "**/*.go"
       instructions: |
-        Effective Go conventions, proper error wrapping, context propagation.
+        Effective Go conventions, proper error wrapping, context propagation, fix at Producing Boundary.
         Skill: `.agent/skills/languages/go/SKILL.md`
 
     - path: "**/*.py"
       instructions: |
-        PEP 8, type hints, proper exception handling.
+        PEP 8, type hints, proper exception handling, fix at Producing Boundary.
         Skill: `.agent/skills/languages/python/SKILL.md`
 
 chat:
   auto_reply: true
 
 # DOMYH Awesome Code — NockDev
-# Principles: think before coding, simplicity first, surgical changes, verify before done, stop when uncertain, session discipline.
-# MCP: hsa_get_agent_config('bootstrap'), hsa_session(action='intent'), hsa_search(action='skills').
+# Principles: think before coding, parallel tool batching, simplicity first, surgical changes (fix at Producing Boundary), verify before done, Epistemic Quad-State ([OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN] + Proof Grades 1-5; Missing coverage is unknown, not absence), stop when uncertain, session discipline.
+# MCP: hsa_get_agent_config('bootstrap'), hsa_session(action='intent'), hsa_search(action='skills'), hsa_trace_flow(detail='summary').
 # Fallback: .agent/workflows/{command}.md, .agent/rules/AGENT_RULES.md
 # Terminal (Windows): no pipes, no pagers, detect shell first.

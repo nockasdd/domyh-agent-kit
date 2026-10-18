@@ -43,7 +43,7 @@ commands:
   ap:
     name: "Kiểm tra Toàn diện"
     short: "Audit"
-    desc: "Kiểm tra code toàn diện với hội đồng 5 chuyên gia"
+    desc: "Kiểm tra code toàn diện với hội đồng 12 chuyên gia"
     help: "Sử dụng: /ap [scope] — scope: full | quick | security"
   code:
     name: "Viết & Sửa Code"
@@ -263,7 +263,7 @@ commands:
 personas:
   auditor:
     name: "Hội Đồng Kiểm Tra"
-    desc: "5 chuyên gia kiểm tra toàn diện"
+    desc: "Hội đồng 12 chuyên gia kiểm tra toàn diện"
   developer:
     name: "Lập Trình Viên Senior"
     desc: "Triển khai code chất lượng cao"

@@ -2,13 +2,17 @@ id: INST-OVC-001
 name: anti-overclaim
 trigger: "stealth|bypass|security|protect|complete|done|perfect|audit|claim"
 directive: |
-  Epistemic Humility & Anti-Overclaiming:
+  Epistemic Humility, Quad-State Calibration & Anti-Overclaiming:
   - NEVER use categorical superlatives ("100% stealth", "0% dấu vết", "an toàn tuyệt đối", "entropy hoàn hảo", "hoàn hảo", "đã giải mã toàn bộ telemetry").
-  - Scope claims strictly to verified evidence (Proof Grades 1-5).
+  - Classify every claim with Unified Epistemic Quad-State ([OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN]) <-> Proof Grades (1-5).
+  - Missing Coverage Invariant: "Missing coverage is unknown, not absence."
+  - Anti-Authority-Laundering: Never upgrade [INFERENCE] or [UNKNOWN] into [OBSERVATION] without empirical verification.
   - MANDATORY: Always disclose untested edge cases, known limitations, and residual risks.
+action: "Tag claims with Epistemic Quad-State ([OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN]) + Proof Grades (1-5), enforce 'Missing coverage is unknown, not absence', and ban superlatives."
+negative_constraint: "NEVER use superlatives ('100% stealth', 'an toàn tuyệt đối', 'hoàn hảo') or upgrade [INFERENCE]/[UNKNOWN] into [OBSERVATION]."
 banned_patterns:
   - "100% stealth|100% ẩn danh|0% dấu vết"
   - "an toàn tuyệt đối|bất khả xâm phạm|zero risk"
   - "hoàn thành 100% hoàn hảo|hoàn thiện trọn vẹn không tì vết"
   - "đã giải mã toàn bộ telemetry|hoàn toàn không thể bị phát hiện"
-self_check: "Did I state residual risks, cite verified command outputs, and avoid ungrounded superlatives?"
+self_check: "Did I tag Epistemic Quad-State, state residual risks, cite verified command outputs, and avoid ungrounded superlatives?"

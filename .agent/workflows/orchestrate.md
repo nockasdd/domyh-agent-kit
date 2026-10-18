@@ -13,8 +13,8 @@ success_criteria: "All sub-tasks completed, passed 2-tier review gates, outputs 
 3. **SUBAGENT DELEGATION THRESHOLDS**:
    - **Mandatory Subagent**: Broad exploration (>10 unknown files), full project audit (`/ap`), or independent multi-module implementation.
    - **Direct Main Agent**: Targeted read/edit (<3 known files), single-function trace (`hsa_trace_flow`), or small surgical bugfix (<50 lines).
-4. **ISOLATED WORKSPACE & READ-ONLY CONFINEMENT**: Subagents performing audits or research MUST be read-only. Modifying subagents MUST use branched/isolated workspaces.
-5. **2-TIER REVIEW GATE**: Never merge subagent outputs without Tier 1 (Spec Compliance) and Tier 2 (Test & Quality Verification) validation.
+4. **ISOLATED WORKSPACE & READ-ONLY CONFINEMENT**: Subagents performing audits or research MUST be read-only. Modifying subagents MUST use branched/isolated workspaces and fix defects at the **Producing Boundary**, never via defensive patches at the **Consuming Boundary**.
+5. **2-TIER REVIEW GATE & ANTI-AUTHORITY-LAUNDERING**: Never merge subagent outputs without Tier 1 (Spec Compliance) and Tier 2 (Test & Quality Verification across the **6-Axis Behavioral Obligation Ledger**: `structural`, `behavioral`, `boundary`, `state`, `error`, `resource`). Subagent reports without executed test/AST evidence are `[INFERENCE]` (Grade 4) — NEVER launder unverified subagent claims into `[OBSERVATION]` (Grade 1–2). Any uninspected scope MUST remain `[UNKNOWN]` (Grade 5).
 
 ---
 
@@ -65,11 +65,12 @@ For each subtask, generate an immutable Task Contract:
 contract_id: "sdd_task_{id}"
 task_type: "code | test | review | research | audit"
 focus_files: ["path/to/target.ts", "path/to/target.test.ts"] # Strict boundary
+producing_boundary: "path/to/target.ts:fnName"
 tool_policy: "read_only | full_write"
 acceptance_criteria:
-  - "Unit tests pass with 100% assertion coverage"
-  - "Zero out-of-scope files modified"
-  - "Typecheck clean (tsc --noEmit)"
+  - "Unit tests pass with 100% assertion coverage across 6-Axis Ledger (structural, behavioral, boundary, state, error, resource)"
+  - "Zero out-of-scope files modified; fix applied at Producing Boundary"
+  - "Typecheck clean (tsc --noEmit) with Epistemic Quad-State & Proof Grade (1-5) declared"
 ```
 
 ### 5. PLAN & APPROVE GATE (⛔ STOP — Confirm with User)
@@ -79,18 +80,21 @@ acceptance_criteria:
 ### 6. DISPATCH & CONCURRENT EXECUTION
 *   Dispatch subagents concurrently according to the active Platform Dispatch Matrix.
 *   Ensure research/audit subagents run in **Read-Only mode** to keep parent context clean.
-*   **Compact Handoff Protocol**: Subagents MUST return a structured, compact summary (max 30 lines) instead of full transcript or raw codebase dumps:
+*   **Compact Handoff Protocol**: Subagents MUST return a structured, compact summary (max 30 lines) with Epistemic Quad-State classification instead of full transcript or raw codebase dumps:
     ```yaml
     subtask_id: "sdd_task_{id}"
     status: "PASS | FAIL"
+    epistemic_state: "OBSERVATION | DERIVATION | INFERENCE | UNKNOWN"
+    proof_grade: "Grade 1 | Grade 2 | Grade 3 | Grade 4 | Grade 5"
     files_touched: ["path/to/file.ts"]
-    key_findings: ["1-line summary"]
+    key_findings: ["1-line summary with file:line"]
     verification_evidence: "Test command + exit code 0"
+    unverified_unknowns: ["Explicit list of uninspected paths or missing runtime tests ([UNKNOWN] Grade 5)"]
     ```
 
 ### 7. 2-TIER QUALITY REVIEW GATE
-*   **Tier 1 (Spec Compliance)**: Verify that subagent touched ONLY files in `focus_files`. Any unapproved modifications $\rightarrow$ **REJECT & REVERT**.
-*   **Tier 2 (Quality & TDD)**: Run test suites and linters (`npm test`, `pytest`, `tsc`). If broken $\rightarrow$ re-dispatch correction.
+*   **Tier 1 (Spec & Boundary Compliance)**: Verify that subagent touched ONLY files in `focus_files` and targeted the **Producing Boundary**. Any unapproved modifications $\rightarrow$ **REJECT & REVERT**.
+*   **Tier 2 (Quality, 6-Axis Ledger & Anti-Authority-Laundering)**: Run test suites and linters (`npm test`, `pytest`, `tsc`) and verify all 6 axes (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`). Downgrade any subagent claim lacking raw execution output to `[INFERENCE]` (Grade 4). If broken $\rightarrow$ re-dispatch correction.
 
 ### 8. SYNTHESIZE & PERSIST
 *   Merge verified deliverables into main branch/workspace.

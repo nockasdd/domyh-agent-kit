@@ -242,6 +242,58 @@ function validatePersonas() {
   }
 }
 
+function validateInstincts() {
+  const instinctsDir = path.join(AGENT_DIR, "instincts");
+  if (!fs.existsSync(instinctsDir)) {
+    addError("instincts/ directory is missing");
+    return;
+  }
+
+  const indexPath = path.join(instinctsDir, "INDEX.yaml");
+  if (!fs.existsSync(indexPath)) {
+    addError("instincts/INDEX.yaml is missing");
+  }
+
+  const instinctFiles = fs.readdirSync(instinctsDir).filter((name) => name.endsWith(".instinct.yaml"));
+  if (instinctFiles.length === 0) {
+    addError("instincts/: no .instinct.yaml files found");
+    return;
+  }
+
+  for (const file of instinctFiles) {
+    const fullPath = path.join(instinctsDir, file);
+    const content = readText(fullPath);
+    const id = parseYamlScalar(content, "id");
+    const name = parseYamlScalar(content, "name");
+    const hasDirective = /^\s*directive:\s*/m.test(content);
+    const hasAction = Boolean(parseYamlScalar(content, "action"));
+    if (!id) addError(`instincts/${file}: missing 'id'`);
+    if (!name) addError(`instincts/${file}: missing 'name'`);
+    if (!hasDirective) addError(`instincts/${file}: missing 'directive'`);
+    if (!hasAction) addError(`instincts/${file}: missing 'action'`);
+  }
+}
+
+function validateRulesBundles() {
+  const distDir = path.join(AGENT_DIR, "rules", "dist");
+  if (!fs.existsSync(distDir)) {
+    addError("rules/dist/ directory is missing");
+    return;
+  }
+
+  for (const bundle of ["minimal.md", "standard.md", "full.md"]) {
+    const bundlePath = path.join(distDir, bundle);
+    if (!fs.existsSync(bundlePath)) {
+      addError(`rules/dist/${bundle} is missing`);
+      continue;
+    }
+    const content = readText(bundlePath);
+    if (content.includes("[... truncated")) {
+      addError(`rules/dist/${bundle} contains truncated content ('[... truncated')`);
+    }
+  }
+}
+
 function main() {
   if (!fs.existsSync(AGENT_DIR)) {
     console.error("❌ .agent/ not found");
@@ -253,6 +305,8 @@ function main() {
   validateSkillDirectories();
   validateCriticalPaths();
   validatePersonas();
+  validateInstincts();
+  validateRulesBundles();
 
   if (warnings.length > 0) {
     console.log("⚠️ Warnings:");

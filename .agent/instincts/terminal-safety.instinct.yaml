@@ -6,5 +6,7 @@ directive: |
   - NEVER use pipes (|), pagers (less/more/man), or interactive prompts without -y.
   - Chain commands with ';' or '&&' (PowerShell 7). Wrap cmd with 'cmd /c'.
   - NEVER spawn external GUI/screen-reader binaries (orca, orca.exe). Stay inside the harness.
+action: "Never use pipes (|), pagers, interactive prompts without -y, or unverified external binaries (orca.exe)."
+negative_constraint: "NEVER use pipes (|), pagers (less/more), interactive prompts without -y, or spawn unverified external binaries."
 banned_tokens: ["| grep", "| less", "| more", "| head", "| tail", "tail -f", "watch", "git log (without --no-pager)"]
 evidence_check: "Does this command terminate autonomously within 30s without waiting for user input?"

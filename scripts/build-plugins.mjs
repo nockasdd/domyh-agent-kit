@@ -1,10 +1,10 @@
 /**
  * DOMYH Multi-Target Plugin Builder
  * Compiles the Single Source of Truth (SSoT) from domyh-awf & domyh-hsa-mcp into:
- *   1. Claude Code Plugin (.claude-plugin/plugin.json + agents/ + commands/ + skills/ + .mcp.json)
+ *   1. Claude Code Plugin (.claude-plugin/plugin.json + agents/ + commands/ + skills/ + rules/ + instincts/ + .mcp.json)
  *   2. Claude Code Marketplace (.claude-plugin/marketplace.json)
- *   3. Google Antigravity Plugin (plugin.json + mcp_config.json + rules/ + skills/)
- *   4. OpenAI Codex Plugin (AGENTS.md + rules/ + skills/ + .codex/)
+ *   3. Google Antigravity Plugin (plugin.json + mcp_config.json + rules/ + skills/ + instincts/ + workflows/)
+ *   4. OpenAI Codex Plugin (AGENTS.md + rules/ + skills/ + instincts/ + workflows/ + .codex/)
  *   5. Cursor & VS Code MCP Bundles (.cursor/rules/ + mcp.json)
  */
 
@@ -36,8 +36,6 @@ if (existsSync(DIST_PLUGINS_DIR)) {
 mkdirSync(DIST_PLUGINS_DIR, { recursive: true });
 
 // ─── HELPER: Read version from SSoT ───────────────────────────────────────
-// VERSION.yaml and package.json are the version sources; hardcoding them here
-// is what let 7.2.6 drift a full major behind 6.7.13.
 function readVersionField(file, regex) {
   const match = readFileSync(file, 'utf-8').match(regex);
   if (!match) throw new Error(`Cannot parse version from ${file}`);
@@ -45,11 +43,6 @@ function readVersionField(file, regex) {
 }
 
 // ─── HELPER: Copy directory safely ────────────────────────────────────────
-// rules/dist holds compile-rules-bundle.js output, consumed only by doctor.ts
-// self-check. It is build output, not source — never ship it to an IDE.
-// rules/legacy-modules is a local pre-consolidation backup, superseded by
-// AGENT_RULES.md + SACRED_RULES.xml.
-// filterFn receives the entry's own path, so match the parent dir via dirname.
 const RULES_SKIP_DIRS = new Set(['dist', 'legacy-modules']);
 function skipRulesBuildArtifacts(srcPath, entry) {
   return !(entry.isDirectory() && RULES_SKIP_DIRS.has(entry.name) && basename(dirname(srcPath)) === 'rules');
@@ -94,10 +87,10 @@ const claudePluginManifest = {
   description: 'Senior Software Engineer Rigor for Claude Code: Subagent-Driven Development (SDD), 2-Tier Review Gate, and High-Speed Code Intelligence via HSA MCP.',
   author: {
     name: 'NockDev',
-    url: 'https://github.com/NockDev',
+    url: 'https://github.com/nockasdd',
   },
-  homepage: 'https://github.com/NockDev/domyh-awesome-code-agent',
-  repository: 'https://github.com/NockDev/domyh-awesome-code-agent',
+  homepage: 'https://github.com/nockasdd/domyh-agent-kit',
+  repository: 'https://github.com/nockasdd/domyh-agent-kit',
   license: 'MIT',
   keywords: ['skills', 'subagents', 'sdd', 'mcp', 'code-intelligence', 'tdd', 'architecture'],
 };
@@ -143,27 +136,29 @@ if (existsSync(workflowsDir)) {
   }
 }
 
-// 1.5 Skills (skills/**/SKILL.md)
+// 1.5 Skills (skills/**/SKILL.md), Rules (rules/), and Instincts (instincts/)
 const claudeSkillsDir = join(claudePluginDir, 'skills');
 const copiedSkills = copyDir(join(AGENT_DIR, 'skills'), claudeSkillsDir, (path, entry) => {
   return !path.includes('node_modules') && !path.includes('.git');
 });
+copyDir(join(AGENT_DIR, 'rules'), join(claudePluginDir, 'rules'), skipRulesBuildArtifacts);
+copyDir(join(AGENT_DIR, 'instincts'), join(claudePluginDir, 'instincts'));
 
 // 1.6 Hooks (hooks/hooks.json)
 const claudeHooksDir = join(claudePluginDir, 'hooks');
 mkdirSync(claudeHooksDir, { recursive: true });
 const claudeHooksConfig = {
   hooks: {
-    preToolExecution: [
+    PreToolUse: [
       {
         matcher: '.*',
-        description: 'Verify surgical scope and adherence to Task Contract',
+        description: 'Verify surgical scope, Producing Boundary discipline, and adherence to Task Contract',
       },
     ],
-    postToolExecution: [
+    PostToolUse: [
       {
         matcher: 'Edit|Write|Replace',
-        description: 'Trigger 2-tier review gate and change verification',
+        description: 'Trigger 2-tier review gate, 6-Axis Obligation Ledger check, and change verification',
       },
     ],
   },
@@ -178,7 +173,7 @@ const claudeMarketplaceManifest = {
   name: 'nockdev-marketplace',
   owner: {
     name: 'NockDev',
-    url: 'https://github.com/NockDev',
+    url: 'https://github.com/nockasdd',
   },
   description: 'Official Marketplace for DOMYH Awesome Code Plugins and Agentic Extensions.',
   plugins: [
@@ -196,7 +191,7 @@ writeFileSync(join(claudeMarketplaceMetaDir, 'marketplace.json'), JSON.stringify
 const mktPluginDest = join(claudeMarketplaceDir, 'plugins', 'domyh-awesome-code');
 copyDir(claudePluginDir, mktPluginDest);
 
-console.log(`   ✅ Claude Code Plugin built (${copiedSkills} skill files, custom agents, slash commands)`);
+console.log(`   ✅ Claude Code Plugin built (${copiedSkills} skill files, rules/, instincts/, custom agents, slash commands)`);
 console.log(`   ✅ Claude Marketplace manifest created (.claude-plugin/marketplace.json)`);
 
 // ─── 2. TARGET 2: GOOGLE ANTIGRAVITY PLUGIN ────────────────────────────────
@@ -227,13 +222,12 @@ const agyMcpConfig = {
 };
 writeFileSync(join(agyPluginDir, 'mcp_config.json'), JSON.stringify(agyMcpConfig, null, 2), 'utf-8');
 
-// 2.3 Rules (rules/)
+// 2.3 Rules (rules/), Skills (skills/), Instincts (instincts/), and Workflows (workflows/)
 const agyRulesDir = join(agyPluginDir, 'rules');
 copyDir(join(AGENT_DIR, 'rules'), agyRulesDir, skipRulesBuildArtifacts);
-
-// 2.4 Skills (skills/)
-const agySkillsDir = join(agyPluginDir, 'skills');
-copyDir(join(AGENT_DIR, 'skills'), agySkillsDir);
+copyDir(join(AGENT_DIR, 'skills'), join(agyPluginDir, 'skills'));
+copyDir(join(AGENT_DIR, 'instincts'), join(agyPluginDir, 'instincts'));
+copyDir(join(AGENT_DIR, 'workflows'), join(agyPluginDir, 'workflows'));
 
 // 2.5 Hooks (hooks.json)
 const agyHooks = {
@@ -250,7 +244,7 @@ const agyHooks = {
 };
 writeFileSync(join(agyPluginDir, 'hooks.json'), JSON.stringify(agyHooks, null, 2), 'utf-8');
 
-console.log('   ✅ Antigravity Plugin built (plugin.json, mcp_config.json, rules/, skills/, hooks.json)');
+console.log('   ✅ Antigravity Plugin built (plugin.json, mcp_config.json, rules/, skills/, instincts/, workflows/, hooks.json)');
 
 // ─── 3. TARGET 3: OPENAI CODEX PLUGIN & SCOPED PACKAGE ─────────────────────
 console.log('\n📦 [3/4] Building OpenAI Codex Plugin & AGENTS.md Hierarchy...');
@@ -266,9 +260,11 @@ if (existsSync(codexAgentsMd)) {
   writeFileSync(join(codexPluginDir, 'AGENTS.md'), content, 'utf-8');
 }
 
-// 3.2 Rules and Skills
+// 3.2 Rules, Skills, Instincts, and Workflows
 copyDir(join(AGENT_DIR, 'rules'), join(codexPluginDir, 'rules'), skipRulesBuildArtifacts);
 copyDir(join(AGENT_DIR, 'skills'), join(codexPluginDir, 'skills'));
+copyDir(join(AGENT_DIR, 'instincts'), join(codexPluginDir, 'instincts'));
+copyDir(join(AGENT_DIR, 'workflows'), join(codexPluginDir, 'workflows'));
 
 // 3.3 Codex Manifest
 const codexManifest = {
@@ -281,7 +277,7 @@ const codexManifest = {
 };
 writeFileSync(join(codexPluginDir, 'codex.json'), JSON.stringify(codexManifest, null, 2), 'utf-8');
 
-console.log('   ✅ OpenAI Codex Plugin built (AGENTS.md, rules/, skills/, codex.json)');
+console.log('   ✅ OpenAI Codex Plugin built (AGENTS.md, rules/, skills/, instincts/, workflows/, codex.json)');
 
 // ─── 4. TARGET 4: CURSOR & VS CODE MCP / RULES BUNDLES ──────────────────────
 console.log('\n📦 [4/4] Building Cursor & VS Code Bundles...');

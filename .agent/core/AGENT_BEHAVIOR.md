@@ -106,17 +106,16 @@ When any workflow reaches the EXECUTE/WRITE step, follow these micro-steps:
 
 | Step | Action | Tool | Output |
 |------|--------|------|--------|
-| 1. LOCATE | Find exact file + function to modify | `hsa_search` → `view_file` | `TARGET: {file}:{line}` |
-| 2. UNDERSTAND | Trace EXISTING flow + read target | `hsa_trace_flow` → `view_file` | `FLOW: {path}` `CALLERS: {list}` |
-| 3. SIZE | Classify task per `proportional-response` | mental | `SIZE: MICRO/SMALL/MEDIUM/LARGE` |
-| 4. WRITE | Apply minimal change matching SIZE | `replace_file_content` or `multi_replace` | diff shown |
-| 5. VERIFY | Confirm change matches plan | `git diff` or view changed lines | verified |
+| 1. LOCATE | Find exact file + Producing Boundary to modify | `hsa_search` → `view_file` | `TARGET: {file}:{line}` |
+| 2. UNDERSTAND | Trace EXISTING flow (`detail:"summary"` + `view_id`/`page`) + read target | `hsa_trace_flow` → `view_file` | `FLOW: {path}` `CALLERS: {list}` |
+| 3. SIZE | Classify task size (`MICRO <10 LOC`, `SMALL 10-50`, `MEDIUM 50-200`, `LARGE >200`) per `AGENT_RULES.md §2` | mental | `SIZE: MICRO/SMALL/MEDIUM/LARGE` |
+| 4. WRITE | Apply minimal change at the **Producing Boundary** matching SIZE | `replace_file_content` or `multi_replace` | diff shown |
+| 5. VERIFY | Read back file + check **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`) | `view_file` + test/build | verified (`[OBSERVATION]`) |
 
-> SIZE classification follows `rules/modules/proportional-response.yaml` rules.
+> SIZE classification follows `rules/AGENT_RULES.md §2` (Simplicity First size guide).
 > Skip steps 1-2 for truly new files with no existing context.
 
-> **Comprehension Debt**: After WRITE, provide 2-3 line summary: WHAT changed, WHY, and IMPACT on callers.
-> 41% of code is AI-generated (2025) — review is the bottleneck, not writing.
+> **Comprehension Debt & Epistemic Calibration**: After WRITE, provide 2-3 line summary: WHAT changed at the Producing Boundary, WHY, IMPACT on callers, and **Epistemic Quad-State** (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`). Remember: **Missing coverage is unknown, not absence.**
 
 ## Token Budgets
 <!-- POSITION: HEAD zone — load with SACRED_RULES -->

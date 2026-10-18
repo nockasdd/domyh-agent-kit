@@ -42,12 +42,13 @@
 
   <requirement id="EPISTEMIC_001" tier="1" severity="block">
     <text>Epistemic Calibration &amp; Anti-Overclaim Mandate:
-    - Epistemic Quad-State: Every completion claim or technical statement must be classified into:
-      1. [OBSERVATION]: Empirical measurements, terminal logs, test results, exit codes.
-      2. [DERIVATION]: Direct deductive logic or syntax analysis strictly derived from observations.
-      3. [INFERENCE]: Technical hypotheses or extrapolations requiring further empirical verification.
-      4. [UNKNOWN]: Uncovered scope, untested edge cases, unexamined code paths.
-    - Missing Coverage Invariant: "Missing coverage is unknown, not absence" — NEVER conclude code is defect-free merely because an unexercised test did not fail.
+    - Unified Epistemic Quad-State &lt;-&gt; Proof Grades (1-5): Every completion claim or technical statement must be classified into:
+      1. [OBSERVATION] &lt;-&gt; Grade 1 [EMPIRICAL] (Runtime command/test output, exit code 0) &amp; Grade 2 [STATIC-ANALYSIS] (Typecheck/lint/AST/schema validation).
+      2. [DERIVATION] &lt;-&gt; Grade 3 [DEDUCTIVE-LOGIC] (Direct structural/code deduction strictly derived from observations with explicit file:line citations).
+      3. [INFERENCE] &lt;-&gt; Grade 4 [THEORETICAL-MODEL] (Unverified hypothesis, RFC/spec extrapolation requiring further empirical verification).
+      4. [UNKNOWN] &lt;-&gt; Grade 5 [RESIDUAL-RISK] (Untested paths, missing coverage, unexamined code paths, external/environmental vectors).
+    - Missing Coverage Invariant: "Missing coverage is unknown, not absence" — NEVER conclude code is defect-free merely because an unexercised path or missing test did not fail.
+    - Anti-Authority-Laundering: Never upgrade an [INFERENCE] or [UNKNOWN] (including from subagent handoffs) into [OBSERVATION] or [DERIVATION] without new empirical or deductive verification.
     - Banned Superlatives: NEVER claim absolute perfection, zero traces, 100% stealth, absolute security, or complete telemetry eradication without formal mathematical/runtime proof.
     - Measured Language: Replace categorical absolutes with empirical observations, boundary conditions, and test results.
     - Residual Risk Acknowledgment: Every technical summary, completion report, or audit report MUST explicitly disclose known limitations, untested boundary conditions, and residual risk vectors.
@@ -59,11 +60,11 @@
   <requirement id="INSTINCT_001" tier="1" severity="block">
     <text>Activate fast-path Instinct Reflexes before action:
     - Terminal: NEVER use pipes (|), pagers, or interactive prompts without -y. NEVER spawn unverified external GUI binaries (orca, orca.exe).
-    - Bugfix: Modify strictly requested lines. NO adjacent code cleanups, no quote or style churn.
+    - Bugfix: Modify strictly requested lines. Fix at the Producing Boundary (never patch at the consuming boundary). NO adjacent code cleanups, no quote or style churn.
     - Creation: Search utils/lib/shared first before creating new functions (DRY).
     - Comments: Default ZERO comments. Never describe WHAT code does.
     - Claims: Never say 'should work'. Always verify with command execution evidence (exit code 0).
-    - Humility: Zero superlatives ('100% stealth', 'an toàn tuyệt đối', 'hoàn hảo'). Disclose known limitations.
+    - Humility: Zero superlatives ('100% stealth', 'an toàn tuyệt đối', 'hoàn hảo'). Tag claims with Epistemic Quad-State ([OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN]). Missing coverage is unknown, not absence. Disclose known limitations.
     See .agent/instincts/ for micro-directives (&lt;50 tokens each).</text>
     <rationale>Instinct reflexes provide deterministic guardrails at zero token bloat, preventing LLMs from falling into known cognitive traps.</rationale>
     <reference>.agent/instincts/INDEX.yaml</reference>

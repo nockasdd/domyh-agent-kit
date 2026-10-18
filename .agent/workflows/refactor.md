@@ -9,19 +9,19 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 ## RULES
 
 - R1: STOP after PLAN — confirm scope with user
-- R2: Run tests BEFORE and AFTER every change
+- R2: Run tests BEFORE and AFTER every change (`[OBSERVATION]` Grade 1 `[EMPIRICAL]`)
 - R3: One commit per logical refactoring step
-- R4: Never change behavior — only structure
-- R5: Preserve existing test coverage
+- R4: Never change external behavior — restructure at the **Producing Boundary** and verify across the **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`)
+- R5: Preserve existing test coverage; **Missing coverage is unknown, not absence** (disclose untested paths as `[UNKNOWN]`)
 
 ## REFACTOR FLOW
 
-1. **DETECT** — hsa_session, hsa_detect(stack), hsa_search for context, hsa_trace_flow(entry, direction:'both') for impact
-2. **BASELINE** — Run tests, record passing state
-3. **PLAN** — Define changes, confirm scope. hsa_prefetch target files. STOP: confirm with user.
-4. **EXECUTE** — Apply refactoring (one commit per change). Use proportional-response SIZE classification.
-5. **VERIFY** — Re-run tests, validate behavior unchanged
-6. **SYNC** — hsa_check_changes to update index
+1. **DETECT** — `hsa_session`, `hsa_detect(stack)`, `hsa_search` for context, `hsa_trace_flow(entry, direction:'both', detail:'summary')` for impact and Producing Boundaries
+2. **BASELINE** — Run tests, record passing state (`[OBSERVATION]` Grade 1)
+3. **PLAN** — Define changes, confirm scope. `hsa_prefetch` target files. STOP: confirm with user.
+4. **EXECUTE** — Apply refactoring at the **Producing Boundary** (one commit per change). Read back modified files (`view_file`).
+5. **VERIFY** — Re-run tests, validate 6-Axis Behavioral Obligation Ledger (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`), tag Epistemic Quad-State (`[OBSERVATION]`, `[DERIVATION]`, `[INFERENCE]`, `[UNKNOWN]`)
+6. **SYNC** — `hsa_check_changes` to update index
 
 ## COMMANDS
 
@@ -58,5 +58,5 @@ success_criteria: "Code improved, all tests pass, no behavior change"
 
 ## CHECKPOINT
 
-1. Verify: all tests pass, no behavior change
+1. Verify: all tests pass (`[OBSERVATION]`), 6-Axis Ledger satisfied, untested paths disclosed as `[UNKNOWN]`
 2. `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})`

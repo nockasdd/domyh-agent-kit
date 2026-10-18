@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@nockdev/hsa"><img src="https://img.shields.io/npm/v/@nockdev/hsa?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm" /></a>
-  <img src="https://img.shields.io/badge/MCP%20tools-16-10B981?style=for-the-badge&logo=puzzle&logoColor=white" alt="MCP Tools" />
+  <img src="https://img.shields.io/badge/MCP%20tools-18-10B981?style=for-the-badge&logo=puzzle&logoColor=white" alt="MCP Tools" />
   <img src="https://img.shields.io/badge/docs-84+-06B6D4?style=for-the-badge&logo=bookstack&logoColor=white" alt="Built-in Docs" />
   <img src="https://img.shields.io/badge/node-%E2%89%A518-3B82F6?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js" />
   <img src="https://img.shields.io/badge/license-MIT-8B5CF6?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License" />
@@ -12,7 +12,7 @@
 
 <p align="center">
   Token-optimized MCP context engine with <b>BM25+ search</b>, <b>HNSW vector search</b>, <b>Merkle tree</b> change detection, <b>84+ built-in library docs</b>, <b>sub-agent delegation</b>, <b>impact analysis</b>, <b>persistent memory</b>, <b>LiveCanvas</b> visual feedback, and <b>real-time dashboard</b>.<br/>
-  Part of the <a href="https://github.com/nockasdd/domyh-awf-code"><b>DOMYH AWF </b></a> framework.
+  Part of the <a href="https://github.com/nockasdd/domyh-agent-kit"><b>DOMYH Agent Kit (AWF)</b></a> framework.
 </p>
 
 ---
@@ -61,9 +61,9 @@ nock-hsa
 
 ---
 
-## 🛠️ MCP Tools (16)
+## 🛠️ MCP Tools (18)
 
-> 16 public tools with 50+ actions covering search, exploration, delegation, memory, design, and session governance.
+> 18 public tools with 50+ actions covering search, exploration, delegation, memory, workspace, bridge, design, and session governance.
 
 ### Core Analysis
 
@@ -85,8 +85,10 @@ nock-hsa
 | `hsa_memory` | `store` `recall` `list` `delete` `stats` | Persistent cross-session episodic memory with semantic recall |
 | `hsa_get_agent_config` | `bootstrap` `commands` `rules` `skills` `modules` `all` | Load DOMYH agent configuration, rules, skills |
 | `hsa_report` | `status` `export` `tasks` | Engine health, cache stats, active task list |
-| `hsa_delegate` | `prepare` `filter` | Sub-agent context preparation and tool filtering |
+| `hsa_delegate` | `prepare` `contract` `verify` `gate` `models` `cancel` | Sub-agent task contracts and 2-tier review gate |
 | `hsa_research` | `index` `overview` `read` `search` `list` `refresh` `delete` `pkg` `releases` `compare` `file` | External repo research, package metadata, release notes, remote file reading |
+| `hsa_workspace` | `get` `switch` `list` | Multi-workspace management and project context switching |
+| `hsa_bridge` | `status` `connect` `execute` `disconnect` | External runtime/engine bridge supervision |
 | `hsa_guide` | — | HSA optimal workflow guide |
 
 ### Visual & Design

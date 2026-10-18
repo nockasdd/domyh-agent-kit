@@ -33,7 +33,7 @@ const PROFILES = {
       "modules/terminal-safety.yaml",
       "modules/progressive-escalation.yaml",
     ],
-    truncate: 8000, // chars per source max
+    truncate: 16000, // chars per source max
   },
   standard: {
     description: "Standard bundle — Tier 0-2 + all 5 modules (~5K tokens)",
@@ -47,7 +47,7 @@ const PROFILES = {
       "modules/terminal-safety.yaml",
       "modules/git-workflow.yaml",
     ],
-    truncate: 12000,
+    truncate: 18000,
   },
   full: {
     description: "Full bundle — everything including domain rules (~10K tokens)",
@@ -63,7 +63,7 @@ const PROFILES = {
       "domain/orchestration-comm.yaml",
       "domain/orchestration-deleg.yaml",
     ],
-    truncate: 20000,
+    truncate: 25000,
   },
 };
 

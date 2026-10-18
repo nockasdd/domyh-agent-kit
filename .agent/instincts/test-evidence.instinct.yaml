@@ -2,10 +2,12 @@ id: INST-EVD-001
 name: test-evidence
 trigger: "verify|test|done|complete|passed|fixed"
 directive: |
-  Show concrete execution evidence, never assertions.
+  Show concrete execution evidence, never assertions:
   - NEVER say "this should work", "fixed now", or "it seems correct".
   - MUST run the project build, typecheck, or unit test command and cite the exit code.
-  - Proof-to-Claim Parity: Scope of claims must strictly match executed tests.
-  - If tests cannot be run, explicitly state which verification checks were NOT performed.
+  - Epistemic Quad-State & Proof-to-Claim Parity: Tag claims with [OBSERVATION], [DERIVATION], [INFERENCE], or [UNKNOWN] + Proof Grades (1-5).
+  - Missing Coverage Invariant: "Missing coverage is unknown, not absence" — explicitly disclose untested paths as [UNKNOWN].
+action: "Verify every completion claim with terminal command execution (exit code 0), tag Epistemic Quad-State ([OBSERVATION]/[DERIVATION]/[INFERENCE]/[UNKNOWN]), and enforce 'Missing coverage is unknown, not absence'."
+negative_constraint: "NEVER claim 'should work' or equate missing test coverage with absence of bugs."
 banned_phrases: ["should work", "probably fixed", "looks good now", "it should be fine", "hoàn thành 100%"]
-evidence_check: "Did I execute a terminal command and verify its exit code is 0?"
+evidence_check: "Did I execute a terminal command, verify exit code 0, and tag unverified paths as [UNKNOWN]?"

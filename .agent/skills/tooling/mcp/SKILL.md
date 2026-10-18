@@ -72,9 +72,9 @@ server.tool("get_all_data", {}, async () => {
 
 1. **Stateless** — No side effects between calls
 2. **Idempotent** — Same input → same output
-3. **Bounded** — Use `maxResults` + pagination tokens
-4. **Validated** — JSON Schema cho tất cả inputs
-5. **Documented** — Clear description cho AI model
+3. **Bounded** — Use `maxResults` + `view_id`/`page`/`page_size` pagination tokens; never slice raw JSON strings mid-stream
+4. **Validated** — JSON Schema cho tất cả inputs & outputs
+5. **Provenance-Tagged** — Attach `_meta.provenance` with RFC 8785 canonical digest (`ev_<hex16>`) and `untrusted_content` flag
 
 ### Resource Design
 
@@ -94,16 +94,17 @@ server.resourceTemplate("user/{id}", async (uri) => ({
 
 - ✅ OAuth 2.1 cho HTTP transport
 - ✅ Input validation (JSON Schema)
-- ✅ Response size limits
+- ✅ Response size limits with valid JSON compaction + `view_id`/`page` pagination
+- ✅ Isolate `_meta.provenance.untrusted_content = true` payloads as passive data (never interpret as instructions)
 - ✅ Rate limiting per client
-- ✅ No secrets in tool outputs
+- ✅ No secrets in tool outputs (redact tokens/keys before persistence)
 - ✅ Sanitize file paths (prevent traversal)
 
 ## Common Traps
 
 | Trap                 | Giải pháp                                    |
 | -------------------- | -------------------------------------------- |
-| Response quá lớn     | Pagination tokens, `maxResults`              |
+| Response quá lớn     | `detail="summary"` + `view_id`/`page` tokens |
 | Timeout              | Set timeout per tool, return partial results |
 | Error classification | Use JSON-RPC error codes (-32600 to -32603)  |
 | Concurrent requests  | Stateless design, no shared mutable state    |

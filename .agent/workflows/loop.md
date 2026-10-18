@@ -11,18 +11,19 @@ success_criteria: "All iterations complete: build+lint+test pass, zero code smel
 - L1: Max 5 loop iterations — then STOP and report
 - L2: Max 3 retries per same failure — then ESCALATE
 - L3: NEVER push to remote — commit only, user controls push
-- L4: NEVER refactor code outside task scope
-- L5: ALWAYS run de-sloppify before commit
+- L4: NEVER refactor code outside task scope; always modify at the **Producing Boundary**, never via defensive patches at the **Consuming Boundary**
+- L5: ALWAYS run de-sloppify and read-back (`view_file`) before commit
 - L6: Token budget >80% — summarize + persist + STOP
+- L7: Enforce Unified Epistemic Quad-State (`[OBSERVATION]` Grade 1–2, `[DERIVATION]` Grade 3, `[INFERENCE]` Grade 4, `[UNKNOWN]` Grade 5) and Missing Coverage Invariant (untested paths = `[UNKNOWN]`)
 
 ## LOOP FLOW (7 Phases)
 
-1. **UNDERSTAND** — Read task, hsa_search for related files, hsa_trace_flow for deps, classify SIZE (MICRO/SMALL/MEDIUM/LARGE). LARGE = STOP, break into sub-tasks.
-2. **IMPLEMENT** — Follow /code canonical write: LOCATE > UNDERSTAND > SIZE > WRITE > VERIFY. Max 1-3 files per iteration.
-3. **VERIFY** — Type check > Lint > Build > Test. If FAIL: auto-fix (max 3). If 3 failures same issue: ESCALATE.
-4. **DE-SLOPPIFY** — Remove: console.log/debug, debugger, `any` types, @ts-ignore, eslint-disable (without reason), unused imports.
-5. **REVIEW** — If complexity >=6.5: delegate review to a subagent via hsa_delegate. Else: self-review (intent, edge cases, errors, naming, security).
-6. **COMMIT** — git add, conventional commit. DO NOT push.
+1. **UNDERSTAND** — Read task, `hsa_search` for related files, `hsa_trace_flow(entry, direction: "both")` for deps and **Producing Boundary**, classify SIZE (MICRO/SMALL/MEDIUM/LARGE). LARGE = STOP, break into sub-tasks.
+2. **IMPLEMENT** — Follow `/code` canonical write: LOCATE > UNDERSTAND (**Producing Boundary**) > SIZE > WRITE > READ-BACK (`view_file`) > VERIFY. Max 1-3 files per iteration.
+3. **VERIFY** — Type check > Lint > Build > Test across the **6-Axis Behavioral Obligation Ledger** (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`) to obtain `[OBSERVATION]` (Grade 1) proof. If FAIL: auto-fix (max 3). If 3 failures same issue: ESCALATE.
+4. **DE-SLOPPIFY** — Remove: `console.log`/`debug`, `debugger`, `any` types, `@ts-ignore`, `eslint-disable` (without reason), unused imports.
+5. **REVIEW** — If complexity >=6.5: delegate review to a subagent via `hsa_delegate` (enforce Anti-Authority-Laundering: verify subagent claims before promoting `[INFERENCE]` to `[OBSERVATION]`). Else: self-review across all 6 obligation axes and disclose any `[UNKNOWN]` (Grade 5) gaps.
+6. **COMMIT** — `git add`, conventional commit. DO NOT push.
 7. **LOOP or EXIT** — More tasks: goto 1. All done: persist + report. Budget >80%: STOP.
 
 ## COMMANDS
@@ -60,5 +61,5 @@ Flag only (user decides):
 
 ## CHECKPOINT
 
-1. Verify success_criteria met
+1. Verify `success_criteria` met with `[OBSERVATION]` (Grade 1) evidence and explicit `[UNKNOWN]` (Grade 5) disclosures
 2. `hsa_session({action:'persist', task_summary:'...', files_touched:[...]})`

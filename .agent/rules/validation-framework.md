@@ -14,7 +14,7 @@ category: quality
 
 ## Description
 
-Before creating ANY new code, agent MUST pass 7-phase validation.
+Before creating or completing ANY new code, agent MUST pass 7-phase validation.
 
 ---
 
@@ -142,12 +142,38 @@ Before claiming completion, answer:
 | ---------------------------------------------------- | ---------------------- |
 | Are all assumptions & boundary conditions declared?  | ⚠️ Disclose boundary   |
 | Are side-effects & side-channels analyzed?           | ⚠️ Note residual risk  |
-| Is evidence proof grade strictly tagged?             | ❌ Retag proof grade   |
+| Is Epistemic Quad-State & Proof Grade tagged?        | ❌ Retag state/grade   |
+| Is fix applied at the Producing Boundary?            | ❌ Refactor to origin  |
+| Is the 6-Axis Behavioral Obligation Ledger checked?  | ⚠️ Mark unverified axes |
 | Did I omit superlatives ("100%", "perfect", "zero")? | ❌ Strip superlatives  |
+
+### Unified Epistemic Quad-State ↔ Proof Grade Mapping
+
+| Epistemic State | Proof Grade | Requirement |
+| :--- | :--- | :--- |
+| `[OBSERVATION]` | Grade 1 `[EMPIRICAL]` / Grade 2 `[STATIC-ANALYSIS]` | Runtime command/test output (exit code 0) or static typecheck/lint/AST check |
+| `[DERIVATION]` | Grade 3 `[DEDUCTIVE-LOGIC]` | Direct structural/code deduction with `file:line` citations |
+| `[INFERENCE]` | Grade 4 `[THEORETICAL-MODEL]` | Unverified hypothesis or spec extrapolation |
+| `[UNKNOWN]` | Grade 5 `[RESIDUAL-RISK]` | Untested paths, missing coverage, external vectors |
+
+### 6-Axis Behavioral Obligation Ledger
+
+| Axis | Verification Obligation |
+| :--- | :--- |
+| `structural` | AST, types, signatures, and module exports/imports align |
+| `behavioral` | Core logic satisfies functional contract on valid inputs |
+| `boundary` | Producing boundary emits valid invariants; consuming boundaries are not defensively patched |
+| `state` | State transitions, persistence, and caches remain consistent |
+| `error` | Exceptions, non-zero exit codes, and fallback paths fail safely |
+| `resource` | Memory, file handles, timers, and child processes are bounded and cleaned up |
 
 ```yaml
 epistemic_checklist:
+  - epistemic_quad_state: "[OBSERVATION] | [DERIVATION] | [INFERENCE] | [UNKNOWN]"
   - proof_grade: "[EMPIRICAL] | [STATIC-ANALYSIS] | [DEDUCTIVE-LOGIC] | [THEORETICAL-MODEL] | [RESIDUAL-RISK]"
+  - missing_coverage_invariant: "Missing coverage is unknown, not absence"
+  - producing_boundary: "Verified fix at producing boundary (not consuming workaround)"
+  - obligation_ledger_6_axis: "structural | behavioral | boundary | state | error | resource"
   - negative_space: "What does this code NOT solve?"
   - residual_vectors: "What environmental or external factors remain unaddressed?"
   - humility_enforcement: "Zero ungrounded claims of absolute perfection or total stealth"
@@ -163,7 +189,8 @@ epistemic_checklist:
 - [ ] Know where to place? (Phase 4)
 - [ ] Know who uses it? (Phase 5)
 - [ ] Will update registry? (Phase 6)
-- [ ] Disclosed limits & risks? (Phase 7)
+- [ ] Tagged Epistemic Quad-State `[OBSERVATION/DERIVATION/INFERENCE/UNKNOWN]` & Proof Grade (1–5)? (Phase 7)
+- [ ] Verified fix at the Producing Boundary & checked 6-Axis Obligation Ledger? (Phase 7)
 
 ---
 
@@ -178,6 +205,8 @@ block_conditions:
   - Out of scope for request
   - Placement unclear
   - YAGNI violation detected
+  - Consuming-boundary workaround instead of Producing-boundary fix
+  - Authority laundering (upgrading [INFERENCE]/[UNKNOWN] to [OBSERVATION] without proof)
 ```
 
 ---
@@ -188,7 +217,7 @@ block_conditions:
 
 ## Mô Tả
 
-Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 7 phase validation.
+Trước khi tạo hoặc hoàn tất BẤT KỲ code mới nào, agent PHẢI qua 7 phase validation.
 
 ## 7 Phase
 
@@ -198,7 +227,25 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 7 phase validati
 4. **Placement** — Đặt ở đâu?
 5. **Connectivity** — Ai sẽ dùng?
 6. **Registration** — Cần update index nào?
-7. **Epistemic Bounding** — Giới hạn & rủi ro tồn đọng là gì?
+7. **Epistemic Bounding** — Giới hạn, rủi ro tồn đọng, Quad-State & 6-Axis Ledger là gì?
+
+### Bảng Ánh Xạ Epistemic Quad-State ↔ Proof Grades (1–5)
+
+| Trạng thái Nhận thức (Quad-State) | Cấp độ Bằng chứng (Proof Grade) | Yêu cầu Kiểm chứng |
+| :--- | :--- | :--- |
+| `[OBSERVATION]` | Grade 1 `[EMPIRICAL]` / Grade 2 `[STATIC-ANALYSIS]` | Kết quả chạy lệnh/test thực tế (exit code 0) hoặc typecheck/lint/AST |
+| `[DERIVATION]` | Grade 3 `[DEDUCTIVE-LOGIC]` | Suy diễn trực tiếp từ cấu trúc code kèm trích dẫn `file:line` |
+| `[INFERENCE]` | Grade 4 `[THEORETICAL-MODEL]` | Giả thuyết kỹ thuật hoặc ngoại suy chưa chạy kiểm chứng thực nghiệm |
+| `[UNKNOWN]` | Grade 5 `[RESIDUAL-RISK]` | Nhánh chưa test, thiếu độ phủ (Missing coverage is unknown, not absence), yếu tố ngoại vi |
+
+### Sổ cái Nghĩa vụ Hành vi 6 Trục (6-Axis Behavioral Obligation Ledger)
+
+- `structural` (Cấu trúc): Kiểu dữ liệu, chữ ký hàm, import/export đồng nhất.
+- `behavioral` (Hành vi): Logic cốt lõi đáp ứng đúng hợp đồng đầu vào/đầu ra.
+- `boundary` (Ranh giới): Sửa tận gốc tại **Producing Boundary** (nơi sinh dữ liệu), không vá tạm tại nơi tiêu thụ (Consuming Boundary).
+- `state` (Trạng thái): Chuyển đổi trạng thái, bộ nhớ đệm và lưu trữ nhất quán.
+- `error` (Lỗi): Xử lý ngoại lệ, mã thoát và nhánh dự phòng an toàn.
+- `resource` (Tài nguyên): Bộ nhớ, file descriptor, bộ đếm thời gian và tiến trình con được giải phóng đầy đủ.
 
 ## Checklist Nhanh
 
@@ -208,7 +255,7 @@ Trước khi tạo BẤT KỲ code mới nào, agent PHẢI qua 7 phase validati
 - [ ] Biết đặt ở đâu? (Phase 4)
 - [ ] Biết ai dùng? (Phase 5)
 - [ ] Sẽ update registry? (Phase 6)
-- [ ] Minh bạch rủi ro tồn đọng & gắn nhãn Quad-State [OBSERVATION/DERIVATION/INFERENCE/UNKNOWN]? (Phase 7)
-- [ ] Đã sửa đúng ranh giới sinh dữ liệu (Producing Boundary)? (Phase 7)
+- [ ] Minh bạch rủi ro tồn đọng, tuân thủ *"Missing coverage is unknown, not absence"* & gắn nhãn Quad-State `[OBSERVATION/DERIVATION/INFERENCE/UNKNOWN]` + Proof Grade (1–5)? (Phase 7)
+- [ ] Đã sửa đúng ranh giới sinh dữ liệu (Producing Boundary) & đối chiếu đủ 6 trục (`structural`, `behavioral`, `boundary`, `state`, `error`, `resource`)? (Phase 7)
 
 ---

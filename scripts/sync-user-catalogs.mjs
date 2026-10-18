@@ -16,6 +16,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 
 const SOURCE_SKILLS = path.join(ROOT_DIR, '.agent', 'skills');
 const SOURCE_RULES = path.join(ROOT_DIR, '.agent', 'rules');
+const SOURCE_INSTINCTS = path.join(ROOT_DIR, '.agent', 'instincts');
 
 const HOME = homedir();
 const TARGETS = [
@@ -62,11 +63,13 @@ export function syncUserCatalogs() {
   for (const target of TARGETS) {
     const destSkills = path.join(target.base, 'skills');
     const destRules = path.join(target.base, 'rules');
+    const destInstincts = path.join(target.base, 'instincts');
 
     const sCount = syncDirectory(SOURCE_SKILLS, destSkills);
     const rCount = syncDirectory(SOURCE_RULES, destRules);
+    const iCount = syncDirectory(SOURCE_INSTINCTS, destInstincts);
 
-    console.log(`   ✅ ${target.name}: ${sCount} skill files, ${rCount} rule files updated.`);
+    console.log(`   ✅ ${target.name}: ${sCount} skill files, ${rCount} rule files, ${iCount} instinct files updated.`);
   }
 
   console.log('🎉 Dual catalog sync complete!');
@@ -75,4 +78,3 @@ export function syncUserCatalogs() {
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(__filename)) {
   syncUserCatalogs();
 }
-
