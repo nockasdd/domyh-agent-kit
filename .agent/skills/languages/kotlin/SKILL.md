@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# Kotlin Patterns — DOMYH Awesome Code
+# Kotlin Patterns — DOMYH Agent Kit
 
 > Kotlin 2.0/2.1 • KMP • Compose — 2025-2026
 

@@ -1,4 +1,4 @@
-# Ruby Advanced Patterns — DOMYH Awesome Code
+# Ruby Advanced Patterns — DOMYH Agent Kit
 
 > Deep dive into Ruby 3.3/3.4 advanced patterns
 

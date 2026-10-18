@@ -6,7 +6,7 @@ category: ai-ml
 tier: 2
 ---
 
-# ML Pipeline Patterns — DOMYH Awesome Code
+# ML Pipeline Patterns — DOMYH Agent Kit
 
 > **Scope**: End-to-end ML projects with scikit-learn, TensorFlow, PyTorch
 > **MLOps**: DVC, MLflow, DagsHub, GitHub Actions

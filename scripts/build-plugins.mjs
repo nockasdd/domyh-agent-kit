@@ -25,7 +25,7 @@ const VERSION = readVersionField(join(AGENT_DIR, 'core', 'VERSION.yaml'), /^\s*v
 const HSA_VERSION = JSON.parse(
   readFileSync(resolve(ROOT_DIR, '..', 'domyh-hsa-mcp', 'package.json'), 'utf-8')
 ).version;
-const AUTHOR = 'NockDev (DOMYH Awesome Code)';
+const AUTHOR = 'NockDev (DOMYH Agent Kit)';
 
 console.log('🚀 Starting DOMYH Multi-Target Plugin Builder v' + VERSION + '...');
 
@@ -72,7 +72,7 @@ function copyDir(src, dest, filterFn) {
 
 // ─── 1. TARGET 1: CLAUDE CODE PLUGIN & MARKETPLACE ─────────────────────────
 console.log('\n📦 [1/4] Building Claude Code Plugin & Marketplace...');
-const claudePluginDir = join(DIST_PLUGINS_DIR, 'claude-plugin', 'domyh-awesome-code');
+const claudePluginDir = join(DIST_PLUGINS_DIR, 'claude-plugin', 'domyh-agent-kit');
 const claudeMarketplaceDir = join(DIST_PLUGINS_DIR, 'claude-marketplace');
 mkdirSync(claudePluginDir, { recursive: true });
 mkdirSync(claudeMarketplaceDir, { recursive: true });
@@ -82,7 +82,7 @@ const claudePluginMetaDir = join(claudePluginDir, '.claude-plugin');
 mkdirSync(claudePluginMetaDir, { recursive: true });
 
 const claudePluginManifest = {
-  name: 'domyh-awesome-code',
+  name: 'domyh-agent-kit',
   version: VERSION,
   description: 'Senior Software Engineer Rigor for Claude Code: Subagent-Driven Development (SDD), 2-Tier Review Gate, and High-Speed Code Intelligence via HSA MCP.',
   author: {
@@ -175,11 +175,11 @@ const claudeMarketplaceManifest = {
     name: 'NockDev',
     url: 'https://github.com/nockasdd',
   },
-  description: 'Official Marketplace for DOMYH Awesome Code Plugins and Agentic Extensions.',
+  description: 'Official Marketplace for DOMYH Agent Kit Plugins and Agentic Extensions.',
   plugins: [
     {
-      name: 'domyh-awesome-code',
-      source: './plugins/domyh-awesome-code',
+      name: 'domyh-agent-kit',
+      source: './plugins/domyh-agent-kit',
       description: 'Subagent-Driven Development (SDD), 2-Tier Quality Review Gates, and Fast Code Intelligence for Claude Code.',
       version: VERSION,
     },
@@ -188,7 +188,7 @@ const claudeMarketplaceManifest = {
 writeFileSync(join(claudeMarketplaceMetaDir, 'marketplace.json'), JSON.stringify(claudeMarketplaceManifest, null, 2), 'utf-8');
 
 // Copy plugin into marketplace catalog
-const mktPluginDest = join(claudeMarketplaceDir, 'plugins', 'domyh-awesome-code');
+const mktPluginDest = join(claudeMarketplaceDir, 'plugins', 'domyh-agent-kit');
 copyDir(claudePluginDir, mktPluginDest);
 
 console.log(`   ✅ Claude Code Plugin built (${copiedSkills} skill files, rules/, instincts/, custom agents, slash commands)`);
@@ -196,14 +196,14 @@ console.log(`   ✅ Claude Marketplace manifest created (.claude-plugin/marketpl
 
 // ─── 2. TARGET 2: GOOGLE ANTIGRAVITY PLUGIN ────────────────────────────────
 console.log('\n📦 [2/4] Building Google Antigravity Plugin...');
-const agyPluginDir = join(DIST_PLUGINS_DIR, 'antigravity-plugin', 'domyh-awesome-code');
+const agyPluginDir = join(DIST_PLUGINS_DIR, 'antigravity-plugin', 'domyh-agent-kit');
 mkdirSync(agyPluginDir, { recursive: true });
 
 // 2.1 Manifest (plugin.json)
 const agyManifest = {
-  name: 'domyh-awesome-code',
+  name: 'domyh-agent-kit',
   version: VERSION,
-  description: 'DOMYH Awesome Code Customization Bundle for Google Antigravity. Features SDD Subagents, 2-Tier Review Gate, and HSA Code Intelligence.',
+  description: 'DOMYH Agent Kit Customization Bundle for Google Antigravity. Features SDD Subagents, 2-Tier Review Gate, and HSA Code Intelligence.',
   author: AUTHOR,
 };
 writeFileSync(join(agyPluginDir, 'plugin.json'), JSON.stringify(agyManifest, null, 2), 'utf-8');
@@ -270,7 +270,7 @@ copyDir(join(AGENT_DIR, 'workflows'), join(codexPluginDir, 'workflows'));
 const codexManifest = {
   name: 'domyh-codex',
   version: VERSION,
-  description: 'DOMYH Awesome Code for OpenAI Codex CLI / App.',
+  description: 'DOMYH Agent Kit for OpenAI Codex CLI / App.',
   mcp: {
     server: '@nockdev/hsa',
   },
@@ -322,13 +322,13 @@ const distSummary = {
   builtAt: new Date().toISOString(),
   targets: {
     claude_code: {
-      plugin_path: 'dist-plugins/claude-plugin/domyh-awesome-code',
+      plugin_path: 'dist-plugins/claude-plugin/domyh-agent-kit',
       marketplace_path: 'dist-plugins/claude-marketplace',
-      install_command: '/plugin install domyh@nockdev-marketplace',
+      install_command: '/plugin install domyh-agent-kit@nockdev-marketplace',
     },
     antigravity: {
-      plugin_path: 'dist-plugins/antigravity-plugin/domyh-awesome-code',
-      install_path: '~/.gemini/antigravity/plugins/domyh-awesome-code',
+      plugin_path: 'dist-plugins/antigravity-plugin/domyh-agent-kit',
+      install_path: '~/.gemini/antigravity/plugins/domyh-agent-kit',
     },
     codex: {
       plugin_path: 'dist-plugins/codex-plugin',

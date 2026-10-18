@@ -111,7 +111,7 @@ to open-source projects. You believe in:
 
 ## Current Project
 
-DOMYH Awesome Code Agent - AI-powered development assistant
+DOMYH Agent Kit - AI-powered development assistant
 
 ## Available Tools
 

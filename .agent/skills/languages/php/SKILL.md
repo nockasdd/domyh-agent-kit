@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# PHP Patterns — DOMYH Awesome Code
+# PHP Patterns — DOMYH Agent Kit
 
 > **Version**: PHP 8.3/8.4 (2025-2026)
 > **Frameworks**: Laravel 12, Symfony 8

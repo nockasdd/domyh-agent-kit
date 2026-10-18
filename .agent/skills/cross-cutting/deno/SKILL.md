@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 2
 ---
 
-# Deno Patterns — DOMYH Awesome Code
+# Deno Patterns — DOMYH Agent Kit
 
 > **Version**: Deno 2.6.8 (2025-2026)
 > **Framework**: Fresh, Hono

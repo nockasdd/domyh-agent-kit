@@ -6,7 +6,7 @@ category: frameworks
 tier: 1
 ---
 
-# Vue Patterns — DOMYH Awesome Code
+# Vue Patterns — DOMYH Agent Kit
 
 > **Version**: Vue 3.5+/3.6 (2025-2026)
 > **Philosophy**: Progressive, Composition API, reactive

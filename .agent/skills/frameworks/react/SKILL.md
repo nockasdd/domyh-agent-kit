@@ -6,7 +6,7 @@ category: frameworks
 tier: 1
 ---
 
-# React Patterns — DOMYH Awesome Code
+# React Patterns — DOMYH Agent Kit
 
 > **Version**: React 19.2+ (2025-2026)
 > **Philosophy**: Server-first, compiler-optimized, hooks-based

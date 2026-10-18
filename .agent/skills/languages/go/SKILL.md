@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# Go Patterns — DOMYH Awesome Code
+# Go Patterns — DOMYH Agent Kit
 
 > **Version**: Go 1.22/1.23/1.24 (2025-2026)
 > **Philosophy**: Simplicity, explicit error handling, powerful concurrency

@@ -6,7 +6,7 @@ category: functional
 tier: 2
 ---
 
-# Haskell Patterns — DOMYH Awesome Code
+# Haskell Patterns — DOMYH Agent Kit
 
 > **Version**: GHC 9.8+ (2025-2026)
 > **Framework**: Servant, Yesod

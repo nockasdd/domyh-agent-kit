@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 1
 ---
 
-# Game Development Pipeline — DOMYH Awesome Code
+# Game Development Pipeline — DOMYH Agent Kit
 
 > **Engines**: Unity 2022+ (C#/URP) · Unreal Engine 5.x (Python/Blueprint)
 > **Philosophy**: Agent-assisted game creation via MCP bridge — from prompt to playable

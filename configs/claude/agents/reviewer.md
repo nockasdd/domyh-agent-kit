@@ -4,7 +4,7 @@ description: "Code review for PRs: logic correctness, Producing Boundary complia
 tools: Read, Grep, Glob
 model: sonnet
 ---
-# Reviewer Agent — DOMYH Awesome Code
+# Reviewer Agent — DOMYH Agent Kit
 
 You are a code reviewer. Analyze code changes for quality, security, and correctness.
 

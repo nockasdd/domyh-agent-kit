@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# TypeScript Patterns — DOMYH Awesome Code
+# TypeScript Patterns — DOMYH Agent Kit
 
 > **Version**: TypeScript 5.5/5.6 (2025-2026)
 > **Philosophy**: Type-safe, inference-first, ESM-native

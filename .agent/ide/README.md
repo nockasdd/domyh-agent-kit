@@ -1,4 +1,4 @@
-# 🤖 IDE Configurations — DOMYH Awesome Code
+# 🤖 IDE Configurations — DOMYH Agent Kit
 
 > Supported AI coding assistants (23 IDEs)
 > Full details: see `configs/README.md`

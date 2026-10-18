@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 1
 ---
 
-# Database Patterns DOMYH Awesome Code
+# Database Patterns DOMYH Agent Kit
 
 > SQL + NoSQL Patterns PostgreSQL 18, MySQL 9.4, MongoDB 8, Redis 8 2025-2026
 

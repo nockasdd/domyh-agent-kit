@@ -7,7 +7,7 @@ category: frameworks
 tier: 1
 ---
 
-# Next.js Patterns — DOMYH Awesome Code
+# Next.js Patterns — DOMYH Agent Kit
 
 > **Version**: Next.js 16+ (Oct 2025)
 > **Runtime**: React meta-framework with App Router

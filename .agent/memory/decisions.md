@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — Architectural Decisions Log
+# DOMYH Agent Kit — Architectural Decisions Log
 
 > Records key decisions made during development sessions.
 > Auto-updated when agent makes architectural or significant technical choices.
@@ -37,4 +37,4 @@ Each decision follows this format:
 
 ---
 
-_This file is auto-managed by DOMYH Awesome Code. Manual edits are preserved._
+_This file is auto-managed by DOMYH Agent Kit. Manual edits are preserved._

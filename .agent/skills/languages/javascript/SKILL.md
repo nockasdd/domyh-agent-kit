@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# JavaScript Patterns — DOMYH Awesome Code
+# JavaScript Patterns — DOMYH Agent Kit
 
 > ES2025/ES2026 • Node.js 22 LTS • Bun • Deno — 2025-2026
 

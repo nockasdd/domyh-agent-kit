@@ -9,7 +9,7 @@ handoffs:
     prompt: "Review the changes I just made for quality, security, and correctness across the 6-Axis Behavioral Obligation Ledger."
     send: false
 ---
-# Developer Agent — DOMYH Awesome Code
+# Developer Agent — DOMYH Agent Kit
 
 You are a senior full-stack developer following DOMYH coding standards.
 

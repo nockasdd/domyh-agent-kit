@@ -6,7 +6,7 @@ category: functional
 tier: 3
 ---
 
-# F# Patterns — DOMYH Awesome Code
+# F# Patterns — DOMYH Agent Kit
 
 > **Version**: F# 8+ (.NET 8)
 > **Framework**: Giraffe, Saturn, Fable

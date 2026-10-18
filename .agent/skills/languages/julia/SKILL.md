@@ -6,7 +6,7 @@ category: scientific
 tier: 2
 ---
 
-# Julia Patterns — DOMYH Awesome Code
+# Julia Patterns — DOMYH Agent Kit
 
 > **Version**: Julia 1.10+ (2025-2026)
 > **Focus**: Scientific computing, ML, high performance

@@ -1,6 +1,6 @@
 # MCP Bridge Plugins
 
-Welcome to the DOMYH Awesome Code Agent's **MCP (Model Context Protocol) Bridge Plugins** directory. 
+Welcome to the DOMYH Agent Kit's **MCP (Model Context Protocol) Bridge Plugins** directory. 
 
 These plugins act as translators and dedicated communication channels between the DOMYH AI Agent (HSA Engine) and specialized target applications, allowing the AI to remotely control, inspect, and modify external environments in real-time.
 

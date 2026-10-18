@@ -6,7 +6,7 @@
 # =============================================================================
 
 app:
-  name: "DOMYH Awesome Code"
+  name: "DOMYH Agent Kit"
   tagline: "AI-Powered Development Assistant"
   developer: "NockDev"
   language_name: "English"

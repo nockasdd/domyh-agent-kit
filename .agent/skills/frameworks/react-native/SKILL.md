@@ -6,7 +6,7 @@ category: mobile
 tier: 1
 ---
 
-# React Native Patterns — DOMYH Awesome Code
+# React Native Patterns — DOMYH Agent Kit
 
 > **Version**: React Native 0.76+ (2025-2026)
 > **Philosophy**: New Architecture, Fabric, Turbo Modules, Expo

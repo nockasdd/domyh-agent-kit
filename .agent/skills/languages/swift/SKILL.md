@@ -6,7 +6,7 @@ category: mobile
 tier: 1
 ---
 
-# Swift Patterns — DOMYH Awesome Code
+# Swift Patterns — DOMYH Agent Kit
 
 > **Version**: Swift 6/6.1 (2025-2026)
 > **Frameworks**: SwiftUI, UIKit

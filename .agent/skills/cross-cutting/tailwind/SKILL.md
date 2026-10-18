@@ -12,7 +12,7 @@ category: cross-cutting
 tier: 1
 ---
 
-# Tailwind CSS Patterns — DOMYH Awesome Code
+# Tailwind CSS Patterns — DOMYH Agent Kit
 
 > **Version**: Tailwind CSS 4.1 (2025-2026)
 > **Philosophy**: CSS-first configuration, utility-first styling

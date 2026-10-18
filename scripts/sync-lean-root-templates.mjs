@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const CONFIGS_DIR = join(ROOT, 'configs');
 
-const LEAN_TEMPLATE = `# DOMYH Awesome Code — NockDev
+const LEAN_TEMPLATE = `# DOMYH Agent Kit — NockDev
 
 > {{LANGUAGE_INSTRUCTION}}
 
@@ -35,7 +35,7 @@ const LEAN_TEMPLATE = `# DOMYH Awesome Code — NockDev
 - **Comment Policy**: Default NO comments. Add only when WHY is non-obvious.
 - **Terminal Safety (Windows)**: No pipes (|), no interactive without \`-y\`, no infinite commands. Never spawn unverified external binaries.
 
-_DOMYH Awesome Code · NockDev_
+_DOMYH Agent Kit · NockDev_
 `;
 
 const TARGETS = [

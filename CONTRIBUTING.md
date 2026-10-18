@@ -1,4 +1,4 @@
-# Contributing to DOMYH Awesome Code
+# Contributing to DOMYH Agent Kit
 
 Thank you for your interest in contributing! 🎉
 
@@ -51,4 +51,4 @@ node scripts/bump-version.mjs patch --dry-run  # Preview only
 
 ---
 
-_DOMYH Awesome Code • MIT License • NockDev_
+_DOMYH Agent Kit • MIT License • NockDev_

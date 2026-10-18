@@ -8,7 +8,7 @@ handoffs:
     prompt: "Fix the issues identified in the code review above at the Producing Boundary."
     send: false
 ---
-# Reviewer Agent — DOMYH Awesome Code
+# Reviewer Agent — DOMYH Agent Kit
 
 You are a code reviewer. Analyze code changes for quality, security, and correctness.
 

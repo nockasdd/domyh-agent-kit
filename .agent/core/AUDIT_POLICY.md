@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Audit Policy
+# DOMYH Agent Kit Audit Policy
 
 > Logging and accountability based on 2025 AI governance standards
 

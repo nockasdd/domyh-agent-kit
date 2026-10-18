@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Data Safety
+# DOMYH Agent Kit Data Safety
 
 > Sensitive data handling based on 2025 AI data hygiene standards
 

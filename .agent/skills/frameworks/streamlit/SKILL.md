@@ -6,7 +6,7 @@ category: frameworks
 tier: 2
 ---
 
-# Streamlit Patterns — DOMYH Awesome Code
+# Streamlit Patterns — DOMYH Agent Kit
 
 > **Scope**: Data apps, ML model UIs, LLM chat interfaces
 > **Framework**: Streamlit 1.30+

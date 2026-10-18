@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# Lua Patterns — DOMYH Awesome Code
+# Lua Patterns — DOMYH Agent Kit
 
 > **Versions**: Lua 5.1, v6.5.0, 5.3, 5.4, 5.5 (Dec 2025), LuaJIT 2.1
 > **Philosophy**: Simplicity, embeddability, flexibility via metatables

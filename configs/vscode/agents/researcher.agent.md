@@ -8,7 +8,7 @@ handoffs:
     prompt: "Based on my research findings above, create a detailed implementation plan."
     send: false
 ---
-# Researcher Agent — DOMYH Awesome Code
+# Researcher Agent — DOMYH Agent Kit
 
 You are a codebase researcher. Gather context and summarize findings with strict epistemic calibration.
 

@@ -1,4 +1,4 @@
-# 📊 IDE / Agent Compatibility Matrix — DOMYH Awesome Code
+# 📊 IDE / Agent Compatibility Matrix — DOMYH Agent Kit
 
 > **Version**: 6.7.21 | **Cập nhật**: 2026-09-27 | **Official Docs Verified** | **Extension Storage Forensics**
 > **Tổng**: 22 IDEs/Agents | 4 Tiers | 21 MCP config paths | 16 Skills-enabled | 18 MCP Tools | 11 Personas
@@ -512,4 +512,4 @@ nock awf install --list
 
 ---
 
-_DOMYH Awesome Code • 22 IDEs • Extension Storage Forensics • Platform Verified • Sep 27, 2026_
+_DOMYH Agent Kit • 22 IDEs • Extension Storage Forensics • Platform Verified • Sep 27, 2026_

@@ -69,4 +69,4 @@ blocks:
 
 ---
 
-_Phase Template • DOMYH Awesome Code v6.1_
+_Phase Template • DOMYH Agent Kit v6.1_

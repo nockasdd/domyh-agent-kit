@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# Ruby Patterns — DOMYH Awesome Code
+# Ruby Patterns — DOMYH Agent Kit
 
 > **Version**: Ruby 3.3/3.4 (2025-2026)
 > **Frameworks**: Rails 8, Hotwire, Hanami 2

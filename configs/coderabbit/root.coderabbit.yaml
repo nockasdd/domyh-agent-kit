@@ -38,7 +38,7 @@ reviews:
 chat:
   auto_reply: true
 
-# DOMYH Awesome Code — NockDev
+# DOMYH Agent Kit — NockDev
 # Principles: think before coding, parallel tool batching, simplicity first, surgical changes (fix at Producing Boundary), verify before done, Epistemic Quad-State ([OBSERVATION], [DERIVATION], [INFERENCE], [UNKNOWN] + Proof Grades 1-5; Missing coverage is unknown, not absence), stop when uncertain, session discipline.
 # MCP: hsa_get_agent_config('bootstrap'), hsa_session(action='intent'), hsa_search(action='skills'), hsa_trace_flow(detail='summary').
 # Fallback: .agent/workflows/{command}.md, .agent/rules/AGENT_RULES.md

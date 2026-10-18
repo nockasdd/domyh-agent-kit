@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DOMYH Agent Kit (Awesome Code) — AI Code Agent Framework</title>
+  <title>DOMYH Agent Kit — AI Code Agent Framework</title>
   <meta name="description"
     content="118 Skills · 45 Commands · 26 IDEs · 18 MCP Tools — The most comprehensive AI coding assistant framework. Server-side enforcement, workflow state machine, and sub-agent task contracts.">
   <link rel="icon" href="icons/hsa-engine.png" type="image/png">
@@ -646,66 +646,6 @@
       color: white;
     }
 
-    /* ═══ Extension Links ═══ */
-    .ext-section {
-      padding: 60px 0;
-    }
-
-    .ext-cards {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .ext-card {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 20px 28px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      transition: all 0.3s;
-      text-decoration: none;
-      color: var(--text-primary);
-      min-width: 300px;
-    }
-
-    .ext-card:hover {
-      border-color: var(--border-hover);
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-      color: var(--text-primary);
-    }
-
-    .ext-card .ext-icon {
-      font-size: 32px;
-      flex-shrink: 0;
-    }
-
-    .ext-card .ext-info h4 {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .ext-card .ext-info p {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .ext-badge {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--emerald-400);
-      background: rgba(16, 185, 129, 0.1);
-      padding: 2px 8px;
-      border-radius: 10px;
-      margin-left: auto;
-      border: 1px solid rgba(16, 185, 129, 0.15);
-    }
-
     /* ═══ Animations ═══ */
     @keyframes fadeInUp {
       from {
@@ -985,35 +925,6 @@
     </div>
   </section>
 
-  <!-- VS Code Extension -->
-  <section class="ext-section">
-    <div class="container">
-      <div class="section-header">
-        <h2 data-i18n="ext_title">VS Code Extension</h2>
-        <p data-i18n="ext_desc">HSA Companion — MCP integration for VS Code & compatible editors</p>
-      </div>
-      <div class="ext-cards">
-        <a href="https://marketplace.visualstudio.com/items?itemName=nockasdd.nock-hsa-ext" target="_blank"
-          class="ext-card">
-          <span class="ext-icon">🟦</span>
-          <div class="ext-info">
-            <h4>VS Code Marketplace</h4>
-            <p>nockasdd.nock-hsa-ext</p>
-          </div>
-          <span class="ext-badge">Install</span>
-        </a>
-        <a href="https://open-vsx.org/extension/Nockasdd/nock-hsa-ext" target="_blank" class="ext-card">
-          <span class="ext-icon">🟢</span>
-          <div class="ext-info">
-            <h4>Open VSX Registry</h4>
-            <p>Nockasdd/nock-hsa-ext</p>
-          </div>
-          <span class="ext-badge">Install</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
   <!-- CTA -->
   <section class="cta-section">
     <div class="container">
@@ -1072,7 +983,6 @@
         feat_ide_desc: '26 IDEs supported — VS Code, Cursor, Windsurf, Claude Code, Codex, Kiro, JetBrains, and more — all sharing one config.',
         workflow_title: 'How It Works', workflow_desc: '5 steps to start — agents auto-comply',
         ides_title: '26 IDEs Supported', ides_desc: 'One framework, every IDE', ides_more: '+13 more',
-        ext_title: 'VS Code Extension', ext_desc: 'HSA Companion — MCP integration for VS Code & compatible editors',
         cta_title: 'Get Started', cta_desc: 'Install in 2 steps — works on any IDE', cta_then: 'then in your project:',
         cta_update_title: '🔄 Update & Upgrade', cta_update_desc: 'Keep your system up to date with a single command',
         cta_upgrade_detail: 'This upgrades <strong style="color:var(--emerald-300)">CLI</strong>, <strong style="color:var(--emerald-300)">plugins</strong>, <strong style="color:var(--emerald-300)">HSA engine</strong>, and refreshes <strong style="color:var(--emerald-300)">skills & workflows</strong> — all in one step.',
@@ -1087,7 +997,6 @@
         feat_ide_desc: '26 IDEs hỗ trợ — VS Code, Cursor, Windsurf, Claude Code, Codex, Kiro, JetBrains, và nhiều hơn — cùng dùng chung 1 config.',
         workflow_title: 'Cách hoạt động', workflow_desc: '5 bước để bắt đầu — agent tự động tuân thủ',
         ides_title: '26 IDEs hỗ trợ', ides_desc: 'Một framework, mọi IDE', ides_more: '+13 IDEs nữa',
-        ext_title: 'Extension cho VS Code', ext_desc: 'HSA Companion — tích hợp MCP cho VS Code & các editor tương thích',
         cta_title: 'Bắt đầu ngay', cta_desc: 'Cài đặt 2 bước — hoạt động trên mọi IDE', cta_then: 'sau đó trong dự án của bạn:',
         cta_update_title: '🔄 Cập nhật & Nâng cấp', cta_update_desc: 'Giữ hệ thống luôn mới nhất với một lệnh duy nhất',
         cta_upgrade_detail: 'Nâng cấp <strong style="color:var(--emerald-300)">CLI</strong>, <strong style="color:var(--emerald-300)">plugins</strong>, <strong style="color:var(--emerald-300)">HSA engine</strong>, và làm mới <strong style="color:var(--emerald-300)">skills & workflows</strong> — tất cả trong một bước.',

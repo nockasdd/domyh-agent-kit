@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# Python Patterns — DOMYH Awesome Code
+# Python Patterns — DOMYH Agent Kit
 
 > **Version**: Python 3.12/3.13 (2025-2026)
 > **Frameworks**: FastAPI, Django 5+

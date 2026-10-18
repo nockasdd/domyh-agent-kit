@@ -1,4 +1,4 @@
-# ⚙️ DOMYH Awesome Code Core
+# ⚙️ DOMYH Agent Kit Core
 
 Core system files — always loaded or on-demand reference.
 

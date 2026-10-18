@@ -6,7 +6,7 @@ category: functional
 tier: 2
 ---
 
-# Scala 3 Patterns — DOMYH Awesome Code
+# Scala 3 Patterns — DOMYH Agent Kit
 
 > **Version**: Scala 3.4+ (2025-2026)
 > **Frameworks**: ZIO 2, Cats Effect 3, Akka

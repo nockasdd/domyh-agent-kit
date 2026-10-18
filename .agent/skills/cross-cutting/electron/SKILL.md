@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 1
 ---
 
-# Electron Patterns DOMYH Awesome Code
+# Electron Patterns DOMYH Agent Kit
 
 > **Version**: Electron 35-40 (2025-2026)
 > **Chromium**: 134.0.6998+

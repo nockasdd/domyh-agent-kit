@@ -1,4 +1,4 @@
-# 📄 DOMYH Awesome Code Templates
+# 📄 DOMYH Agent Kit Templates
 
 > Output templates for agent-generated reports and plans
 

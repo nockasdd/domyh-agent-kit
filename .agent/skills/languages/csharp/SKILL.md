@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# C# Development Patterns — DOMYH Awesome Code
+# C# Development Patterns — DOMYH Agent Kit
 
 > Modern C# (C# 12/13/14) with .NET 9/10 — 2025-2026
 

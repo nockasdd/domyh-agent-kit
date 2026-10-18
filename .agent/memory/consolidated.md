@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — Consolidated Memory View
+# DOMYH Agent Kit — Consolidated Memory View
 
 > ⚠️ **Status**: Placeholder — consolidation engine not yet implemented
 > Auto-generated consolidated view of all active memories

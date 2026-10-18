@@ -3,7 +3,7 @@
   "version": "6.7.21",
   "private": true,
   "type": "module",
-  "description": "DOMYH Agent Kit (Awesome Code Framework) — Constitutional AI Rules, Workflows, Skills & IDE Configs",
+  "description": "DOMYH Agent Kit — Constitutional AI Rules, Workflows, Skills & IDE Configs",
   "repository": {
     "type": "git",
     "url": "https://github.com/nockasdd/domyh-agent-kit.git"

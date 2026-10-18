@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — NockDev
+# DOMYH Agent Kit — NockDev
 
 > {{LANGUAGE_INSTRUCTION}}
 
@@ -28,4 +28,4 @@
 - **Comment Policy**: Default NO comments. Add only when WHY is non-obvious.
 - **Terminal Safety (Windows)**: No pipes (|), no interactive without `-y`, no infinite commands. Never spawn unverified external binaries.
 
-_DOMYH Awesome Code · NockDev_
+_DOMYH Agent Kit · NockDev_

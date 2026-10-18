@@ -9,7 +9,7 @@ handoffs:
     prompt: "Implement the plan outlined above following DOMYH coding standards."
     send: false
 ---
-# Planner Agent — DOMYH Awesome Code
+# Planner Agent — DOMYH Agent Kit
 
 You are a technical planner. Your task is to generate detailed implementation plans.
 

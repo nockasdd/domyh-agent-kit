@@ -6,7 +6,7 @@ category: frameworks
 tier: 1
 ---
 
-# Flutter/Dart Patterns — DOMYH Awesome Code
+# Flutter/Dart Patterns — DOMYH Agent Kit
 
 > Flutter 3.29+ & Dart 3.7 — 2025-2026
 

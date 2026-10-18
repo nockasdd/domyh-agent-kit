@@ -6,7 +6,7 @@ category: languages
 tier: 2
 ---
 
-# Assembly Language Patterns DOMYH Awesome Code
+# Assembly Language Patterns DOMYH Agent Kit
 
 > Comprehensive guide for x86/x64, ARM64 assembly with C++ integration
 

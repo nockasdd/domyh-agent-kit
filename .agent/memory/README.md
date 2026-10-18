@@ -1,4 +1,4 @@
-# 🧠 DOMYH Awesome Code Memory System
+# 🧠 DOMYH Agent Kit Memory System
 
 > Version 6.4.10 — 5-Layer Hierarchical Memory Architecture
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-This directory contains the persistent memory system for DOMYH Awesome Code, enabling:
+This directory contains the persistent memory system for DOMYH Agent Kit, enabling:
 
 - **Cross-session context** — Remember work across conversations
 - **Low token footprint** — Only ~5,500 tokens total (~4.3% of limit)

@@ -6,7 +6,7 @@ category: core
 tier: 1
 ---
 
-# Skill Creator — DOMYH Awesome Code
+# Skill Creator — DOMYH Agent Kit
 
 > **Type**: Meta-skill (creates other skills)
 > **Philosophy**: Model-agnostic, HSA-native, multi-IDE portable
@@ -149,7 +149,7 @@ The description determines whether the skill gets found by `hsa_search`. Write i
 Follow this standard structure. Not all sections are required — include what's relevant:
 
 ```markdown
-# {Name} Patterns — DOMYH Awesome Code
+# {Name} Patterns — DOMYH Agent Kit
 
 > **Version**: ...
 > **Philosophy**: one-line guiding principle

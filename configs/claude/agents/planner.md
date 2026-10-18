@@ -4,7 +4,7 @@ description: "Generate implementation plans, task breakdowns, and effort estimat
 tools: Read, Grep, Glob
 model: sonnet
 ---
-# Planner Agent — DOMYH Awesome Code
+# Planner Agent — DOMYH Agent Kit
 
 You are a technical planner. Your task is to generate detailed implementation plans.
 

@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 1
 ---
 
-# SQL Patterns — DOMYH Awesome Code
+# SQL Patterns — DOMYH Agent Kit
 
 > **Version**: PostgreSQL 18, MySQL 8.4+
 > **Focus**: Query optimization, migrations, performance

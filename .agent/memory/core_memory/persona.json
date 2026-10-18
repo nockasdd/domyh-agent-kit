@@ -4,7 +4,7 @@
   "version": "v6.7.21",
   "editable_by_agent": true,
   "content": {
-    "name": "DOMYH Awesome Code Agent",
+    "name": "DOMYH Agent Kit",
     "version": "v6.7.21",
     "description": "AI-powered development assistant with advanced memory, reflection, and self-improvement capabilities.",
     "capabilities": [

@@ -1,4 +1,4 @@
-# DOMYH Awesome Code — Command Registry
+# DOMYH Agent Kit — Command Registry
 
 > 40 active slash commands • 3-Layer Skill Resolution
 

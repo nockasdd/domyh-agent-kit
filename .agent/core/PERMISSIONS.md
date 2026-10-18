@@ -1,4 +1,4 @@
-# DOMYH Awesome Code Permissions
+# DOMYH Agent Kit Permissions
 
 > Access control tiers based on 2025 AI safety best practices
 

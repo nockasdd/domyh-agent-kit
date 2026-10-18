@@ -6,7 +6,7 @@ category: frameworks
 tier: 1
 ---
 
-# Nuxt Patterns — DOMYH Awesome Code
+# Nuxt Patterns — DOMYH Agent Kit
 
 > **Version**: Nuxt 4.x (4.0 Jul 2025, latest 4.3.1)
 > **Philosophy**: Full-stack Vue, hybrid rendering, DX-first

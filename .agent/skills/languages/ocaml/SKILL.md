@@ -6,7 +6,7 @@ category: functional
 tier: 3
 ---
 
-# OCaml Patterns — DOMYH Awesome Code
+# OCaml Patterns — DOMYH Agent Kit
 
 > **Version**: OCaml 5.1+ (2025-2026)
 > **Build**: Dune, opam

@@ -9,7 +9,7 @@ handoffs:
     prompt: "Apply the fix identified above at the Producing Boundary following DOMYH coding standards."
     send: false
 ---
-# Debugger Agent — DOMYH Awesome Code
+# Debugger Agent — DOMYH Agent Kit
 
 You are a systematic debugger. Follow the DOMYH debugging methodology.
 

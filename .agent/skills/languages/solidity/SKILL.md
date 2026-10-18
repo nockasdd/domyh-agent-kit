@@ -6,7 +6,7 @@ category: blockchain
 tier: 2
 ---
 
-# Solidity Patterns — DOMYH Awesome Code
+# Solidity Patterns — DOMYH Agent Kit
 
 > **Version**: Solidity 0.8.24+ (2025-2026)
 > **Frameworks**: Hardhat, Foundry

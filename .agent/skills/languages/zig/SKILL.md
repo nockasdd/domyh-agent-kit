@@ -6,7 +6,7 @@ category: systems
 tier: 2
 ---
 
-# Zig Patterns — DOMYH Awesome Code
+# Zig Patterns — DOMYH Agent Kit
 
 > **Version**: Zig 0.13+ (2025-2026)
 > **Focus**: Systems programming, C interop, WebAssembly

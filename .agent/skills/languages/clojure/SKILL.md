@@ -6,7 +6,7 @@ category: functional
 tier: 3
 ---
 
-# Clojure Patterns — DOMYH Awesome Code
+# Clojure Patterns — DOMYH Agent Kit
 
 > **Version**: Clojure 1.11+ (2025-2026)
 > **Framework**: Ring, Pedestal, Reagent

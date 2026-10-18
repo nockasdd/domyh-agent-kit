@@ -50,4 +50,4 @@ coverage: "X%"
 
 ---
 
-_Feature Lifecycle • DOMYH Awesome Code v6.3.9_
+_Feature Lifecycle • DOMYH Agent Kit v6.3.9_

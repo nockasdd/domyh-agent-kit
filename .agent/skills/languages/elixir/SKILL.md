@@ -6,7 +6,7 @@ category: functional
 tier: 2
 ---
 
-# Elixir Patterns — DOMYH Awesome Code
+# Elixir Patterns — DOMYH Agent Kit
 
 > **Version**: Elixir 1.16+ / OTP 26+
 > **Framework**: Phoenix 1.7+, LiveView 0.20+

@@ -1,19 +1,12 @@
 <!-- Header: Waving type with darker blue-purple gradient -->
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1E40AF,100:6D28D9&height=200&section=header&text=DOMYH%20Awesome%20Code&fontSize=42&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=AI-Powered%20Development%20Assistant&descAlignY=55&descSize=16" width="100%" />
-</p>
-
-<!-- Animated Typing -->
-<p align="center">
-  <a href="https://git.io/typing-svg">
-    <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=20&duration=3000&pause=1000&color=3B82F6&center=true&vCenter=true&multiline=false&repeat=true&width=550&height=35&lines=118+Skills+•+26+IDEs+•+45+Commands" alt="Typing SVG" />
-  </a>
+  <img src="https://capsule-render.vercel.app/api?type=waving&color=0:1E40AF,100:6D28D9&height=200&section=header&text=DOMYH%20Agent%20Kit&fontSize=42&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=AI-Powered%20Development%20Assistant&descAlignY=55&descSize=16" width="100%" />
 </p>
 
 <!-- Badges Row -->
 <p align="center">
-  <a href="https://www.npmjs.com/package/@nockdev/awf">
-    <img src="https://img.shields.io/npm/v/@nockdev/awf?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
+  <a href="https://www.npmjs.com/package/@nockdev/agent-kit">
+    <img src="https://img.shields.io/npm/v/@nockdev/agent-kit?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
   <img src="https://img.shields.io/badge/skills-118-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
@@ -71,7 +64,7 @@ nock awf mcp update           # Update MCP server (HSA)
 <!-- MCP Requirement Note -->
 <blockquote>
   <p>⚠️ <strong>MCP Server Required</strong></p>
-  <p>DOMYH Awesome Code uses <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> for intelligent context — code search, semantic analysis, and project understanding. <strong>Install MCP for your IDE to unlock full potential.</strong></p>
+  <p>DOMYH Agent Kit uses <a href="https://www.npmjs.com/package/@nockdev/hsa"><strong>HSA MCP Server</strong></a> for intelligent context — code search, semantic analysis, and project understanding. <strong>Install MCP for your IDE to unlock full potential.</strong></p>
   <p>💡 <code>nock awf mcp install</code> automatically downloads HSA and uses <code>node</code> for direct execution (faster, lower memory than <code>npx</code>). Falls back to <code>npx</code> on first run.</p>
 </blockquote>
 
@@ -227,26 +220,11 @@ Get notified on Telegram when AI agent completes tasks or persists sessions.
 **Usage:** Notifications are sent automatically when agent calls:
 - `hsa_session({action: 'persist'})` — session saved
 
-> 💡 Custom notifications are handled by the HSA Companion extension independently.
-
 > 💡 Notification language matches your configured preference. Vietnamese users (`/lang vi`) see "✅ Phiên làm việc đã lưu" instead of English.
 
 > ⚠️ If `HSA_TELEGRAM_TOKEN` is not set, all notification features are **silently skipped** — no errors, no token waste.
 
 </details>
-
-### 🧩 HSA Companion Extension (Optional)
-
-> Enhance your workflow with the **HSA Companion** IDE extension — real-time monitoring, remote control, and automation.
-
-| Feature | Description |
-| :------ | :---------- |
-| **Auto-Accept** | Automatically accept AI agent steps, file edits, terminal commands (with safety filters) |
-| **Telegram Remote Control** | Send `/ask` messages, receive completion notifications via Telegram |
-| **Session Monitoring** | Track AI agent activity, detect completion, extract response previews |
-| **Context Injection** | Automatically append `[HSA Context]` to chat messages for MCP guidance |
-
-**Install:** [HSA Companion](https://open-vsx.org/extension/Nockasdd/nock-hsa-ext)
 
 ---
 
@@ -452,11 +430,6 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 ---
 
 ## 🧠 Skills (118 total)
-
-<!-- Skills Animation -->
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=18&duration=2000&pause=800&color=8B5CF6&center=true&vCenter=true&width=550&height=35&lines=28+Languages+•+9+Frameworks;9+Core+•+7+DevOps;30+Cross-cutting+•+6+Tooling+•+9+AI-ML;9+Governance+•+118+Total+Skills" alt="Skills" />
-</p>
 
 <table>
 <tr>

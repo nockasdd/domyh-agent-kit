@@ -7,7 +7,7 @@ category: languages
 tier: 1
 ---
 
-# Java Patterns — DOMYH Awesome Code
+# Java Patterns — DOMYH Agent Kit
 
 > Java 21/22/23 LTS — 2025-2026
 

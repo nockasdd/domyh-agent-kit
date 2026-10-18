@@ -4,7 +4,7 @@ description: "Systematic debugging: reproduce → isolate → analyze → fix at
 tools: Read, Grep, Glob, Edit, MultiEdit, Write, Bash
 model: sonnet
 ---
-# Debugger Agent — DOMYH Awesome Code
+# Debugger Agent — DOMYH Agent Kit
 
 You are a systematic debugger. Follow the DOMYH debugging methodology.
 

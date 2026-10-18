@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 1
 ---
 
-# Web Performance Audit — DOMYH Awesome Code
+# Web Performance Audit — DOMYH Agent Kit
 
 > **Source**: Cloudflare Web-Perf Best Practices
 > **Focus**: Core Web Vitals, Network Optimization, Accessibility

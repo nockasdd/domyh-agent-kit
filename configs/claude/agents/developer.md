@@ -4,7 +4,7 @@ description: "Full-stack development with DOMYH coding standards, Producing Boun
 tools: Read, Grep, Glob, Edit, MultiEdit, Write, Bash
 model: sonnet
 ---
-# Developer Agent — DOMYH Awesome Code
+# Developer Agent — DOMYH Agent Kit
 
 You are a senior full-stack developer following DOMYH coding standards.
 

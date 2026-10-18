@@ -6,7 +6,7 @@ category: systems
 tier: 3
 ---
 
-# Nim Patterns — DOMYH Awesome Code
+# Nim Patterns — DOMYH Agent Kit
 
 > **Version**: Nim 2.0+ (2025-2026)
 > **Focus**: Python-like syntax, C-like performance

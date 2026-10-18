@@ -6,7 +6,7 @@ category: frameworks
 tier: 1
 ---
 
-# Angular Patterns — DOMYH Awesome Code
+# Angular Patterns — DOMYH Agent Kit
 
 > **Version**: Angular 20.2/21/22 (2025-2026)
 > **Philosophy**: Signals-first, standalone, zoneless-stable

@@ -1,5 +1,5 @@
 {
-  "name": "DOMYH Awesome Code",
+  "name": "DOMYH Agent Kit",
   "version": "v6.7.21",
   "gemini": {
     "model_preference": "gemini-2.0-flash",

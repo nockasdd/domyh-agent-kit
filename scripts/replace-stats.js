@@ -60,30 +60,7 @@ replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-ag
   return text;
 });
 
-// 3. docs files (HSA Ext)
-const nockHsaExtDocs = [
-  'DOMYH_ECOSYSTEM.md',
-  'PRODUCT_LAUNCH_VN.md',
-  'SOCIAL_MEDIA_VN.md'
-];
-for (const doc of nockHsaExtDocs) {
-  replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent/nock-hsa-ext/docs/' + doc, c => {
-    let text = c;
-    text = text.replace(/1\.7\.7/g, '1.7.8');
-    text = text.replace(/6\.6\.9/g, '6.7.0');
-    // Using string replace because we have multiple instances of "103" & "44" and want to avoid blind replacements
-    text = text.replace(/103 skills/gi, '104 skills');
-    text = text.replace(/103 Tools/gi, '104 Tools');
-    text = text.replace(/103 tính/gi, '104 tính');
-    text = text.replace(/44 workflows/gi, '45 workflows');
-    text = text.replace(/44 commands/gi, '45 commands');
-    text = text.replace(/ 103 /gi, ' 104 ');
-    text = text.replace(/ 44 /gi, ' 45 ');
-    return text;
-  });
-}
-
-// 4. index.html Landing page
+// 3. index.html Landing page
 replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent/domyh-awf/docs/index.html', c => {
   let text = c;
   text = text.replace(/103\+ Skills/g, '104+ Skills');
@@ -96,7 +73,7 @@ replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-ag
   return text;
 });
 
-// 5. doc codex-setup.md, HSA_ENGINE.md
+// 4. doc codex-setup.md, HSA_ENGINE.md
 replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent/domyh-awf/readme/codex-setup.md', c => {
   return c.replace(/1\.7\.7/g, '1.7.8');
 });
@@ -104,8 +81,8 @@ replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-ag
   return c.replace(/1\.7\.7/g, '1.7.8');
 });
 
-// 6. HSA README
-replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent/hsa-engine-ts/README.md', c => {
+// 5. HSA README
+replaceFileContent('e:/Deverloper/NewDeverloper/auto_domyh/domyh-awesome-code-agent/domyh-hsa-mcp/README.md', c => {
   let text = c;
   text = text.replace(/1\.7\.7/g, '1.7.8');
   return text;

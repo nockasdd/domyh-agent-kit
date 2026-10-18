@@ -6,7 +6,7 @@ category: cross-cutting
 tier: 2
 ---
 
-# Bun Patterns — DOMYH Awesome Code
+# Bun Patterns — DOMYH Agent Kit
 
 > **Version**: Bun 1.3.7 (2025-2026)
 > **Framework**: Elysia, Hono

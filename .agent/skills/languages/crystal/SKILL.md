@@ -6,7 +6,7 @@ category: languages
 tier: 3
 ---
 
-# Crystal Patterns — DOMYH Awesome Code
+# Crystal Patterns — DOMYH Agent Kit
 
 > **Version**: Crystal 1.10+ (2025-2026)
 > **Framework**: Kemal, Lucky

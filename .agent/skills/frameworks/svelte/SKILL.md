@@ -6,7 +6,7 @@ category: frameworks
 tier: 1
 ---
 
-# Svelte Patterns — DOMYH Awesome Code
+# Svelte Patterns — DOMYH Agent Kit
 
 > **Version**: Svelte 5.x / SvelteKit 2.x (Feb 2026)
 > **Philosophy**: Compiled reactivity, runes, zero overhead

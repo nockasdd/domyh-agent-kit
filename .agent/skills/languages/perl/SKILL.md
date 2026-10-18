@@ -6,7 +6,7 @@ category: scripting
 tier: 3
 ---
 
-# Perl 5 Patterns — DOMYH Awesome Code
+# Perl 5 Patterns — DOMYH Agent Kit
 
 > **Version**: Perl 5.40+ (2025-2026)
 > **Framework**: Mojolicious, Dancer2

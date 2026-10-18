@@ -1,6 +1,6 @@
 # Flutter/Dart — Advanced Patterns
 
-> DOMYH Awesome Code — Tier 3 Reference
+> DOMYH Agent Kit — Tier 3 Reference
 
 ## Table of Contents
 

@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# C Language Patterns DOMYH Awesome Code
+# C Language Patterns DOMYH Agent Kit
 
 > Pure C (ISO C23) development patterns NOT C++
 

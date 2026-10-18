@@ -20,7 +20,7 @@ Succeeded in unifying state.json, CONTEXT_SNAPSHOT.md, and session.md
 
 ## System
 
-DOMYH Awesome Code v6.5.0 — AI agent framework for intelligent development assistance.
+DOMYH Agent Kit v6.5.0 — AI agent framework for intelligent development assistance.
 
 **Structure**: `.agent/` directory containing:
 - `rules/` — 16 modular YAML rules + SACRED_RULES.xml (constitutional hierarchy, 18 rules Tier 0-4)

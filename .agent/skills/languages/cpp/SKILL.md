@@ -6,7 +6,7 @@ category: languages
 tier: 1
 ---
 
-# C++ Development Patterns — DOMYH Awesome Code
+# C++ Development Patterns — DOMYH Agent Kit
 
 > Modern C++ (C++20/23/26) patterns — NOT Pure C
 

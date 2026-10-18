@@ -6,7 +6,7 @@ category: data
 tier: 2
 ---
 
-# R Patterns — DOMYH Awesome Code
+# R Patterns — DOMYH Agent Kit
 
 > **Version**: R 4.4+ (2025-2026)
 > **Ecosystem**: Tidyverse, Shiny, ggplot2

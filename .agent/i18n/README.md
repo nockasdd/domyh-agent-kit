@@ -1,4 +1,4 @@
-# 🌍 i18n — DOMYH Awesome Code
+# 🌍 i18n — DOMYH Agent Kit
 
 Language files for internationalization.
 

@@ -1,4 +1,4 @@
-# 🔧 IDE Configs — DOMYH Awesome Code
+# 🔧 IDE Configs — DOMYH Agent Kit
 
 > Root configuration files for 23 configs (22 unique IDEs — copilot merged into vscode).
 > Template version: **v7** (enforced MCP/skills, optimized for IDE size limits)

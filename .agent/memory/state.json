@@ -2,13 +2,13 @@
   "version": "v6.7.21",
   "last_updated": "2026-09-29T10:39:11.464Z",
   "system": {
-    "name": "DOMYH Awesome Code",
+    "name": "DOMYH Agent Kit",
     "version": "v6.7.21",
     "version_short": "v6.7.21",
     "_note": "Sync from core/VERSION.yaml"
   },
   "project": {
-    "name": "DOMYH Awesome Code",
+    "name": "DOMYH Agent Kit",
     "path": ".",
     "type": "ai-agent-library",
     "stack": [

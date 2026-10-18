@@ -6,7 +6,7 @@ category: systems
 tier: 1
 ---
 
-# Rust Patterns — DOMYH Awesome Code
+# Rust Patterns — DOMYH Agent Kit
 
 > **Version**: Rust 1.80+ (2025-2026)
 > **Philosophy**: Zero-cost abstractions, fearless concurrency, memory safety

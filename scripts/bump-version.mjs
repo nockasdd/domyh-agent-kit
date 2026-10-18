@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // =============================================================================
-// bump-version.mjs — DOMYH Awesome Code Version Bump Script
+// bump-version.mjs — DOMYH Agent Kit Version Bump Script
 // =============================================================================
 // Usage:
 //   node scripts/bump-version.mjs patch              → 6.2.5 → 6.2.6
