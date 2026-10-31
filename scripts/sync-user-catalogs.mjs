@@ -24,18 +24,30 @@ const TARGETS = [
   { name: '~/.agents', base: path.join(HOME, '.agents') },
 ];
 
-function syncDirectory(src, dest) {
+function syncDirectory(src, dest, options = {}) {
   if (!fs.existsSync(src)) return 0;
   fs.mkdirSync(dest, { recursive: true });
   let count = 0;
 
   const entries = fs.readdirSync(src, { withFileTypes: true });
   for (const entry of entries) {
+    if (options.excludeDirs && entry.isDirectory() && options.excludeDirs.includes(entry.name)) {
+      if (fs.existsSync(path.join(dest, entry.name))) {
+        fs.rmSync(path.join(dest, entry.name), { recursive: true, force: true });
+      }
+      continue;
+    }
+    if (options.excludeFiles && !entry.isDirectory() && options.excludeFiles.includes(entry.name)) {
+      if (fs.existsSync(path.join(dest, entry.name))) {
+        fs.unlinkSync(path.join(dest, entry.name));
+      }
+      continue;
+    }
     const srcPath = path.join(src, entry.name);
     const destPath = path.join(dest, entry.name);
 
     if (entry.isDirectory()) {
-      count += syncDirectory(srcPath, destPath);
+      count += syncDirectory(srcPath, destPath, options);
     } else {
       let shouldCopy = false;
       if (!fs.existsSync(destPath)) {
@@ -65,9 +77,23 @@ export function syncUserCatalogs() {
     const destRules = path.join(target.base, 'rules');
     const destInstincts = path.join(target.base, 'instincts');
 
-    const sCount = syncDirectory(SOURCE_SKILLS, destSkills);
-    const rCount = syncDirectory(SOURCE_RULES, destRules);
+    const sCount = syncDirectory(SOURCE_SKILLS, destSkills, {
+      excludeDirs: ['_index'],
+    });
+    const rCount = syncDirectory(SOURCE_RULES, destRules, {
+      excludeDirs: ['dist', 'archive', 'legacy-modules'],
+      excludeFiles: ['README.md', 'AGENT_RULES.md', 'validation-framework.md', 'prompt-injection-guard.md'],
+    });
     const iCount = syncDirectory(SOURCE_INSTINCTS, destInstincts);
+
+    // Clean up legacy source-command-* duplicate skills in user catalogs
+    if (fs.existsSync(destSkills)) {
+      for (const e of fs.readdirSync(destSkills, { withFileTypes: true })) {
+        if (e.isDirectory() && e.name.startsWith('source-command-')) {
+          fs.rmSync(path.join(destSkills, e.name), { recursive: true, force: true });
+        }
+      }
+    }
 
     console.log(`   ✅ ${target.name}: ${sCount} skill files, ${rCount} rule files, ${iCount} instinct files updated.`);
   }

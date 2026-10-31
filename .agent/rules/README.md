@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 # Rules System
 
 > Constitutional hierarchy with modular composition
