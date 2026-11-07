@@ -4,7 +4,7 @@
             {
                 "type": "command",
                 "command": ".github/hooks/scripts/inject-context.sh",
-                "windows": "powershell -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\inject-context.ps1",
+                "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github/hooks/scripts/inject-context.ps1",
                 "timeout": 10
             }
         ]

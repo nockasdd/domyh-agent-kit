@@ -13,7 +13,8 @@ if ($hookInput.tool_name -notin $editTools) {
     exit 0
 }
 
-$filePath = $hookInput.tool_input.files[0]
+$filePath = $hookInput.tool_input.file_path
+if (-not $filePath) { $filePath = $hookInput.tool_input.files[0] }
 if (-not $filePath) { $filePath = $hookInput.tool_input.path }
 if (-not $filePath) { $filePath = $hookInput.tool_input.TargetFile }
 if (-not $filePath -or -not (Test-Path $filePath)) {
@@ -28,11 +29,12 @@ if ($ext -notin $codeExts) {
     exit 0
 }
 
-# Detect formatter
+# Detect formatter (redirect all output so formatter stdout never corrupts hook JSON)
 if ((Test-Path "node_modules/.bin/prettier") -or (Test-Path ".prettierrc") -or (Test-Path "prettier.config.js")) {
-    npx prettier --write $filePath 2>$null
+    npx prettier --write $filePath *>$null
 } elseif ((Test-Path "biome.json") -or (Test-Path "biome.jsonc")) {
-    npx biome format --write $filePath 2>$null
+    npx biome format --write $filePath *>$null
 }
 
 Write-Output '{"continue":true}'
+exit 0

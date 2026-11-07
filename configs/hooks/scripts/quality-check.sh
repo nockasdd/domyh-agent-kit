@@ -25,6 +25,7 @@ esac
 
 # Extract file path (handle different IDE field names)
 FILE_PATH=$(echo "$INPUT" | jq -r '
+  .tool_input.file_path //
   .tool_input.files[0] //
   .tool_input.path //
   .tool_input.TargetFile //

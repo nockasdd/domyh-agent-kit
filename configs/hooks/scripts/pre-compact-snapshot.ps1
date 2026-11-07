@@ -41,14 +41,6 @@ if (Test-Path $sessionFile) {
 }
 
 # ── Output JSON ────────────────────────────────────────────
-if ($backedUp) {
-    $output = @{
-        hookSpecificOutput = @{
-            hookEventName = "PreCompact"
-            additionalContext = "Context snapshot backed up at $timestamp. Restore from CONTEXT_SNAPSHOT.md.pre-compact.bak if needed."
-        }
-    } | ConvertTo-Json -Depth 3 -Compress
-    Write-Output $output
-} else {
-    Write-Output '{"hookSpecificOutput":{"hookEventName":"PreCompact","additionalContext":"No snapshot to backup — AWF memory not initialized."}}'
-}
+# PreCompact does not support hookSpecificOutput in Claude Code; exit silently.
+Write-Output '{}'
+exit 0

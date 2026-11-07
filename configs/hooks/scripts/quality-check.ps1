@@ -1,6 +1,6 @@
 # ═══════════════════════════════════════════════════════════════
 # AWF PostToolUse Hook: Quality Check (PowerShell)
-# v2.0: 6 checks, line numbers, JSON escaping, .d.ts exclusion
+# v2.1: Added file_path support for Claude Code, removed double-escaping
 # ═══════════════════════════════════════════════════════════════
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -14,7 +14,8 @@ if ($hookInput.tool_name -notin $editTools) {
     exit 0
 }
 
-$filePath = $hookInput.tool_input.files[0]
+$filePath = $hookInput.tool_input.file_path
+if (-not $filePath) { $filePath = $hookInput.tool_input.files[0] }
 if (-not $filePath) { $filePath = $hookInput.tool_input.path }
 if (-not $filePath) { $filePath = $hookInput.tool_input.TargetFile }
 if (-not $filePath -or -not (Test-Path $filePath)) {
@@ -90,8 +91,6 @@ if ($content -match 'catch\s*\([^)]*\)\s*\{\s*\}') {
 if ($issues.Count -gt 0) {
     $basename = [System.IO.Path]::GetFileName($filePath)
     $ctx = "Quality ($($issues.Count) issues in $basename): " + ($issues -join ". ")
-    # JSON-safe escaping
-    $ctx = $ctx -replace '\\', '\\\\' -replace '"', '\"'
     $output = @{
         hookSpecificOutput = @{
             hookEventName = "PostToolUse"
@@ -102,3 +101,4 @@ if ($issues.Count -gt 0) {
 } else {
     Write-Output '{"continue":true}'
 }
+exit 0

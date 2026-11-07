@@ -4,11 +4,19 @@
 
 $ErrorActionPreference = "SilentlyContinue"
 
+# Drain stdin to prevent EPIPE on Windows
+try { [Console]::In.ReadToEnd() | Out-Null } catch {}
+
 # Read project info
-$projectInfo = "Unknown project"
+$projectInfo = Split-Path -Leaf (Get-Location)
+if (-not $projectInfo) { $projectInfo = "workspace" }
 if (Test-Path "package.json") {
     $pkg = Get-Content "package.json" -Raw | ConvertFrom-Json
-    $projectInfo = "$($pkg.name) v$($pkg.version)"
+    if ($pkg.name -and $pkg.version) {
+        $projectInfo = "$($pkg.name) v$($pkg.version)"
+    } elseif ($pkg.name) {
+        $projectInfo = "$($pkg.name)"
+    }
 }
 
 # Git branch
@@ -38,3 +46,4 @@ $output = @{
     }
 } | ConvertTo-Json -Depth 3 -Compress
 Write-Output $output
+exit 0

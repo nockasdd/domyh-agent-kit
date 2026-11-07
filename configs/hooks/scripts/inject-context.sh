@@ -1,24 +1,27 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════
 # AWF SessionStart Hook: Project Context Injection
-# v2.0: Fixed JSON escaping for commit messages with quotes
+# v2.1: Fallback project name to directory basename, safe JSON
 # ═══════════════════════════════════════════════════════════════
 
 # Read stdin (SessionStart may or may not send input)
 cat > /dev/null 2>&1 || true
 
 # Read project info
-PROJECT_INFO="Unknown project"
+PROJECT_INFO=$(basename "$PWD" 2>/dev/null || echo "workspace")
 if [ -f "package.json" ]; then
-  NAME=$(jq -r '.name // "unknown"' package.json 2>/dev/null || echo "unknown")
-  VERSION=$(jq -r '.version // "unknown"' package.json 2>/dev/null || echo "unknown")
-  PROJECT_INFO="${NAME} v${VERSION}"
+  NAME=$(jq -r '.name // empty' package.json 2>/dev/null || echo "")
+  VERSION=$(jq -r '.version // empty' package.json 2>/dev/null || echo "")
+  if [ -n "$NAME" ] && [ -n "$VERSION" ]; then
+    PROJECT_INFO="${NAME} v${VERSION}"
+  elif [ -n "$NAME" ]; then
+    PROJECT_INFO="${NAME}"
+  fi
 fi
 
 # Git info (with quote escaping)
 BRANCH=$(git branch --show-current 2>/dev/null || echo "unknown")
 LAST_COMMIT=$(git log -1 --format="%s" 2>/dev/null || echo "N/A")
-# Escape quotes for JSON safety
 LAST_COMMIT=$(echo "$LAST_COMMIT" | sed 's/"/\\"/g; s/\\/\\\\/g' 2>/dev/null)
 
 # Runtime version
@@ -46,3 +49,4 @@ jq -n \
   --arg awf "$AWF_VER" \
   --arg git "$GIT_STATUS" \
   '{hookSpecificOutput:{hookEventName:"SessionStart",additionalContext:("AWF Session | Project: " + $project + " | Branch: " + $branch + " | Last: " + $commit + " | Node: " + $node + " | AWF: " + $awf + " | Git: " + $git)}}'
+exit 0

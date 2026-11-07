@@ -47,10 +47,6 @@ if [ -f "$SESSION" ]; then
 fi
 
 # ── Output JSON ────────────────────────────────────────────
-if [ "$BACKED_UP" = true ]; then
-  jq -n \
-    --arg ts "$TIMESTAMP" \
-    '{hookSpecificOutput:{hookEventName:"PreCompact",additionalContext:("Context snapshot backed up at " + $ts + ". Restore from CONTEXT_SNAPSHOT.md.pre-compact.bak if needed.")}}'
-else
-  echo '{"hookSpecificOutput":{"hookEventName":"PreCompact","additionalContext":"No snapshot to backup — AWF memory not initialized."}}'
-fi
+# PreCompact does not support hookSpecificOutput in Claude Code; exit silently.
+echo '{}'
+exit 0

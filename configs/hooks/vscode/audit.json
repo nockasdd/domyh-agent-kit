@@ -14,7 +14,7 @@
             {
                 "type": "command",
                 "command": ".github/hooks/scripts/session-persist.sh",
-                "windows": "powershell -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\session-persist.ps1",
+                "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github/hooks/scripts/session-persist.ps1",
                 "timeout": 10
             }
         ],
@@ -22,7 +22,7 @@
             {
                 "type": "command",
                 "command": ".github/hooks/scripts/pre-compact-snapshot.sh",
-                "windows": "powershell -ExecutionPolicy Bypass -File .github\\hooks\\scripts\\pre-compact-snapshot.ps1",
+                "windows": "powershell -NoProfile -ExecutionPolicy Bypass -File .github/hooks/scripts/pre-compact-snapshot.ps1",
                 "timeout": 5
             }
         ]

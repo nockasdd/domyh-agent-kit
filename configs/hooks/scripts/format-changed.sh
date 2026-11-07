@@ -21,6 +21,7 @@ esac
 
 # Extract file path
 FILE_PATH=$(echo "$INPUT" | jq -r '
+  .tool_input.file_path //
   .tool_input.files[0] //
   .tool_input.path //
   .tool_input.TargetFile //
@@ -42,27 +43,27 @@ case "$FILE_PATH" in
     ;;
 esac
 
-# Detect and run formatter (priority order)
+# Detect and run formatter (priority order — suppress stdout/stderr to keep JSON clean)
 FORMATTED=false
 
 # 1. Prettier (most common)
 if [ "$FORMATTED" = false ] && command -v npx &>/dev/null; then
   if [ -f "node_modules/.bin/prettier" ] || [ -f ".prettierrc" ] || [ -f ".prettierrc.json" ] || [ -f "prettier.config.js" ] || [ -f "prettier.config.mjs" ]; then
-    npx prettier --write "$FILE_PATH" 2>/dev/null && FORMATTED=true
+    npx prettier --write "$FILE_PATH" >/dev/null 2>&1 && FORMATTED=true
   fi
 fi
 
 # 2. Biome
 if [ "$FORMATTED" = false ] && command -v npx &>/dev/null; then
   if [ -f "biome.json" ] || [ -f "biome.jsonc" ]; then
-    npx biome format --write "$FILE_PATH" 2>/dev/null && FORMATTED=true
+    npx biome format --write "$FILE_PATH" >/dev/null 2>&1 && FORMATTED=true
   fi
 fi
 
 # 3. Deno fmt
 if [ "$FORMATTED" = false ] && command -v deno &>/dev/null; then
   if [ -f "deno.json" ] || [ -f "deno.jsonc" ]; then
-    deno fmt "$FILE_PATH" 2>/dev/null && FORMATTED=true
+    deno fmt "$FILE_PATH" >/dev/null 2>&1 && FORMATTED=true
   fi
 fi
 
