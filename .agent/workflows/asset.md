@@ -18,8 +18,8 @@ success_criteria: "Asset matches spec/anchor contract, passes deterministic QA &
 
 | Asset Domain | Primary Skill | Core Verification Tooling |
 |:-------------|:--------------|:--------------------------|
-| 3D Mesh / PBR / Rig / ARKit 52 | `blender-3d-studio` | `hsa_bridge(target:'blender')`, `blender_render_views`, `blender_asset_qa` |
-| Pixel Art / Tileset / Sprite Stack | `pixel-art-studio` | `hsa_design(pixel_quantize \| sprite_stack \| sprite_sheet \| frame_diff)` |
+| 3D Mesh / PBR / Rig / ARKit 52 | `blender-3d-studio` | `hsa_bridge(target:'blender')`, `blender_render_views`, `blender_asset_qa`, `hsa_design(asset_audit)` |
+| Pixel Art / Tileset / Sprite Stack | `pixel-art-studio` | `hsa_design(pixel_quantize \| sprite_stack \| sprite_sheet)` |
 | 2D Character / SVG Rig / NPC Lipsync | `character-npc-studio` | `hsa_design(sprite_sheet \| viseme_timeline)`, `hsa_canvas(capture)` |
 | Three.js / R3F / Combat VFX / Godot 4 | `webgl-shader-godot` | `hsa_canvas(capture)`, `godot --headless --path . --quit-after 60` |
 | Cloud Concept / Keyframe / Veo Video | `gemini-media-gen` | Multi-ref identity lock + `silhouette_iou` / `frame_diff` |
@@ -28,8 +28,8 @@ success_criteria: "Asset matches spec/anchor contract, passes deterministic QA &
 1. **SPEC LOCK** — Load or scaffold contract from `.agent/templates/specs/*.template.yaml` into `.agent/specs/`.
 2. **SYNTHESIZE** — Execute domain pipeline (`bpy` blockout/mesh/ORM/rig, Cloud Image $\to$ `pixel_quantize`, `sprite_stack`, layered SVG rig, or GLSL/`.gdshader`).
 3. **MEASURE & RENDER** — Chain inside `hsa_execute`:
-   - **3D**: `blender_asset_qa` (poly budget, N-gon ratio, unweighted verts, UV overlap, scale `1,1,1`) + `blender_render_views` (Front/Side/3-4/Top) + `hsa_design({action:'silhouette_iou'})`.
-   - **2D/Pixel**: `pixel_quantize` (exact palette & binary alpha) + `frame_diff` + `preview_scale: 8` contact sheet.
+   - **3D**: `blender_asset_qa` (poly budget, N-gon ratio, unweighted verts, UV overlap, scale `1,1,1`) + `blender_render_views` (Front/Side/3-4/Top + `reference_mask_path` Silhouette IoU) + `hsa_design({action:'asset_audit'})`.
+   - **2D/Pixel**: `pixel_quantize` (exact palette & binary alpha) + `sprite_sheet` (`frameDiffs` & `reference_path` IoU) + `preview_scale: 8` contact sheet.
    - **NPC/Shader/WebGL**: `viseme_timeline` sync check + `hsa_canvas({action:'capture'})` runtime render.
 4. **VISION CRITIQUE & REPAIR** — Inspect rendered contact sheet against Visual Scorecard (Silhouette, Proportions, Topology/Pixel Craft, Material/Palette, Rig/Motion; target avg $\ge 8.0$). Fix at the **Producing Boundary** and re-test (max 3 rounds).
 5. **EXPORT** — Package engine-ready `.glb`/`.fbx`, atlas `.png`+`.json`, `.tscn`/`.gdshader`, or `.mp4` + QA report.

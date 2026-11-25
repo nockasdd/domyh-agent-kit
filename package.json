@@ -1,6 +1,6 @@
 {
   "name": "domyh-agent-kit",
-  "version": "6.8.0",
+  "version": "6.8.1",
   "private": true,
   "type": "module",
   "description": "DOMYH Agent Kit — Constitutional AI Rules, Workflows, Skills & IDE Configs",

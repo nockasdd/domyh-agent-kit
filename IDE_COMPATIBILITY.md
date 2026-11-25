@@ -1,6 +1,6 @@
 # 📊 IDE / Agent Compatibility Matrix — DOMYH Agent Kit
 
-> **Version**: 6.8.0 | **Cập nhật**: 2026-11-25 | **Official Docs Verified** | **Extension Storage Forensics**
+> **Version**: 6.8.1 | **Cập nhật**: 2026-11-25 | **Official Docs Verified** | **Extension Storage Forensics**
 > **Tổng**: 22 IDEs/Agents | 4 Tiers | 21 MCP config paths | 16 Skills-enabled | 19 MCP Tools | 11 Personas
 >
 > ⚠️ `IDE_REGISTRY` có 25 entry; bảng này liệt kê 22. Thiếu: `blackbox`, `openclaw` (có `mcp.supported` nhưng chưa có hàng).
