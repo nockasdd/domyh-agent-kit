@@ -87,6 +87,11 @@ commands:
     short: "Visualize"
     desc: "Tạo mockups và wireframes"
     help: "Sử dụng: /visualize [mô tả UI] — style: glassmorphism, minimalist, etc."
+  asset:
+    name: "Chế Tác Asset"
+    short: "Asset"
+    desc: "Tạo và kiểm định 3D/2D/Pixel Assets, Character, NPC, VFX & Video chuẩn kỹ thuật"
+    help: "Sử dụng: /asset [bible | spec | create | audit] [mô tả]"
   generate:
     name: "Sinh Code"
     short: "Generate"

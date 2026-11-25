@@ -13,6 +13,100 @@ const UNITY_HTTP_BASE = process.env.UNITY_HTTP_URL ?? "http://127.0.0.1:30030";
 const BRIDGE_TOKEN = process.env.HSA_BRIDGE_TOKEN ?? "";
 const UNITY_PROJECT_DIR = process.env.UNITY_PROJECT_DIR ?? "";
 
+const SAFE_ASSET_EXTENSIONS = new Set([
+  ".fbx", ".glb", ".gltf", ".obj",
+  ".png", ".jpg", ".jpeg", ".webp", ".tga", ".exr", ".hdr",
+  ".wav", ".ogg", ".mp3",
+  ".json", ".anim", ".controller", ".mat", ".shader", ".hlsl",
+]);
+
+function assertSafeAssetExtension(filePath: string, label: string): void {
+  const ext = path.extname(filePath).toLowerCase();
+  if (!ext || !SAFE_ASSET_EXTENSIONS.has(ext)) {
+    throw new Error(
+      `Disallowed ${label} extension '${ext || "(none)"}'. Allowed asset extensions: ${[...SAFE_ASSET_EXTENSIONS].join(", ")}`,
+    );
+  }
+}
+
+function normalizeForContainment(p: string): string {
+  const resolved = path.resolve(p);
+  return process.platform === "win32" ? resolved.toLowerCase() : resolved;
+}
+
+function isSubPathOf(candidatePath: string, rootDir: string): boolean {
+  if (!rootDir) return false;
+  const realRoot = fs.existsSync(rootDir) ? fs.realpathSync(rootDir) : path.resolve(rootDir);
+  const rel = path.relative(normalizeForContainment(realRoot), normalizeForContainment(candidatePath));
+  return rel !== "" && rel !== ".." && !rel.startsWith(".." + path.sep) && !rel.startsWith("../") && !path.isAbsolute(rel);
+}
+
+function stageExternalAssetIfNeeded(sourcePath: string, destPath: string): string {
+  assertSafeAssetExtension(sourcePath, "sourcePath");
+  assertSafeAssetExtension(destPath, "destPath");
+
+  const looksAbsolute = path.isAbsolute(sourcePath) || /^[a-zA-Z]:/.test(sourcePath);
+  if (!looksAbsolute) {
+    const norm = sourcePath.replace(/\\/g, "/");
+    if (norm.includes("..") || norm.startsWith("~") || norm.includes(":")) {
+      throw new Error(`Invalid relative sourcePath: ${sourcePath}`);
+    }
+    return norm;
+  }
+
+  if (!UNITY_PROJECT_DIR) {
+    throw new Error(
+      "UNITY_PROJECT_DIR must be set to stage an absolute sourcePath into <UNITY_PROJECT_DIR>/Library/HsaStaging.",
+    );
+  }
+
+  const allowedRoots = [process.env.HSA_PROJECT_ROOT ?? "", UNITY_PROJECT_DIR].filter((r) => r.trim() !== "");
+  if (allowedRoots.length === 0) {
+    throw new Error("Neither HSA_PROJECT_ROOT nor UNITY_PROJECT_DIR is configured to validate sourcePath.");
+  }
+
+  const resolvedSource = path.resolve(sourcePath);
+  if (!fs.existsSync(resolvedSource)) {
+    throw new Error(`Source asset file does not exist: ${sourcePath}`);
+  }
+
+  const linkStat = fs.lstatSync(resolvedSource);
+  const realSource = fs.realpathSync(resolvedSource);
+  const realStat = fs.statSync(realSource);
+  if (!realStat.isFile()) {
+    throw new Error(`Source asset path is not a regular file: ${sourcePath}`);
+  }
+
+  const logicalInside = allowedRoots.some((root) => isSubPathOf(resolvedSource, root));
+  const realInside = allowedRoots.some((root) => isSubPathOf(realSource, root));
+  if (!logicalInside || !realInside) {
+    const reason = linkStat.isSymbolicLink()
+      ? "Source symlink points outside allowed workspace roots (HSA_PROJECT_ROOT / UNITY_PROJECT_DIR)"
+      : "Source path must reside inside HSA_PROJECT_ROOT or UNITY_PROJECT_DIR";
+    throw new Error(`${reason}: ${sourcePath}`);
+  }
+
+  const rawBase = path.basename(resolvedSource);
+  const safeBasename = rawBase.replace(/[^a-zA-Z0-9._-]/g, "_");
+  if (!safeBasename || safeBasename === "." || safeBasename === "..") {
+    throw new Error(`Unsafe source filename: ${rawBase}`);
+  }
+  assertSafeAssetExtension(safeBasename, "staged filename");
+
+  const realUnityProject = fs.existsSync(UNITY_PROJECT_DIR)
+    ? fs.realpathSync(UNITY_PROJECT_DIR)
+    : path.resolve(UNITY_PROJECT_DIR);
+  const stagingDir = path.join(realUnityProject, "Library", "HsaStaging");
+  fs.mkdirSync(stagingDir, { recursive: true });
+
+  const stagedFullPath = path.join(stagingDir, safeBasename);
+  if (fs.existsSync(stagedFullPath) && fs.lstatSync(stagedFullPath).isSymbolicLink()) {
+    fs.unlinkSync(stagedFullPath);
+  }
+  fs.copyFileSync(realSource, stagedFullPath);
+  return `Library/HsaStaging/${safeBasename}`;
+}
+
 /**
  * The editor reads the token from <project>/Library/HsaBridgeConfig.json, which
  * it needs because the Unity process does not share this bridge's environment.
@@ -186,10 +280,35 @@ tool("unity_instantiate_prefab", "Instantiate a Prefab into the scene", {
   position: z.object({ x: z.number(), y: z.number(), z: z.number() }).optional(),
 }, "/instantiate-prefab");
 
-tool("unity_import_asset", "Import an external file into the Unity project", {
-  sourcePath: z.string().describe("Absolute path to the source file"),
-  destPath: z.string().describe("Unity project relative path (e.g. 'Assets/Textures/sky.png')"),
-}, "/import-asset");
+server.tool("unity_import_asset",
+  "Import an external or project-relative asset file into the Unity project (stages workspace files via Library/HsaStaging)",
+  {
+    sourcePath: z.string().describe("Absolute path inside HSA_PROJECT_ROOT/UNITY_PROJECT_DIR, or relative project/staging path"),
+    destPath: z.string().describe("Unity project relative path (e.g. 'Assets/Textures/sky.png')"),
+  },
+  async (params) => {
+    try {
+      const stagedSource = stageExternalAssetIfNeeded(params.sourcePath, params.destPath);
+      const data = await unityRequest("/import-asset", {
+        sourcePath: stagedSource,
+        destPath: params.destPath,
+      });
+      return { content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }] };
+    } catch (e: any) {
+      return { isError: true, content: [{ type: "text" as const, text: e.message }] };
+    }
+  },
+);
+
+tool("unity_capture_viewport",
+  "Render the active scene camera into a PNG under Library/HsaStaging/captures and return its path and dimensions",
+  {
+    width: z.number().int().min(64).max(4096).optional().describe("Capture width in pixels (default: 1024, clamped 64..4096)"),
+    height: z.number().int().min(64).max(4096).optional().describe("Capture height in pixels (default: 576, clamped 64..4096)"),
+    cameraPath: z.string().optional().describe("Optional GameObject path to a specific Camera (defaults to Camera.main or first active Camera)"),
+  },
+  "/capture-viewport",
+);
 
 // unity_create_script — uses base64 for reliable code delivery
 server.tool("unity_create_script",

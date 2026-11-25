@@ -1,0 +1,72 @@
+name: pixel-art-studio
+display: "Pixel Art, Tileset & Sprite-Stacking Studio"
+category: cross-cutting
+tier: 1
+priority: 3
+
+desc: "Deterministic Pixel Art Studio for Gemini, GPT, and Claude: SummerEngine pixel-anchor contracts, anti-jaggie/anti-banding Pixel Craft Rules, Cloud Image-to-Pixel exact quantization (pixel_quantize), Fake-3D Voxel Sprite Stacking with Normal/Emissive maps (sprite_stack), Wang/47-blob autotiles, Isometric 2:1 grids, and Aseprite CLI automation."
+
+caps:
+  - Pixel Anchor Style Lock (.agent/specs/pixel-anchor.yaml)
+  - Pixel Craft Rules (Hue-Shifting, Sel-Out, Anti-Pillow/Banding/Jaggies)
+  - Cloud Image-to-Pixel Exact Grid & Palette Quantizer (pixel_quantize)
+  - Fake-3D Voxel Sprite Stacking + 2D Normal/Emissive Maps (sprite_stack)
+  - Spritesheet Packing, Slicing & Pivot Metadata (sprite_sheet)
+  - Wang 16-Tile & 47-Tile Blob Autotile Bitmasks (Godot / Unity / Phaser)
+  - True 2:1 Isometric Pixel Projection & Aseprite Lua CLI Batching
+  - Walk/Idle/Attack Motion Verification (frame_diff & silhouette_iou)
+
+data_files:
+  - data/pixel-craft-rules.yaml
+  - data/palettes-and-anchors.yaml
+  - data/tileset-and-stacking.yaml
+
+triggers:
+  file_patterns:
+    - "*.ase"
+    - "*.aseprite"
+    - "*pixel-anchor*.yaml"
+    - "*tileset*.png"
+    - "*spritesheet*.json"
+  keywords:
+    - pixel art
+    - pixel
+    - spritesheet
+    - sprite sheet
+    - tileset
+    - wang tiles
+    - autotile
+    - isometric
+    - aseprite
+    - sprite stacking
+    - voxel
+    - pico-8
+    - sweetie-16
+    - endesga-32
+    - 16-bit
+    - 8-bit
+    - sel-out
+    - dithering
+    - gameboy palette
+  intents:
+    - create pixel art sprite
+    - generate pixel art tileset
+    - build 4-dir or 8-dir walk cycle spritesheet
+    - quantize ai image to exact pixel palette
+    - render fake-3d sprite stack with normal map
+
+related_skills:
+  - game-development
+  - character-npc-studio
+  - webgl-shader-godot
+  - gemini-media-gen
+
+prevent_confusion_with:
+  - digital-marketing: "Meta Pixel and Facebook Pixel are web analytics tracking scripts, not 2D pixel art graphics"
+  - domyh-design: "UI CSS px units are responsive web layout metrics, not grid-locked retro pixel art"
+
+links_to:
+  - game-development
+  - character-npc-studio
+  - webgl-shader-godot
+  - gemini-media-gen

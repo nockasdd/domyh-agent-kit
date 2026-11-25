@@ -1,0 +1,77 @@
+name: webgl-shader-godot
+display: "Three.js, R3F, Combat Shaders & Godot 4 Pipeline"
+category: cross-cutting
+tier: 1
+priority: 3
+
+desc: "Production WebGL/WebGPU (Three.js, React Three Fiber), Cross-Engine Combat VFX Shaders (GLSL, WGSL, HLSL, gdshader), and File-First Godot 4.x Game Pipeline: strict sRGB/Linear PBR color-space management, InstancedMesh, LiveCanvas VRT + Visual Scorecard, procedural VFX shaders, static-typed GDScript 2.0, TileMapLayer, AnimationTree, and headless Godot CLI verification."
+
+caps:
+  - Three.js & React Three Fiber PBR Color Space (SRGBColorSpace vs NoColorSpace)
+  - High-Throughput InstancedMesh, DRACO/KTX2 & Deterministic VRAM Disposal
+  - Selective HDR Post-Processing (ACESFilmic + Thresholded UnrealBloom)
+  - Live WebGL Runtime Verification via hsa_canvas + Visual Scorecard
+  - Combat VFX Shaders (Sword Slash, Dissolve, Fresnel Shield, Toon Water, Hit-Flash)
+  - Godot 4.3+ File-First Architecture (project.godot, .tscn, .tres)
+  - Static-Typed GDScript 2.0 (CharacterBody2D/3D, TileMapLayer, AnimationTree)
+  - Automated Headless Verification (godot --headless --path . --quit-after 60)
+
+data_files:
+  - data/threejs-r3f-pbr.yaml
+  - data/combat-vfx-shaders.yaml
+  - data/godot4-pipeline.yaml
+
+triggers:
+  file_patterns:
+    - "project.godot"
+    - "*.tscn"
+    - "*.tres"
+    - "*.gd"
+    - "*.gdshader"
+    - "*.glsl"
+    - "*.wgsl"
+    - "*.vert"
+    - "*.frag"
+  keywords:
+    - threejs
+    - three.js
+    - r3f
+    - react three fiber
+    - drei
+    - webgl
+    - webgpu
+    - shader
+    - glsl
+    - hlsl
+    - wgsl
+    - gdshader
+    - vfx
+    - particle
+    - instancedmesh
+    - godot
+    - godot 4
+    - gdscript
+    - tscn
+    - tilemaplayer
+    - animationtree
+    - characterbody2d
+    - characterbody3d
+  intents:
+    - build 3d web scene with threejs or react three fiber
+    - write custom glsl or gdshader combat vfx
+    - create 2d or 3d game in godot 4
+    - fix washed out pbr colors in threejs gltf
+    - verify godot project headlessly
+
+related_skills:
+  - game-development
+  - blender-3d-studio
+  - pixel-art-studio
+  - character-npc-studio
+  - react
+  - typescript
+
+links_to:
+  - game-development
+  - blender-3d-studio
+  - pixel-art-studio

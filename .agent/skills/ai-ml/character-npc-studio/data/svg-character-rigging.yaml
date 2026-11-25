@@ -1,0 +1,151 @@
+# =============================================================================
+# Layered Vector SVG Character Rigging + Arc-Preserving JS Animator & Capture
+# =============================================================================
+
+version: "1.0"
+
+rig_joint_contract:
+  viewBox: "0 0 512 512"
+  stroke_rule: "vector-effect='non-scaling-stroke' across all paths; NEVER animate scaleY on head or limbs"
+  joints_px:
+    rig_root:  [256, 472] # Ground contact center
+    torso:     [256, 340] # Waist/lumbar pivot
+    head:      [256, 218] # Base of skull / C1-C2 neck pivot
+    arm_L:     [304, 236] # Front shoulder socket
+    forearm_L: [318, 298] # Front elbow hinge
+    arm_R:     [208, 236] # Back shoulder socket
+    forearm_R: [194, 298] # Back elbow hinge
+    leg_L:     [276, 352] # Left hip socket
+    leg_R:     [236, 352] # Right hip socket
+
+preston_blair_svg_mouth_shapes:
+  description: "9 canonical SVG mouth <g> elements placed inside #head around (256, 192)"
+  shapes:
+    mouth_X: '<path d="M242,192 Q256,195 270,192" stroke="#2B1E1A" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+    mouth_A: '<path d="M241,192 L271,192" stroke="#2B1E1A" stroke-width="4.5" fill="none" stroke-linecap="round"/>'
+    mouth_B: '<rect x="241" y="187" width="30" height="9" rx="4.5" fill="#FFFFFF" stroke="#2B1E1A" stroke-width="3"/>'
+    mouth_C: '<ellipse cx="256" cy="193" rx="14" ry="9" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/>'
+    mouth_D: '<ellipse cx="256" cy="195" rx="16" ry="14" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/>'
+    mouth_E: '<ellipse cx="256" cy="193" rx="11" ry="9" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/>'
+    mouth_F: '<ellipse cx="256" cy="193" rx="7" ry="8" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/>'
+    mouth_G: '<path d="M242,189 L270,189 Q256,198 242,189 Z" fill="#FFFFFF" stroke="#2B1E1A" stroke-width="3"/>'
+    mouth_H: '<ellipse cx="256" cy="193" rx="12" ry="8" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/>'
+
+complete_html_svg_rig_template: |
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      html, body { margin: 0; padding: 0; background: transparent; overflow: hidden; }
+      svg { width: 512px; height: 512px; display: block; }
+      .joint { transform-box: view-box; will-change: transform; }
+      #rig_root  { transform-origin: 256px 472px; }
+      #torso     { transform-origin: 256px 340px; }
+      #head      { transform-origin: 256px 218px; }
+      #arm_L     { transform-origin: 304px 236px; }
+      #arm_R     { transform-origin: 208px 236px; }
+      #leg_L     { transform-origin: 276px 352px; }
+      #leg_R     { transform-origin: 236px 352px; }
+    </style>
+  </head>
+  <body>
+    <svg id="character_svg" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+      <ellipse id="ground_shadow" cx="256" cy="474" rx="64" ry="12" fill="rgba(18,20,23,0.28)" />
+      <g id="rig_root" class="joint">
+        <g id="arm_R" class="joint">
+          <rect x="190" y="230" width="28" height="106" rx="14" fill="#2B3A67" stroke="#141619" stroke-width="4"/>
+        </g>
+        <g id="leg_R" class="joint">
+          <rect x="220" y="346" width="32" height="122" rx="14" fill="#1F2430" stroke="#141619" stroke-width="4"/>
+        </g>
+        <g id="leg_L" class="joint">
+          <rect x="260" y="346" width="32" height="122" rx="14" fill="#283040" stroke="#141619" stroke-width="4"/>
+        </g>
+        <g id="torso" class="joint">
+          <path d="M204,228 Q256,216 308,228 L296,356 Q256,366 216,356 Z" fill="#3A506B" stroke="#141619" stroke-width="4"/>
+          <g id="head" class="joint">
+            <circle cx="256" cy="166" r="58" fill="#F2C6A0" stroke="#141619" stroke-width="4"/>
+            <g id="eyes_open">
+              <ellipse cx="236" cy="160" rx="6" ry="8" fill="#141619"/>
+              <ellipse cx="276" cy="160" rx="6" ry="8" fill="#141619"/>
+            </g>
+            <g id="eyes_closed" style="opacity:0">
+              <path d="M228,162 Q236,167 244,162 M268,162 Q276,167 284,162" stroke="#141619" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            </g>
+            <g id="mouth_bank">
+              <g id="mouth_X"><path d="M244,190 Q256,194 268,190" stroke="#2B1E1A" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>
+              <g id="mouth_A" style="display:none"><path d="M242,190 L270,190" stroke="#2B1E1A" stroke-width="4.5" fill="none"/></g>
+              <g id="mouth_B" style="display:none"><rect x="242" y="185" width="28" height="9" rx="4" fill="#FFF" stroke="#2B1E1A" stroke-width="3"/></g>
+              <g id="mouth_C" style="display:none"><ellipse cx="256" cy="191" rx="13" ry="8" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/></g>
+              <g id="mouth_D" style="display:none"><ellipse cx="256" cy="193" rx="15" ry="13" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/></g>
+              <g id="mouth_E" style="display:none"><ellipse cx="256" cy="191" rx="10" ry="8" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/></g>
+              <g id="mouth_F" style="display:none"><ellipse cx="256" cy="191" rx="7" ry="8" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/></g>
+              <g id="mouth_G" style="display:none"><path d="M243,187 L269,187 Q256,196 243,187 Z" fill="#FFF" stroke="#2B1E1A" stroke-width="3"/></g>
+              <g id="mouth_H" style="display:none"><ellipse cx="256" cy="191" rx="11" ry="7" fill="#6E1D2A" stroke="#2B1E1A" stroke-width="3"/></g>
+            </g>
+          </g>
+          <g id="arm_L" class="joint">
+            <rect x="294" y="230" width="28" height="106" rx="14" fill="#496A81" stroke="#141619" stroke-width="4"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const state = params.get('state') || 'idle';
+      const mouths = ['X','A','B','C','D','E','F','G','H'];
+      let visemeCues = window.VISEME_CUES || [];
+
+      function setMouth(code) {
+        for (const m of mouths) {
+          const el = document.getElementById('mouth_' + m);
+          if (el) el.style.display = (m === code) ? 'inline' : 'none';
+        }
+      }
+
+      function tick(ms) {
+        const t = ms * 0.001;
+        const root = document.getElementById('rig_root');
+        const torso = document.getElementById('torso');
+        const head = document.getElementById('head');
+        const armL = document.getElementById('arm_L');
+        const armR = document.getElementById('arm_R');
+        const legL = document.getElementById('leg_L');
+        const legR = document.getElementById('leg_R');
+
+        if (state === 'walk') {
+          const w = t * Math.PI * 2.0; // 1.0s exact seamless cycle
+          root.style.transform  = `translateY(${Math.abs(Math.cos(w)) * -6}px)`;
+          torso.style.transform = `rotate(${Math.sin(w) * 3.0}deg)`;
+          head.style.transform  = `rotate(${Math.sin(w - 0.3) * -2.2}deg)`;
+          legL.style.transform  = `rotate(${Math.sin(w) * 24}deg)`;
+          legR.style.transform  = `rotate(${-Math.sin(w) * 24}deg)`;
+          armL.style.transform  = `rotate(${-Math.sin(w) * 20}deg)`;
+          armR.style.transform  = `rotate(${Math.sin(w) * 20}deg)`;
+        } else {
+          const b = t * Math.PI * 1.0; // 2.0s breathing loop
+          root.style.transform  = `translateY(${Math.sin(b) * -2.0}px)`;
+          torso.style.transform = `rotate(${Math.sin(b) * 1.3}deg)`;
+          head.style.transform  = `rotate(${Math.sin(b - 0.5) * -1.6}deg)`;
+          armL.style.transform  = `rotate(${Math.sin(b - 0.4) * 2.5}deg)`;
+          armR.style.transform  = `rotate(${-Math.sin(b - 0.4) * 2.5}deg)`;
+        }
+
+        // Deterministic periodic blink (every 3.4s for 120ms)
+        const blinkPhase = ms % 3400;
+        const blinking = blinkPhase > 3280;
+        document.getElementById('eyes_open').style.opacity = blinking ? '0' : '1';
+        document.getElementById('eyes_closed').style.opacity = blinking ? '1' : '0';
+
+        // Viseme timeline playback if active
+        if (visemeCues.length > 0) {
+          const cue = visemeCues.find(c => ms >= c.start_ms && ms < c.end_ms);
+          setMouth(cue ? cue.value : 'X');
+        }
+        requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    </script>
+  </body>
+  </html>

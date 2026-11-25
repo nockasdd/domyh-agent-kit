@@ -1,0 +1,56 @@
+# =============================================================================
+# Technical Asset Specification Contract — DOMYH Creative Asset Studio
+# =============================================================================
+# Copy to `.agent/specs/<asset-id>.spec.yaml` via `/asset spec [name]` before
+# modeling, generating sprites, rigging SVG/3D characters, or authoring VFX.
+# =============================================================================
+
+schema_version: "1.0"
+id: "chr_vanguard_knight_01"
+name: "Vanguard Knight"
+kind: "3d_character" # 3d_character | 3d_prop | 2d_character | npc | pixel_sprite | tileset | vfx | cutscene_video
+art_bible_ref: ".agent/specs/art-bible.yaml"
+
+dimensions_meters:
+  width: 0.68
+  height: 1.82
+  depth: 0.45
+  pivot_origin: "bottom_center" # bottom_center (characters/props) | geometric_center (projectiles/pickups)
+
+lod_triangle_budgets:
+  lod0: 12000
+  lod1: 6000
+  lod2: 2500
+
+texture_size: 2048 # 512 | 1024 | 2048 | 4096
+pbr_packing: "ORM" # R=AmbientOcclusion, G=Roughness, B=Metallic (Linear / Non-Color)
+
+uv_constraints:
+  uv_channels: 1
+  min_island_margin_px: 8
+  allow_mirrored_overlap: false
+  texel_density_px_per_meter: 512
+
+rig:
+  enabled: true
+  profile: "humanoid_52" # humanoid_52 | simple_prop | quadruped | svg_layered_2d | none
+  arkit_52_blendshapes: true
+  visemes_15: true
+  max_bone_influences_per_vert: 4
+  root_bone_at_origin: true
+
+animations_required:
+  - "idle"
+  - "walk"
+  - "run"
+  - "attack_primary"
+  - "hit_react"
+  - "death"
+
+qa_gates:
+  min_silhouette_iou: 0.88
+  max_ngon_ratio: 0.02
+  zero_unweighted_verts: true
+  zero_non_manifold_edges: true
+  require_unit_scale_applied: true
+  min_visual_scorecard_avg: 8.0

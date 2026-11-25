@@ -1,0 +1,67 @@
+name: character-npc-studio
+display: "2D Character, Layered SVG Rig, NPC Lipsync & Cutscene Studio"
+category: ai-ml
+tier: 1
+priority: 3
+
+desc: "Complete 2D Character, Interactive NPC, and Cutscene Video Studio for Gemini, GPT, and Claude (Zero Local GPU): Single-Canvas Turnaround + 14-Ref Identity Lock expression sheets, layered anatomical SVG character rigging with arc-preserving JS/CSS state machines, TTS-to-Viseme lipsync (viseme_timeline), and keyframe-locked Veo 3.1 cutscenes."
+
+caps:
+  - Single-Canvas Turnaround Identity Lock (Front / 3-4 / Side / Back)
+  - Multi-Reference Expression Sheet Synthesis (6-9 Emotions + Viseme Mouths)
+  - Auto-Slicing, Trim & Pivot Alignment (hsa_design sprite_sheet slice)
+  - Layered Vector SVG Character Rigging (#rig_root, #torso, #head, #mouth_X..H)
+  - Arc-Preserving State Machine Animator & Transparent PNG Frame Capture (hsa_canvas)
+  - NPC Voice Synthesis (Gemini TTS / OpenAI TTS) + Millisecond Viseme Lipsync
+  - Cross-Engine NPC Dialogue State Machine (Unity / Unreal / Godot 4 / Web)
+  - First/Last Keyframe-Locked Cutscene Video Generation (Veo 3.1 / Cloud Video)
+
+data_files:
+  - data/consistent-character-sheets.yaml
+  - data/svg-character-rigging.yaml
+  - data/npc-dialogue-lipsync-video.yaml
+
+triggers:
+  file_patterns:
+    - "*character-sheet*"
+    - "*turnaround*"
+    - "*viseme*.json"
+    - "*dialogue*.json"
+    - "*npc*.yaml"
+  keywords:
+    - 2d character
+    - character sheet
+    - turnaround
+    - consistent character
+    - npc
+    - npc dialogue
+    - expression sheet
+    - portrait
+    - svg character
+    - vector rig
+    - lipsync
+    - lip sync
+    - viseme
+    - cutscene
+    - storyboard
+    - visual novel sprite
+    - talking avatar
+  intents:
+    - design consistent 2d character sheet
+    - create npc portrait and expression pack
+    - rig layered svg character with idle walk talking animation
+    - generate npc voice audio and viseme lipsync timeline
+    - produce consistent character video cutscene
+
+related_skills:
+  - gemini-media-gen
+  - gemini-tts
+  - pixel-art-studio
+  - blender-3d-studio
+  - game-development
+
+links_to:
+  - gemini-media-gen
+  - gemini-tts
+  - pixel-art-studio
+  - game-development

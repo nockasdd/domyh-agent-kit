@@ -1,0 +1,84 @@
+# =============================================================================
+# Pixel Craft Rules, Defect Taxonomy & Motion QA Thresholds
+# =============================================================================
+
+version: "1.0"
+
+craft_laws:
+  - id: "PCR_01_SILHOUETTE_FIRST"
+    rule: "Block the 1-color solid silhouette at native 1x resolution before placing internal detail"
+    why: "At 16x16 to 48x48, internal rendering cannot rescue an unreadable pose or fused limbs"
+    check: "Render solid black mask against white; limbs/head/weapon must show distinct negative-space gaps"
+
+  - id: "PCR_02_LOCKED_LIGHT_315"
+    rule: "Lock primary directional light at 315 deg (Top-Left) across all sprites and tiles"
+    why: "Mixed light angles break scene cohesion immediately when sprites stand on tiles"
+    check: "Brightest cluster sits in top-left quadrant of convex forms; cast shadow falls bottom-right"
+
+  - id: "PCR_03_HUE_SHIFTED_RAMPS"
+    rule: "Shift highlights toward warm yellow (+10..+18 deg) and shadows toward cool blue/purple (-12..-22 deg)"
+    why: "Pure value-only ramps (adding black/white) look chalky in highlights and muddy gray in shadows"
+
+  - id: "PCR_04_SELECTIVE_OUTLINE"
+    rule: "Darken outer 1px outline relative to local material color + light angle (sel-out), reserving pure black for ground contact"
+    why: "Solid #000000 outlines around bright surfaces flatten small sprites into stickers"
+
+  - id: "PCR_05_CLEAN_CURVES_NO_JAGGIES"
+    rule: "Pixel runs along curves must progress monotonically (e.g. 4-2-1-1-2-4), never erratic 3-1-2-1"
+    why: "Broken run-length progressions catch the human eye as jagged stair-stepping"
+
+  - id: "PCR_06_ANTI_BANDING_ANTI_PILLOW"
+    rule: "Stagger adjacent shade boundaries so two parallel pixel staircases never align end-to-end; never shade concentrically from sprite center"
+    why: "Banding creates phantom grid artifacts; pillow shading destroys 3D volume"
+
+  - id: "PCR_07_BINARY_ALPHA_ZERO_MIXELS"
+    rule: "Enforce 1:1 texel ratio across all assets and strict binary alpha (0 or 255)"
+    why: "Semi-transparent edge pixels blend unpredictably against dark/bright tile backgrounds"
+
+animation_anatomy:
+  idle_4_frame:
+    fps: 6
+    frames:
+      - { idx: 0, pose: "Neutral standing stance, chest relaxed" }
+      - { idx: 1, pose: "Inhale: torso + head +1px up, shoulders widen slightly" }
+      - { idx: 2, pose: "Peak hold: hair/cape secondary follow-through +1px" }
+      - { idx: 3, pose: "Exhale settle: torso returns, cape trails 1 frame behind" }
+    qa_gates:
+      changed_pixel_ratio_range: [0.02, 0.14]
+      min_silhouette_iou_vs_frame0: 0.86
+
+  walk_6_or_8_frame:
+    fps: 10
+    frames_4_minimal:
+      - { idx: 0, pose: "Contact (right foot forward, left back, head at mid height)" }
+      - { idx: 1, pose: "Passing / Down-recoil (weight drops -1px, arms cross torso)" }
+      - { idx: 2, pose: "Contact Mirrored (left foot forward, right back, head mid)" }
+      - { idx: 3, pose: "Passing / Up-push (push-off +1px vertical bob)" }
+    qa_gates:
+      changed_pixel_ratio_range: [0.05, 0.35]
+      min_silhouette_iou_vs_frame0: 0.72
+      foot_baseline_locked_y: true
+
+  attack_melee_5_frame:
+    fps: 14
+    frames:
+      - { idx: 0, pose: "Anticipation coil (wind-up back, 2x hold duration)" }
+      - { idx: 1, pose: "Smear / Slash arc (bright crescent smear frame covering full swing)" }
+      - { idx: 2, pose: "Overshoot impact (weapon fully extended +1px forward)" }
+      - { idx: 3, pose: "Follow-through settle" }
+      - { idx: 4, pose: "Recovery to idle" }
+    qa_gates:
+      changed_pixel_ratio_range: [0.10, 0.58]
+      min_silhouette_iou_vs_frame0: 0.45
+
+directions_8_convention:
+  order_clockwise:
+    - { index: 0, code: "S",  angle_deg: 90,  desc: "Front / Facing camera" }
+    - { index: 1, code: "SW", angle_deg: 135, desc: "Front-Left 3/4" }
+    - { index: 2, code: "W",  angle_deg: 180, desc: "Left profile" }
+    - { index: 3, code: "NW", angle_deg: 225, desc: "Back-Left 3/4" }
+    - { index: 4, code: "N",  angle_deg: 270, desc: "Back / Away from camera" }
+    - { index: 5, code: "NE", angle_deg: 315, desc: "Back-Right 3/4" }
+    - { index: 6, code: "E",  angle_deg: 0,   desc: "Right profile" }
+    - { index: 7, code: "SE", angle_deg: 45,  desc: "Front-Right 3/4" }
+  asymmetry_note: "If character holds sword in Right hand, W and E views are NOT pure horizontal mirrors — swap foreground/background arm occlusion!"

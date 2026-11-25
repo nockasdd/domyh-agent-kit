@@ -119,6 +119,100 @@ function buildTools(tools: BlenderTools): ToolSpec[] {
       mutates: true,
       run: (a) => tools.executePython(a.code as string, (a.stdout_cap_bytes as number) ?? EXEC_OUTPUT_CAP),
     },
+    {
+      name: 'blender_run_headless',
+      description: `Run Python inside a background Blender process (blender --background) without requiring an open GUI session or add-on connection. Assign to _result to return structured JSON, and optionally load blend_file or save_to a .blend path.`,
+      inputSchema: {
+        type: 'object',
+        properties: {
+          code: { type: 'string', description: 'Python source to execute with bpy in scope.' },
+          blend_file: { type: 'string', description: 'Optional .blend file to open before running code. Omit for --factory-startup.' },
+          save_to: { type: 'string', description: 'Optional .blend destination path saved after code succeeds.' },
+          timeout_ms: { type: 'number', description: 'Hard process timeout in milliseconds (default 60000, max 180000).', default: 60_000 },
+          stdout_cap_bytes: { type: 'number', description: 'Maximum user stdout bytes returned.', default: EXEC_OUTPUT_CAP },
+        },
+        required: ['code'],
+      },
+      mutates: true,
+      run: (a) =>
+        tools.runHeadless({
+          code: a.code as string,
+          blendFile: a.blend_file as string | undefined,
+          saveTo: a.save_to as string | undefined,
+          timeoutMs: a.timeout_ms as number | undefined,
+          stdoutCapBytes: a.stdout_cap_bytes as number | undefined,
+        }),
+    },
+    {
+      name: 'blender_render_views',
+      description: `Render orthographic/perspective QA views (BLENDER_WORKBENCH + transparent RGBA) of target MESH objects into a composite PNG at output_path, compute world dimensions_m, viewport fill_ratio, and optional silhouette_iou against reference_mask_path, then restore all scene/render state.`,
+      inputSchema: {
+        type: 'object',
+        properties: {
+          output_path: { type: 'string', description: 'Destination PNG file path for the rendered view or 2x2 composite.' },
+          target_objects: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Object names to frame. Defaults to all visible MESH objects.',
+          },
+          resolution: {
+            type: 'number',
+            description: 'Per-quadrant resolution in pixels (default 512 -> 1024x1024 for 4 views).',
+            default: 512,
+          },
+          views: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'View angles to render (front, right, top, persp, left, back, bottom).',
+            default: ['front', 'right', 'top', 'persp'],
+          },
+          reference_mask_path: {
+            type: 'string',
+            description: 'Optional reference RGBA image path to compute alpha silhouette IoU against.',
+          },
+        },
+        required: ['output_path'],
+      },
+      run: (a) =>
+        tools.renderViews({
+          outputPath: a.output_path as string,
+          targetObjects: a.target_objects as string[] | undefined,
+          resolution: a.resolution as number | undefined,
+          views: a.views as string[] | undefined,
+          referenceMaskPath: a.reference_mask_path as string | undefined,
+        }),
+    },
+    {
+      name: 'blender_asset_qa',
+      description: `Non-destructively inspect MESH geometry, UVs, materials, ARMATURE weights, ARKit 52 blendshapes, and optional GLB export/import roundtrip fidelity. Returns { passed, issues, metrics, objects_checked }.`,
+      inputSchema: {
+        type: 'object',
+        properties: {
+          target_objects: {
+            type: 'array',
+            items: { type: 'string' },
+            description: 'Object names to inspect. Defaults to all visible MESH objects.',
+          },
+          max_tris: { type: 'number', description: 'Maximum allowed total triangle count.' },
+          require_uv: { type: 'boolean', description: 'Fail QA if any checked mesh lacks a UV layer.' },
+          require_manifold: { type: 'boolean', description: 'Fail QA if non-manifold edges or loose vertices exist.' },
+          require_arkit52: { type: 'boolean', description: 'Verify all 52 Apple ARKit blendshapes exist.' },
+          roundtrip_glb_path: {
+            type: 'string',
+            description: 'Optional temporary .glb path to verify export/import height and bone preservation.',
+          },
+        },
+      },
+      run: (a) =>
+        tools.assetQa({
+          targetObjects: a.target_objects as string[] | undefined,
+          maxTris: a.max_tris as number | undefined,
+          requireUv: a.require_uv as boolean | undefined,
+          requireManifold: a.require_manifold as boolean | undefined,
+          requireArkit52: a.require_arkit52 as boolean | undefined,
+          roundtripGlbPath: a.roundtrip_glb_path as string | undefined,
+        }),
+    },
   ];
 }
 

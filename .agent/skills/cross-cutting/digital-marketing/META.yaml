@@ -86,3 +86,11 @@ data_files:
 links_to:
   - seo
   - web-perf
+
+prevent_confusion_with:
+  - pixel-art-studio: "Meta Pixel and Facebook Pixel are web conversion tracking tags, NOT 2D pixel art graphics"
+  - pixel art: "Use pixel-art-studio for retro 2D pixel art graphics and palettes"
+  - spritesheet: "Use pixel-art-studio or character-npc-studio for game sprite sheets"
+  - tileset: "Use pixel-art-studio for Wang and 47-blob game tilesets"
+  - aseprite: "Use pixel-art-studio for Aseprite sprite authoring and CLI batching"
+  - game sprite: "Use pixel-art-studio or character-npc-studio for game sprites"

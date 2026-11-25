@@ -1,0 +1,363 @@
+# =============================================================================
+# Blender bpy Modeling, Procedural PBR Shaders & ORM Baking Recipes
+# Compatible with Blender 3.6 LTS and Blender 4.x+
+# =============================================================================
+
+version: "1.0"
+
+bpy_compatibility_helpers:
+  description: "Cross-version Principled BSDF & Auto-Smooth helpers for Blender 3.6 and 4.x+"
+  script: |
+    import bpy
+
+    def set_bsdf(bsdf, names, value):
+        for n in (names if isinstance(names, (list, tuple)) else [names]):
+            if n in bsdf.inputs:
+                bsdf.inputs[n].default_value = value
+                return True
+        return False
+
+    def apply_clean_smoothing(obj, angle_deg=35.0):
+        import math
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.shade_smooth()
+        if hasattr(obj.data, "use_auto_smooth"):
+            obj.data.use_auto_smooth = True
+            obj.data.auto_smooth_angle = math.radians(angle_deg)
+        elif hasattr(bpy.ops.object, "shade_smooth_by_angle"):
+            bpy.ops.object.shade_smooth_by_angle(angle=math.radians(angle_deg))
+
+scene_initialization:
+  metric_studio_init:
+    description: "Reset Blender scene to clean 1.0m metric units, 30 FPS, ACES/AgX neutral studio lighting"
+    script: |
+      import bpy, math
+
+      def init_metric_scene(fps=30):
+          bpy.ops.wm.read_factory_settings(use_empty=True)
+          scene = bpy.context.scene
+          scene.unit_settings.system = 'METRIC'
+          scene.unit_settings.scale_length = 1.0
+          scene.unit_settings.length_unit = 'METERS'
+          scene.render.fps = fps
+          scene.render.engine = 'CYCLES'
+          scene.cycles.device = 'CPU'
+          scene.cycles.samples = 64
+
+          world = bpy.data.worlds.new("StudioWorld")
+          scene.world = world
+          world.use_nodes = True
+          bg = world.node_tree.nodes.get("Background")
+          bg.inputs[0].default_value = (0.18, 0.20, 0.23, 1.0)
+          bg.inputs[1].default_value = 0.8
+
+          # 3-Point Studio Lighting Rig
+          lights = [
+              ("KeyLight",  1200.0, (1.0, 0.96, 0.90), (2.2, -2.5, 2.8), (math.radians(48), 0, math.radians(40))),
+              ("FillLight",  420.0, (0.85, 0.92, 1.0), (-2.6, -2.0, 1.8), (math.radians(60), 0, math.radians(-48))),
+              ("RimLight",   950.0, (0.92, 0.95, 1.0), (0.0,  2.6, 2.5), (math.radians(-45), 0, 0.0)),
+          ]
+          for name, energy, color, loc, rot in lights:
+              ldata = bpy.data.lights.new(name=name, type='AREA')
+              ldata.energy = energy / 25.0
+              ldata.color = color
+              ldata.size = 1.5
+              lobj = bpy.data.objects.new(name=name, object_data=ldata)
+              bpy.context.collection.objects.link(lobj)
+              lobj.location = loc
+              lobj.rotation_euler = rot
+          return scene
+
+modeling_templates:
+  humanoid_blockout_7_5_heads:
+    description: "Anatomical 7.5-head (1.80m) volumetric blockout centered at origin (0,0,0) foot floor"
+    total_height_m: 1.80
+    head_unit_m: 0.24
+    landmarks_z_m:
+      crown: 1.80
+      chin: 1.56
+      clavicle_shoulders: 1.48
+      chest_nipple_line: 1.32
+      waist_navel: 1.08
+      hips_pelvis_pivot: 0.94
+      wrist_knuckles: 0.84
+      knee_joint: 0.50
+      ankle_joint: 0.08
+      sole_origin: 0.00
+    script: |
+      import bpy
+
+      def build_humanoid_blockout_7_5(height=1.80):
+          h = height / 7.5  # 1 head = 0.24m at 1.80m
+          parts = [
+              ("Head",      "SPHERE",   (0, 0, 7.00 * h), (0.42 * h, 0.48 * h, 0.50 * h)),
+              ("Neck",      "CYLINDER", (0, 0, 6.38 * h), (0.20 * h, 0.20 * h, 0.18 * h)),
+              ("Ribcage",   "CUBE",     (0, 0, 5.55 * h), (0.82 * h, 0.48 * h, 0.68 * h)),
+              ("Abdomen",   "CYLINDER", (0, 0, 4.65 * h), (0.58 * h, 0.38 * h, 0.38 * h)),
+              ("Pelvis",    "CUBE",     (0, 0, 3.95 * h), (0.76 * h, 0.45 * h, 0.40 * h)),
+          ]
+          created = []
+          for name, kind, loc, scale in parts:
+              if kind == "SPHERE":
+                  bpy.ops.mesh.primitive_uv_sphere_add(segments=16, ring_count=12, radius=1.0, location=loc)
+              elif kind == "CYLINDER":
+                  bpy.ops.mesh.primitive_cylinder_add(vertices=16, radius=1.0, depth=2.0, location=loc)
+              else:
+                  bpy.ops.mesh.primitive_cube_add(size=2.0, location=loc)
+              obj = bpy.context.active_object
+              obj.name = f"BLK_{name}"
+              obj.scale = scale
+              bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+              created.append(obj)
+
+          for side, sx in (("L", 1.0), ("R", -1.0)):
+              limb_specs = [
+                  (f"UpperArm_{side}", (sx * 0.98 * h, 0, 5.45 * h), (0.20 * h, 0.20 * h, 0.58 * h)),
+                  (f"ForeArm_{side}",  (sx * 1.05 * h, 0, 4.35 * h), (0.17 * h, 0.17 * h, 0.52 * h)),
+                  (f"Hand_{side}",     (sx * 1.08 * h, 0, 3.55 * h), (0.12 * h, 0.20 * h, 0.26 * h)),
+                  (f"Thigh_{side}",    (sx * 0.42 * h, 0, 2.95 * h), (0.28 * h, 0.28 * h, 0.82 * h)),
+                  (f"Calf_{side}",     (sx * 0.42 * h, 0, 1.32 * h), (0.21 * h, 0.21 * h, 0.78 * h)),
+                  (f"Foot_{side}",     (sx * 0.42 * h, -0.18 * h, 0.16 * h), (0.22 * h, 0.42 * h, 0.16 * h)),
+              ]
+              for lname, loc, scale in limb_specs:
+                  bpy.ops.mesh.primitive_cylinder_add(vertices=14, radius=1.0, depth=2.0, location=loc)
+                  obj = bpy.context.active_object
+                  obj.name = f"BLK_{lname}"
+                  obj.scale = scale
+                  bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+                  created.append(obj)
+          return created
+
+  hard_surface_bevel_weighted_normal:
+    description: "Production hard-surface stack: Bevel (weight/angle) + WeightedNormal + clean UV seam unwrap"
+    script: |
+      import bpy, math
+
+      def apply_hardsurface_stack(obj, bevel_width=0.008, segments=2, uv_margin=0.008):
+          bpy.context.view_layer.objects.active = obj
+          bpy.ops.object.transform_apply(location=False, rotation=True, scale=True)
+
+          bev = obj.modifiers.new(name="Bevel", type='BEVEL')
+          bev.width = bevel_width
+          bev.segments = segments
+          bev.limit_method = 'ANGLE'
+          bev.angle_limit = math.radians(32.0)
+          bev.harden_normals = False
+
+          wn = obj.modifiers.new(name="WeightedNormal", type='WEIGHTED_NORMAL')
+          wn.mode = 'FACE_AREA_WITH_ANGLE'
+          wn.weight = 50
+          wn.keep_sharp = True
+
+          apply_clean_smoothing(obj, 35.0)
+
+          bpy.ops.object.mode_set(mode='EDIT')
+          bpy.ops.mesh.select_all(action='SELECT')
+          bpy.ops.uv.smart_project(angle_limit=math.radians(66.0), island_margin=uv_margin, scale_to_bounds=False)
+          bpy.ops.object.mode_set(mode='OBJECT')
+
+procedural_pbr_materials:
+  scratched_metal:
+    description: "Procedural battle-worn metallic armor/weapon with edge cavity wear and micro-scratches"
+    metallic: 1.0
+    roughness_range: [0.18, 0.55]
+    script: |
+      import bpy
+
+      def create_scratched_metal_material(name="MAT_ScratchedMetal", base_hex=(0.42, 0.45, 0.50, 1.0)):
+          mat = bpy.data.materials.new(name=name)
+          mat.use_nodes = True
+          nodes = mat.node_tree.nodes
+          links = mat.node_tree.links
+          nodes.clear()
+
+          out = nodes.new("ShaderNodeOutputMaterial")
+          bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+          tex_coord = nodes.new("ShaderNodeTexCoord")
+          mapping = nodes.new("ShaderNodeMapping")
+          mapping.inputs["Scale"].default_value = (18.0, 18.0, 18.0)
+
+          noise = nodes.new("ShaderNodeTexNoise")
+          noise.inputs["Scale"].default_value = 14.0
+          noise.inputs["Detail"].default_value = 8.0
+          noise.inputs["Roughness"].default_value = 0.65
+
+          voronoi = nodes.new("ShaderNodeTexVoronoi")
+          voronoi.feature = 'DISTANCE_TO_EDGE'
+          voronoi.inputs["Scale"].default_value = 35.0
+
+          geom = nodes.new("ShaderNodeNewGeometry")
+          edge_ramp = nodes.new("ShaderNodeValToRGB")
+          edge_ramp.color_ramp.elements[0].position = 0.48
+          edge_ramp.color_ramp.elements[1].position = 0.58
+
+          rough_ramp = nodes.new("ShaderNodeValToRGB")
+          rough_ramp.color_ramp.elements[0].color = (0.18, 0.18, 0.18, 1.0)
+          rough_ramp.color_ramp.elements[1].color = (0.56, 0.56, 0.56, 1.0)
+
+          col_mix = nodes.new("ShaderNodeMixRGB")
+          col_mix.inputs["Color1"].default_value = base_hex
+          col_mix.inputs["Color2"].default_value = (0.78, 0.80, 0.84, 1.0)
+
+          bump = nodes.new("ShaderNodeBump")
+          bump.inputs["Strength"].default_value = 0.08
+          bump.inputs["Distance"].default_value = 0.002
+
+          set_bsdf(bsdf, "Metallic", 1.0)
+          links.new(tex_coord.outputs["Object"], mapping.inputs["Vector"])
+          links.new(mapping.outputs["Vector"], noise.inputs["Vector"])
+          links.new(mapping.outputs["Vector"], voronoi.inputs["Vector"])
+          links.new(geom.outputs["Pointiness"], edge_ramp.inputs["Fac"])
+          links.new(edge_ramp.outputs["Color"], col_mix.inputs["Fac"])
+          links.new(col_mix.outputs["Color"], bsdf.inputs["Base Color"])
+          links.new(noise.outputs["Fac"], rough_ramp.inputs["Fac"])
+          links.new(rough_ramp.outputs["Color"], bsdf.inputs["Roughness"])
+          links.new(voronoi.outputs["Distance"], bump.inputs["Height"])
+          links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
+          links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
+          return mat
+
+  weathered_stone:
+    description: "Layered Voronoi fracture + Musgrave/Noise moss cavity procedural stone"
+    metallic: 0.0
+    roughness_range: [0.72, 0.94]
+    parameters:
+      voronoi_scale: 6.5
+      noise_detail: 10.0
+      bump_strength: 0.25
+      moss_cavity_color: [0.16, 0.26, 0.14, 1.0]
+      stone_base_color: [0.34, 0.33, 0.31, 1.0]
+
+  subsurface_skin:
+    description: "Stylized/Realistic character skin with Subsurface Scattering and warm epidermal scatter"
+    metallic: 0.0
+    roughness_range: [0.36, 0.48]
+    parameters:
+      base_color: [0.82, 0.58, 0.47, 1.0]
+      subsurface_weight: 0.35
+      subsurface_radius: [1.0, 0.35, 0.20]
+      subsurface_scale: 0.015
+      pore_voronoi_scale: 180.0
+      pore_bump_strength: 0.03
+
+  woven_fabric:
+    description: "Cross-wave procedural cloth/cape weave with fuzz sheen"
+    metallic: 0.0
+    roughness_range: [0.78, 0.92]
+    parameters:
+      wave_x_scale: 95.0
+      wave_y_scale: 95.0
+      sheen_weight: 0.45
+      bump_strength: 0.06
+
+  cel_shaded_toon_npr:
+    description: "Anime / Genshin-style Cel-Shaded NPR material (ShaderToRGB stepped shadow ramp + Fresnel rim)"
+    engine_note: "Use EEVEE for live viewport NPR or bake diffuse ramp to unlit sRGB texture for glTF"
+    color_stops:
+      shadow_stop_0: { pos: 0.00, mult: [0.48, 0.42, 0.62] }
+      midtone_stop_1: { pos: 0.42, mult: [1.00, 1.00, 1.00] }
+      highlight_stop_2: { pos: 0.88, mult: [1.15, 1.12, 1.05] }
+
+orm_and_normal_baking:
+  description: "Cycles deterministic baker producing BaseColor (sRGB), Normal (Linear OpenGL/DirectX), and Packed ORM (R=AO, G=Roughness, B=Metallic)"
+  channel_contract:
+    base_color: { colorspace: "sRGB", format: "PNG", channels: "RGBA" }
+    orm:        { colorspace: "Non-Color", format: "PNG", R: "AO", G: "Roughness", B: "Metallic" }
+    normal:     { colorspace: "Non-Color", format: "PNG", opengl: "+X +Y +Z", directx: "+X -Y +Z (UE5)" }
+  script: |
+    import bpy, os
+
+    def bake_pbr_orm_maps(obj, out_dir, prefix="T_Asset", size=2048, directx_normal=False):
+        os.makedirs(out_dir, exist_ok=True)
+        scene = bpy.context.scene
+        scene.render.engine = 'CYCLES'
+        scene.cycles.device = 'CPU'
+        scene.cycles.samples = 32
+        scene.render.bake.margin = 16
+
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+
+        def make_bake_target(img_name, non_color=True):
+            img = bpy.data.images.new(img_name, width=size, height=size, alpha=False)
+            img.colorspace_settings.name = 'Non-Color' if non_color else 'sRGB'
+            active_nodes = []
+            for slot in obj.material_slots:
+                if not slot.material or not slot.material.use_nodes:
+                    continue
+                nt = slot.material.node_tree
+                tex = nt.nodes.new("ShaderNodeTexImage")
+                tex.image = img
+                for n in nt.nodes:
+                    n.select = False
+                tex.select = True
+                nt.nodes.active = tex
+                active_nodes.append((nt, tex))
+            return img, active_nodes
+
+        def cleanup_nodes(active_nodes):
+            for nt, tex in active_nodes:
+                nt.nodes.remove(tex)
+
+        # 1. BaseColor (Diffuse Color only, no lighting)
+        img_col, n_col = make_bake_target(f"{prefix}_BaseColor", non_color=False)
+        scene.render.bake.use_pass_direct = False
+        scene.render.bake.use_pass_indirect = False
+        scene.render.bake.use_pass_color = True
+        bpy.ops.object.bake(type='DIFFUSE')
+        col_path = os.path.join(out_dir, f"{prefix}_BaseColor.png")
+        img_col.filepath_raw = col_path
+        img_col.file_format = 'PNG'
+        img_col.save()
+        cleanup_nodes(n_col)
+
+        # 2. Normal Map (OpenGL +Y or DirectX -Y for UE5)
+        img_nrm, n_nrm = make_bake_target(f"{prefix}_Normal", non_color=True)
+        scene.render.bake.normal_space = 'TANGENT'
+        scene.render.bake.normal_r = 'POS_X'
+        scene.render.bake.normal_g = 'NEG_Y' if directx_normal else 'POS_Y'
+        scene.render.bake.normal_b = 'POS_Z'
+        bpy.ops.object.bake(type='NORMAL')
+        nrm_path = os.path.join(out_dir, f"{prefix}_Normal.png")
+        img_nrm.filepath_raw = nrm_path
+        img_nrm.file_format = 'PNG'
+        img_nrm.save()
+        cleanup_nodes(n_nrm)
+
+        # 3. Ambient Occlusion & Roughness + Metallic Channel Packing -> ORM
+        img_ao, n_ao = make_bake_target("_tmp_ao", non_color=True)
+        bpy.ops.object.bake(type='AO')
+        cleanup_nodes(n_ao)
+
+        img_rgh, n_rgh = make_bake_target("_tmp_rough", non_color=True)
+        bpy.ops.object.bake(type='ROUGHNESS')
+        cleanup_nodes(n_rgh)
+
+        # Extract Metallic scalar from Principled BSDF (or 0.0 fallback)
+        metal_val = 0.0
+        if obj.material_slots and obj.material_slots[0].material:
+            for node in obj.material_slots[0].material.node_tree.nodes:
+                if node.type == 'BSDF_PRINCIPLED' and 'Metallic' in node.inputs:
+                    metal_val = float(node.inputs['Metallic'].default_value)
+                    break
+
+        ao_px = list(img_ao.pixels)
+        rgh_px = list(img_rgh.pixels)
+        orm_img = bpy.data.images.new(f"{prefix}_ORM", width=size, height=size, alpha=False)
+        orm_img.colorspace_settings.name = 'Non-Color'
+        orm_px = [1.0] * len(ao_px)
+        for i in range(0, len(ao_px), 4):
+            orm_px[i]     = ao_px[i]      # R = Ambient Occlusion
+            orm_px[i + 1] = rgh_px[i + 1] # G = Roughness
+            orm_px[i + 2] = metal_val     # B = Metallic
+            orm_px[i + 3] = 1.0
+        orm_img.pixels[:] = orm_px
+        orm_path = os.path.join(out_dir, f"{prefix}_ORM.png")
+        orm_img.filepath_raw = orm_path
+        orm_img.file_format = 'PNG'
+        orm_img.save()
+
+        bpy.data.images.remove(img_ao)
+        bpy.data.images.remove(img_rgh)
+        return {"base_color": col_path, "normal": nrm_path, "orm": orm_path}

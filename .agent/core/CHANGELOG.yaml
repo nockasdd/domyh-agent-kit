@@ -2,6 +2,15 @@
 # Extracted from VERSION.yaml (SSoT) for token efficiency
 
 changelog:
+  "6.8.0":
+    date: "2026-11-25"
+    codename: "Cloud & Code-First Creative Asset Studio & Hybrid Code Mode"
+    changes:
+      - "HSA v2.1.0: Deterministic Creative Asset Pipeline in hsa_design (pixel_quantize OKLab, sprite_sheet, sprite_stack 16-dir + Normal Map, binary .glb asset_audit, WAV viseme_timeline)"
+      - "HSA v2.1.0: Real Playwright headless WebGL/SVG/HTML frame sequence capture in hsa_canvas + 12KB Tier-2 skill budget + QuickJS WASM Code Mode (hsa_execute)"
+      - "4 New Creative Skill Packs (122 total skills): blender-3d-studio, pixel-art-studio, character-npc-studio, webgl-shader-godot + /asset workflow & spec templates"
+      - "MCP Bridges Upgraded: blender-bridge (10 tools: headless runner, 2x2 ortho render + IoU, bmesh QA), unity-bridge (23 tools: safe Library/HsaStaging import, viewport capture), ue-bridge (14 tools: viewport capture)"
+
   "6.7.21":
     date: "2026-10-02"
     codename: "Dual-Catalog SSoT & AI Safety Standardization"

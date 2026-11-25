@@ -1,0 +1,127 @@
+# =============================================================================
+# NPC Voice, Millisecond Viseme Lipsync & Keyframe-Locked Cutscene Video
+# =============================================================================
+
+version: "1.0"
+
+preston_blair_viseme_map:
+  description: "Output contract of hsa_design({ action: 'viseme_timeline' }) mapped to 2D sprites, SVG layers, and 3D ARKit blendshapes"
+  cues:
+    X: { name: "Idle / Silence",         phonemes: ["sil", "pause"],       svg_id: "mouth_X", arkit: { mouthClose: 0.15 } }
+    A: { name: "Closed Bilabial Press",  phonemes: ["P", "B", "M"],        svg_id: "mouth_A", arkit: { mouthPressLeft: 0.85, mouthPressRight: 0.85 } }
+    B: { name: "Consonant Clench",       phonemes: ["K", "S", "T", "Z", "EE"], svg_id: "mouth_B", arkit: { jawOpen: 0.16, mouthSmileLeft: 0.35, mouthSmileRight: 0.35 } }
+    C: { name: "Mid Open Vowel",         phonemes: ["EH", "AE", "UH"],     svg_id: "mouth_C", arkit: { jawOpen: 0.42, mouthSmileLeft: 0.25, mouthSmileRight: 0.25 } }
+    D: { name: "Wide Open Vowel",        phonemes: ["AA", "AH", "AY"],     svg_id: "mouth_D", arkit: { jawOpen: 0.78, mouthLowerDownLeft: 0.35, mouthLowerDownRight: 0.35 } }
+    E: { name: "Rounded Mid Vowel",      phonemes: ["AO", "ER", "OH"],     svg_id: "mouth_E", arkit: { jawOpen: 0.48, mouthFunnel: 0.60 } }
+    F: { name: "Tight Pucker Vowel",     phonemes: ["UW", "OW", "W", "Q"], svg_id: "mouth_F", arkit: { jawOpen: 0.18, mouthPucker: 0.85 } }
+    G: { name: "Labiodental Tuck",       phonemes: ["F", "V"],             svg_id: "mouth_G", arkit: { mouthRollLower: 0.75, mouthUpperUpLeft: 0.25, mouthUpperUpRight: 0.25 } }
+    H: { name: "Alveolar / Lateral",     phonemes: ["L", "TH", "R"],       svg_id: "mouth_H", arkit: { jawOpen: 0.28, tongueOut: 0.25 } }
+
+npc_dialogue_schema:
+  example_node:
+    npc_id: "npc_blacksmith_korga"
+    node_id: "quest_iron_gate_01"
+    emotion: "angry" # maps to portraits/angry.png or 3D browDownLeft+browDownRight
+    transcript: "The northern forge went cold at midnight. Bring me three ember cores!"
+    tts_voice_profile: { provider: "gemini-tts", voice_name: "Charon", style_prompt: "Gruff veteran blacksmith, urgent warning tone" }
+    audio_wav: "assets/audio/korga_iron_gate_01.wav"
+    viseme_json: "assets/audio/korga_iron_gate_01.visemes.json"
+    choices:
+      - { id: "accept", text: "I will head to the ash caverns now.", next_node: "quest_accepted" }
+      - { id: "ask_reward", text: "What does it pay?", next_node: "negotiate_pay" }
+
+runtime_players:
+  godot4_gdscript_2d_or_3d: |
+    extends Node
+    class_name NpcLipsyncPlayer
+
+    @export var audio_player: AudioStreamPlayer
+    @export var mouth_sprite: Sprite2D
+    @export var viseme_textures: Dictionary = {} # {"X": Texture2D, "A": Texture2D, ...}
+
+    var _cues: Array = []
+
+    func play_line(stream: AudioStream, viseme_json_path: String) -> void:
+        var raw := FileAccess.get_file_as_string(viseme_json_path)
+        var parsed: Dictionary = JSON.parse_string(raw)
+        _cues = parsed.get("cues", [])
+        audio_player.stream = stream
+        audio_player.play()
+
+    func _process(_delta: float) -> void:
+        if not audio_player.playing:
+            _apply_viseme("X")
+            return
+        var t_ms: float = (audio_player.get_playback_position() + AudioServer.get_time_since_last_mix()) * 1000.0
+        var active_code: String = "X"
+        for cue in _cues:
+            if t_ms >= float(cue["start_ms"]) and t_ms < float(cue["end_ms"]):
+                active_code = String(cue["value"])
+                break
+        _apply_viseme(active_code)
+
+    func _apply_viseme(code: String) -> void:
+        if mouth_sprite and viseme_textures.has(code):
+            mouth_sprite.texture = viseme_textures[code]
+
+  unity_csharp_arkit_3d: |
+    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+
+    [Serializable] public struct VisemeCue { public float start_ms; public float end_ms; public string value; }
+    [Serializable] public class VisemeTimeline { public float duration_ms; public List<VisemeCue> cues; }
+
+    public class NpcArkitLipsync : MonoBehaviour
+    {
+        [SerializeField] private AudioSource audioSource;
+        [SerializeField] private SkinnedMeshRenderer faceMesh;
+        [SerializeField] private float blendSpeed = 18f;
+        private VisemeTimeline _timeline;
+        private int _idxJawOpen, _idxFunnel, _idxPucker, _idxPressL, _idxPressR;
+
+        private void Awake() {
+            var m = faceMesh.sharedMesh;
+            _idxJawOpen = m.GetBlendShapeIndex("jawOpen");
+            _idxFunnel  = m.GetBlendShapeIndex("mouthFunnel");
+            _idxPucker  = m.GetBlendShapeIndex("mouthPucker");
+            _idxPressL  = m.GetBlendShapeIndex("mouthPressLeft");
+            _idxPressR  = m.GetBlendShapeIndex("mouthPressRight");
+        }
+
+        public void PlayDialogue(AudioClip clip, TextAsset visemeJson) {
+            _timeline = JsonUtility.FromJson<VisemeTimeline>(visemeJson.text);
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
+
+        private void Update() {
+            string v = "X";
+            if (audioSource.isPlaying && _timeline?.cues != null) {
+                float ms = audioSource.time * 1000f;
+                foreach (var c in _timeline.cues)
+                    if (ms >= c.start_ms && ms < c.end_ms) { v = c.value; break; }
+            }
+            float jaw = v == "D" ? 78f : (v == "C" || v == "E" ? 44f : (v == "B" || v == "H" ? 20f : 0f));
+            float pucker = v == "F" ? 85f : (v == "E" ? 55f : 0f);
+            float press = v == "A" ? 85f : 0f;
+            LerpShape(_idxJawOpen, jaw);
+            LerpShape(_idxPucker, pucker);
+            LerpShape(_idxPressL, press);
+            LerpShape(_idxPressR, press);
+        }
+
+        private void LerpShape(int idx, float target) {
+            if (idx < 0) return;
+            float cur = faceMesh.GetBlendShapeWeight(idx);
+            faceMesh.SetBlendShapeWeight(idx, Mathf.Lerp(cur, target, Time.deltaTime * blendSpeed));
+        }
+    }
+
+cutscene_video_veo31_workflow:
+  model: "veo-3.1-generate-preview"
+  anti_drift_protocol:
+    step_1_first_keyframe: "Synthesize 16:9 Shot Start PNG using anchor_turnaround.png as Identity Reference"
+    step_2_last_keyframe: "Synthesize 16:9 Shot End PNG using anchor_turnaround.png + Shot Start PNG so lighting, outfit, and background architecture match 100%"
+    step_3_video_bridge: "Invoke Veo 3.1 passing image=ShotStart, config.lastFrame=ShotEnd, resolution='1080p', aspectRatio='16:9'"
+    step_4_audio_mux: "Keep Veo native ambience/SFX or mux NPC TTS .wav dialogue track via ffmpeg -i shot.mp4 -i line.wav -c:v copy -c:a aac cutscene_final.mp4"

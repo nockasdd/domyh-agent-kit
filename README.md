@@ -8,9 +8,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/agent-kit">
     <img src="https://img.shields.io/npm/v/@nockdev/agent-kit?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-118-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-122-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-45-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/commands-46-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -330,7 +330,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 </table>
 
 <details>
-<summary><b>📋 All 45 Commands — Details & Example Flows</b></summary>
+<summary><b>📋 All 46 Commands — Details & Example Flows</b></summary>
 <br>
 
 ### 🔥 Core (9 commands)
@@ -381,17 +381,18 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 
 ---
 
-### 🎯 Special (10 commands)
+### 🎯 Special (11 commands)
 
 | Cmd             | Description                                                           | Example                                                      |
 | :-------------- | :-------------------------------------------------------------------- | :----------------------------------------------------------- |
 | `/orchestrate`  | Multi-Agent coordination: parallel tasks, delegate to specialists     | `/orchestrate Refactor + Test + Deploy auth module`          |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo last 2 commits`                                |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Microservices architecture for 10K concurrent users` |
-| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.6.8 across 15 files               |
+| `/sync-version` | Sync version from VERSION.yaml SSoT across all files                  | `/sync-version` → Sync v6.8.0 across project files           |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                          |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`                  |
 | `/game`         | Comprehensive game development assistant (Unity/UE/HTML5/Godot)       | `/game Create 2D player movement script`                       |
+| `/asset`        | Multimodal 2D/3D/Pixel/NPC creative asset pipeline & QA audit         | `/asset create 3D rigged character with 52 ARKit blendshapes` |
 | `/lang`         | Switch agent language (English ↔ Vietnamese)                          | `/lang vi` → Switch to Vietnamese                            |
 | `/workflow`     | Meta-command: workflow discovery, chaining, and aliasing              | `/workflow list` → Show all available workflows              |
 | `/clean`        | Code cleanup: remove dead code, organize imports, unused deps         | `/clean src/utils/` → Removed 12 unused exports              |
@@ -429,7 +430,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 
 ---
 
-## 🧠 Skills (118 total)
+## 🧠 Skills (122 total)
 
 <table>
 <tr>
@@ -462,7 +463,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (45) + Governance (9)
+### 🔧 Core & Cross-cutting (48) + Governance (9)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -471,7 +472,7 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 <p align="center">
   <sub><b>Core (15):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Graph Patterns, Skill Creator, License Audit, Web Pentest, Network Recon, Vuln Intel, Windows Forensics, Android Pentest</sub>
   <br>
-  <sub><b>Cross-cutting (30):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection</sub>
+  <sub><b>Cross-cutting (33):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Blender 3D Studio, Pixel Art Studio, WebGL Shader & Godot, Reverse Engineering, Anti-Detection</sub>
 </p>
 
 ### 🛠️ Tooling (8)
@@ -480,10 +481,10 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
   <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit, Frida, Symbolic Execution</sub>
 </p>
 
-### 🤖 AI-ML (9)
+### 🤖 AI-ML (10)
 
 <p align="center">
-  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration</sub>
+  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Character & NPC Studio, Agentic Orchestration</sub>
 </p>
 
 </td>
@@ -500,11 +501,11 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 | **Frameworks**    | 9      | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
 | **Core**          | 15     | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Graph Patterns, Skill Creator, License Audit, Web Pentest, Network Recon, Vuln Intel, Windows Forensics, Android Pentest |
 | **DevOps**        | 7      | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 30     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection |
+| **Cross-cutting** | 33     | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Blender 3D Studio, Pixel Art Studio, WebGL Shader & Godot, Reverse Engineering, Anti-Detection |
 | **Tooling**       | 8      | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit, Frida, Symbolic Execution                                                                                                                   |
-| **AI-ML**         | 9      | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
+| **AI-ML**         | 10     | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Character & NPC Studio, Agentic Orchestration                                                  |
 | **Governance**    | 9      | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation, Context Compaction                                  |
-| **Total**         | **118** |                                                                                                                                                                                                                     |
+| **Total**         | **122** |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -572,16 +573,16 @@ HSA includes a built-in web dashboard for real-time monitoring — **disabled by
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Agent configuration
-├── 🧠 skills/                # 118 specialized skills
+├── 🧠 skills/                # 122 specialized skills
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (15)    # Security, API Design, Auth, License Audit, Web Pentest...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (30)   # Testing, Database, Playwright, Delegation Review...
+│   ├── cross-cutting/ (33)   # Testing, Database, Blender 3D, Pixel Art, WebGL/Godot...
 │   ├── tooling/      (8)     # MCP, API Protocols, IDE Extension, Frida...
-│   ├── ai-ml/        (9)     # AI Agents, ML Pipelines, Gemini, RAG...
+│   ├── ai-ml/        (10)    # AI Agents, ML Pipelines, Gemini, Character & NPC Studio...
 │   └── governance/   (9)     # Drift Prevention, Session Governance...
-├── 🔄 workflows/     (45)    # 45 command handlers (including /skill-create)
+├── 🔄 workflows/     (46)    # 46 command handlers (including /asset, /skill-create)
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Engine configurations

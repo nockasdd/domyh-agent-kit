@@ -14,9 +14,9 @@
 # =============================================================================
 
 system:
-  version: "6.7.24"
-  codename: "Tri-Tier Subagent Delegation & Safe Platform Orchestration"
-  release_date: "2026-05-20"
+  version: "6.8.0"
+  codename: "Cloud & Code-First Creative Asset Studio & Hybrid Code Mode"
+  release_date: "2026-11-25"
 
   # Identity comes from BRANDING.yaml
   _identity_ref: "core/BRANDING.yaml"

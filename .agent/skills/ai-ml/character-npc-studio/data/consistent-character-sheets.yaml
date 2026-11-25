@@ -1,0 +1,81 @@
+# =============================================================================
+# Consistent 2D Character Turnaround & Multi-Reference Expression Sheet Recipes
+# =============================================================================
+
+version: "1.0"
+
+turnaround_anchor_recipe:
+  aspect_ratio: "16:9"
+  resolution: "2K_or_4K"
+  background_chroma: "#E6E8EC" # Neutral light gray for dark/saturated costumes, or "#00FF00" if zero green in outfit
+  prompt_template: |
+    Character model turnaround sheet of {character_description}, four full-body views side-by-side in one horizontal row from left to right:
+    1) Front orthographic view, 2) Three-quarter front view, 3) Strict side profile view, 4) Back orthographic view.
+    Identical height, horizontal alignment proportions, exact same {costume_and_color_palette}, neutral A-pose,
+    clean {art_style_archetype} linework and cel-shading, flat solid #E6E8EC studio background,
+    no text labels, no watermarks, no overlapping limbs, crisp silhouette separation.
+
+  qa_checks_before_locking:
+    - "All 4 views stand on the exact same Y baseline pixel row (+/- 4px)"
+    - "Crown-to-sole height matches across Front, 3/4, Side, and Back within 3%"
+    - "Asymmetric details (scars, shoulder pauldron, holster) flip sides logically between Front and Back"
+
+expression_sheet_3x3_recipe:
+  aspect_ratio: "1:1"
+  grid: { columns: 3, rows: 3 }
+  cell_order:
+    - { index: 0, id: "neutral",       desc: "Calm resting gaze, relaxed closed lips" }
+    - { index: 1, id: "happy",         desc: "Warm genuine smile, raised cheeks, bright eyes" }
+    - { index: 2, id: "angry",         desc: "Furrowed lowered brows, tense grit or snarl" }
+    - { index: 3, id: "sad",           desc: "Inner brows raised upward, downturned mouth, softened gaze" }
+    - { index: 4, id: "surprised",     desc: "Wide open eyes, raised arched brows, small 'O' open mouth" }
+    - { index: 5, id: "talking_open",  desc: "Natural mid-speech open vowel 'AA/AE' mouth, engaged eyes" }
+    - { index: 6, id: "talking_round", desc: "Rounded 'OO/OH' speech vowel mouth, neutral brows" }
+    - { index: 7, id: "blink",         desc: "Identical to neutral bust, both eyelids smoothly closed" }
+    - { index: 8, id: "smirk",         desc: "Confident asymmetric half-smile, one brow slightly raised" }
+
+  multi_ref_prompt_template: |
+    Using the attached character turnaround sheet [Ref 1] as strict identity reference:
+    Generate a clean 3x3 grid of 9 bust-up dialogue portraits of this exact character, identical head position,
+    identical camera framing from chest up, identical outfit collar and hair bangs, flat solid #00FF00 background,
+    zero grid border lines, generous padding around each bust:
+    Row 1: (1) neutral calm, (2) happy warm smile, (3) angry furrowed brows.
+    Row 2: (4) sad melancholic, (5) surprised wide-eyed, (6) mid-speech open 'Ah' mouth.
+    Row 3: (7) mid-speech rounded 'Oh' mouth, (8) peaceful eyes-closed blink, (9) confident smirk.
+
+provider_payload_patterns:
+  gemini_nano_banana_pro:
+    model: "gemini-3-pro-image-preview"
+    max_reference_images: 14
+    recommended_refs:
+      - "Ref 1: anchor_turnaround.png (Character Identity SSoT)"
+      - "Ref 2: art_bible_palette_swatch.png (Color Palette Lock)"
+      - "Ref 3: style_benchmark_portrait.png (Lineweight & Shading Lock)"
+    config:
+      aspectRatio: "1:1"
+      imageSize: "2K"
+
+  openai_gpt_image:
+    model: "gpt-image-1"
+    endpoint: "POST /v1/images/edits (withanchor_turnaround.png as reference image[])"
+    size: "1024x1024"
+    quality: "high"
+    background: "opaque" # Prefer solid chroma + hsa_design slice/quantize over soft alpha
+
+slice_and_pack_pipeline: |
+  // Slice 3x3 expression grid into individual engine-ready portraits with locked [0.5, 1.0] pivot
+  const portraits = await hsa.design({
+    action: 'sprite_sheet',
+    mode: 'slice',
+    input_path: '.domyh/scratch/npc_expressions_3x3.png',
+    output_dir: 'assets/characters/npc_merchant/portraits',
+    columns: 3,
+    rows: 3,
+    names: [
+      'neutral', 'happy', 'angry',
+      'sad', 'surprised', 'talking_open',
+      'talking_round', 'blink', 'smirk'
+    ],
+    remove_bg: true,
+    pivot: [0.5, 1.0]
+  });

@@ -287,6 +287,8 @@ public class HsaUnityServer
             RunOnMain(res, () => DoImportAsset(body));
         else if (path == "/create-script")
             RunOnMain(res, () => DoCreateScript(body));
+        else if (path == "/capture-viewport")
+            RunOnMain(res, () => DoCaptureViewport(body));
         // Existing
         else if (path == "/execute-menu")
             RunOnMain(res, () => DoExecuteMenu(body));
@@ -312,7 +314,7 @@ public class HsaUnityServer
             "/delete-object","/duplicate-object","/set-parent","/rename-object",
             "/play-mode","/get-logs","/save-scene","/new-scene",
             "/create-material","/create-prefab","/instantiate-prefab",
-            "/import-asset","/create-script",
+            "/import-asset","/create-script","/capture-viewport",
             "/execute-menu","/recompile"
         };
         for (int i = 0; i < eps.Length; i++)
@@ -846,7 +848,11 @@ public class HsaUnityServer
 
         string bad = CheckProjectPath(destPath);
         if (bad != null) return ErrJson(bad);
-        bad = CheckProjectPath(sourcePath);
+        bad = CheckStagingOrProjectSourcePath(sourcePath);
+        if (bad != null) return ErrJson(bad);
+        bad = CheckSafeAssetExtension(sourcePath);
+        if (bad != null) return ErrJson(bad);
+        bad = CheckSafeAssetExtension(destPath);
         if (bad != null) return ErrJson(bad);
 
         string dir = Path.GetDirectoryName(destPath);
@@ -859,6 +865,91 @@ public class HsaUnityServer
         AssetDatabase.Refresh();
 
         return "{\"ok\":true,\"imported\":\"" + Esc(destPath) + "\"}";
+    }
+
+    private static string DoCaptureViewport(string body)
+    {
+        int width = Mathf.Clamp((int)JNum(body, "width", 1024f), 64, 4096);
+        int height = Mathf.Clamp((int)JNum(body, "height", 576f), 64, 4096);
+        string cameraPath = JVal(body, "cameraPath");
+
+        Camera cam = null;
+        if (!string.IsNullOrEmpty(cameraPath))
+        {
+            GameObject camGo = GameObject.Find(cameraPath);
+            if (camGo == null) return ErrJson("Camera GameObject not found: " + cameraPath);
+            cam = camGo.GetComponent<Camera>();
+            if (cam == null) return ErrJson("No Camera component on: " + cameraPath);
+        }
+        else
+        {
+            cam = Camera.main;
+            if (cam == null)
+            {
+#if UNITY_2023_1_OR_NEWER
+                cam = UnityEngine.Object.FindFirstObjectByType<Camera>();
+#else
+                cam = UnityEngine.Object.FindObjectOfType<Camera>();
+#endif
+            }
+            if (cam == null && Camera.allCamerasCount > 0)
+                cam = Camera.allCameras[0];
+        }
+
+        if (cam == null)
+            return ErrJson("No active Camera found in scene");
+
+        RenderTexture prevTarget = cam.targetTexture;
+        RenderTexture prevActive = RenderTexture.active;
+        RenderTexture rt = null;
+        Texture2D tex = null;
+        byte[] pngBytes = null;
+
+        try
+        {
+            rt = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32);
+            rt.Create();
+            cam.targetTexture = rt;
+            cam.Render();
+
+            RenderTexture.active = rt;
+            tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+            pngBytes = ImageConversion.EncodeToPNG(tex);
+        }
+        catch (Exception ex)
+        {
+            return ErrJson("Capture failed: " + ex.Message);
+        }
+        finally
+        {
+            cam.targetTexture = prevTarget;
+            RenderTexture.active = prevActive;
+            if (tex != null) UnityEngine.Object.DestroyImmediate(tex);
+            if (rt != null)
+            {
+                rt.Release();
+                UnityEngine.Object.DestroyImmediate(rt);
+            }
+        }
+
+        if (pngBytes == null || pngBytes.Length == 0)
+            return ErrJson("Failed to encode viewport capture to PNG");
+
+        string projectRoot = Path.GetDirectoryName(Application.dataPath) ?? ".";
+        string stamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss_fff");
+        string relPath = "Library/HsaStaging/captures/viewport_" + stamp + ".png";
+        string fullPath = Path.GetFullPath(Path.Combine(projectRoot, relPath));
+        string captureDir = Path.GetDirectoryName(fullPath);
+        if (!string.IsNullOrEmpty(captureDir) && !Directory.Exists(captureDir))
+            Directory.CreateDirectory(captureDir);
+
+        try { File.WriteAllBytes(fullPath, pngBytes); }
+        catch (Exception ex) { return ErrJson("Failed to write capture PNG: " + ex.Message); }
+
+        return "{\"ok\":true,\"path\":\"" + Esc(fullPath) + "\",\"relativePath\":\"" + Esc(relPath) +
+               "\",\"width\":" + width + ",\"height\":" + height + "}";
     }
 
     private static string DoCreateScript(string body)
@@ -992,6 +1083,46 @@ public class HsaUnityServer
     private static string ErrJson(string msg) { return "{\"error\":\"" + Esc(msg) + "\"}"; }
 
     private static readonly string[] ALLOWED_ROOTS = { "Assets/", "Packages/" };
+    private static readonly string[] ALLOWED_IMPORT_SOURCE_ROOTS = { "Assets/", "Packages/", "Library/HsaStaging/" };
+    private static readonly string[] SAFE_ASSET_EXTENSIONS = {
+        ".fbx", ".glb", ".gltf", ".obj",
+        ".png", ".jpg", ".jpeg", ".webp", ".tga", ".exr", ".hdr",
+        ".wav", ".ogg", ".mp3",
+        ".json", ".anim", ".controller", ".mat", ".shader", ".hlsl"
+    };
+
+    private static string CheckStagingOrProjectSourcePath(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return "Missing path";
+
+        string norm = path.Replace('\\', '/');
+        if (norm.Contains("..")) return "Path may not contain '..': " + path;
+        if (Path.IsPathRooted(path) || norm.StartsWith("/") || norm.StartsWith("~"))
+            return "Path must be relative to the project: " + path;
+        if (norm.Contains(":")) return "Path may not contain ':': " + path;
+
+        bool ok = false;
+        for (int i = 0; i < ALLOWED_IMPORT_SOURCE_ROOTS.Length; i++)
+            if (norm.StartsWith(ALLOWED_IMPORT_SOURCE_ROOTS[i], StringComparison.OrdinalIgnoreCase)) { ok = true; break; }
+        if (!ok)
+            return "Source path must start with Assets/, Packages/, or Library/HsaStaging/, got: " + path;
+
+        return null;
+    }
+
+    private static string CheckSafeAssetExtension(string path)
+    {
+        if (string.IsNullOrEmpty(path)) return "Missing path";
+        string ext = Path.GetExtension(path);
+        if (string.IsNullOrEmpty(ext))
+            return "Asset path must have an allowed file extension: " + path;
+
+        for (int i = 0; i < SAFE_ASSET_EXTENSIONS.Length; i++)
+            if (string.Equals(ext, SAFE_ASSET_EXTENSIONS[i], StringComparison.OrdinalIgnoreCase))
+                return null;
+
+        return "Disallowed asset extension '" + ext + "' in path: " + path;
+    }
 
     // Returns null when the path is acceptable, or the reason it is not.
     // Every endpoint that creates a directory, writes a file, or copies one takes

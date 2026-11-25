@@ -53,10 +53,14 @@ async function main() {
 
     const listed = await client.request('tools/list', {});
     const names = listed.tools.map((t) => t.name).sort();
-    check('all seven tools are exposed', names.length === 7, names);
-    check('read tools are marked read-only', listed.tools.filter((t) => t.annotations.readOnlyHint).length === 6, names);
-    const exec = listed.tools.find((t) => t.name === 'blender_execute_python');
-    check('the escape hatch is the only mutating tool', exec && exec.annotations.readOnlyHint === false);
+    check('all ten tools are exposed', names.length === 10, names);
+    check('read tools are marked read-only', listed.tools.filter((t) => t.annotations.readOnlyHint).length === 8, names);
+    const mutating = listed.tools.filter((t) => t.annotations.readOnlyHint === false).map((t) => t.name).sort();
+    check(
+      'only execute_python and run_headless are mutating',
+      mutating.length === 2 && mutating[0] === 'blender_execute_python' && mutating[1] === 'blender_run_headless',
+      mutating,
+    );
 
     console.log('health + scene');
     const health = parse(await call(client, 'blender_health'));

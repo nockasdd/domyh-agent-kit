@@ -1,0 +1,121 @@
+# =============================================================================
+# Canonical Pixel Art Hex Palettes & Hue-Shifting Shading Ramps
+# =============================================================================
+
+version: "1.0"
+
+palettes:
+  gameboy-4:
+    count: 4
+    author: "Nintendo DMG Classic"
+    hex:
+      - "#0f380f" # 0: Deepest Shadow / Outline
+      - "#306230" # 1: Mid Dark
+      - "#8bac0f" # 2: Mid Light
+      - "#9bbc0f" # 3: Peak Highlight / Sky
+
+  pico-8:
+    count: 16
+    author: "Lexaloffle PICO-8"
+    hex:
+      - "#000000" # 0: Black
+      - "#1d2b53" # 1: Dark Blue
+      - "#7e2553" # 2: Dark Purple
+      - "#008751" # 3: Dark Green
+      - "#ab5236" # 4: Brown
+      - "#5f574f" # 5: Dark Grey
+      - "#c2c3c7" # 6: Light Grey
+      - "#fff1e8" # 7: White
+      - "#ff004d" # 8: Red
+      - "#ffa300" # 9: Orange
+      - "#ffec27" # 10: Yellow
+      - "#00e436" # 11: Green
+      - "#29adff" # 12: Blue
+      - "#83769c" # 13: Indigo
+      - "#ff77a8" # 14: Pink
+      - "#ffccaa" # 15: Peach
+
+  sweetie-16:
+    count: 16
+    author: "GrafxKid (Lospec)"
+    hex:
+      - "#1a1c2c" # 0: Void Indigo-Black
+      - "#5d275d" # 1: Deep Plum
+      - "#b13e53" # 2: Crimson Rose
+      - "#ef7d57" # 3: Warm Coral
+      - "#ffcd75" # 4: Sun Gold
+      - "#a7f070" # 5: Lime Leaf
+      - "#38b764" # 6: Emerald Green
+      - "#257179" # 7: Deep Teal
+      - "#29366f" # 8: Royal Navy
+      - "#3b5dc9" # 9: Cobalt Blue
+      - "#41a6f6" # 10: Sky Cyan
+      - "#73eff7" # 11: Ice Aqua
+      - "#f4f4f4" # 12: Crisp White
+      - "#94b0c2" # 13: Cool Silver
+      - "#566c86" # 14: Slate Steel
+      - "#333c57" # 15: Dark Slate
+
+  endesga-32:
+    count: 32
+    author: "ENDESGA (Lospec)"
+    hex:
+      - "#be4a2f" # 0: Terracotta
+      - "#d77643" # 1: Ochre Tan
+      - "#ead4aa" # 2: Warm Sand
+      - "#e4a672" # 3: Light Skin
+      - "#b86f50" # 4: Mid Skin
+      - "#733e39" # 5: Deep Umber
+      - "#3e2731" # 6: Espresso Shadow
+      - "#a22633" # 7: Ruby Red
+      - "#e43b44" # 8: Vermilion
+      - "#f77622" # 9: Blaze Orange
+      - "#feae34" # 10: Amber Gold
+      - "#fee761" # 11: Lemon Highlight
+      - "#63c74d" # 12: Meadow Green
+      - "#3e8948" # 13: Forest Green
+      - "#265c42" # 14: Pine Shadow
+      - "#193c3e" # 15: Abyssal Teal
+      - "#124e89" # 16: Ocean Blue
+      - "#0099db" # 17: Cerulean
+      - "#2ce8f5" # 18: Electric Cyan
+      - "#ffffff" # 19: Pure White
+      - "#c0cbdc" # 20: Pale Steel
+      - "#8b9bb4" # 21: Mid Steel
+      - "#5a6988" # 22: Shadow Steel
+      - "#3a4466" # 23: Dusk Indigo
+      - "#262b44" # 24: Midnight Blue
+      - "#181425" # 25: Ink Outline
+      - "#ff0044" # 26: Neon Magenta-Red
+      - "#68386c" # 27: Royal Violet
+      - "#b55088" # 28: Orchid Pink
+      - "#f6757a" # 29: Salmon Blush
+      - "#e8b796" # 30: Soft Peach
+      - "#c28569" # 31: Warm Clay
+
+hue_shifting_ramps_endesga32:
+  description: "Pre-built 4-to-5 step hue-shifted shading ramps using exact endesga-32 hex colors (Shadow -> Mid -> Lit -> Specular)"
+  ramps:
+    steel_armor:  ["#181425", "#262b44", "#3a4466", "#5a6988", "#8b9bb4", "#c0cbdc", "#ffffff"]
+    warm_skin:    ["#3e2731", "#733e39", "#b86f50", "#e4a672", "#ead4aa"]
+    lush_foliage: ["#181425", "#193c3e", "#265c42", "#3e8948", "#63c74d", "#fee761"]
+    crimson_cape: ["#181425", "#3e2731", "#68386c", "#a22633", "#e43b44", "#f77622"]
+    gold_trim:    ["#3e2731", "#733e39", "#be4a2f", "#f77622", "#feae34", "#fee761", "#ffffff"]
+    fire_vfx:     ["#68386c", "#a22633", "#e43b44", "#f77622", "#feae34", "#fee761", "#ffffff"]
+
+anchor_presets:
+  nes_action_16:
+    canvas_size: [16, 16]
+    palette: "pico-8"
+    outline_mode: "none"
+    directions: 4
+  snes_jrpg_32:
+    canvas_size: [32, 32]
+    palette: "endesga-32"
+    outline_mode: "sel-out"
+    directions: 8
+  hd_indie_boss_64:
+    canvas_size: [64, 64]
+    palette: "endesga-32"
+    outline_mode: "sel-out"
+    directions: 4

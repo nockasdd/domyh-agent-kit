@@ -1,0 +1,133 @@
+# =============================================================================
+# Godot 4.3+ Complete File-First Pipeline (project.godot, .tscn, GDScript 2.0)
+# =============================================================================
+
+version: "1.0"
+
+project_godot_pixel_2d_template: |
+  ; Engine configuration file.
+  config_version=5
+
+  [application]
+  config/name="DomyhPixelGame"
+  run/main_scene="res://scenes/main.tscn"
+  config/features=PackedStringArray("4.3", "Forward Plus")
+
+  [display]
+  window/size/viewport_width=320
+  window/size/viewport_height=180
+  window/size/window_width_override=1280
+  window/size/window_height_override=720
+  window/stretch/mode="canvas_items"
+  window/stretch/scale_mode="integer"
+
+  [rendering]
+  textures/canvas_textures/default_texture_filter=0
+
+tscn_player_2d_template:
+  description: "Valid hand-authored Godot 4 .tscn (no fake binary UIDs; clean ext_resource + SubResource)"
+  content: |
+    [gd_scene load_steps=4 format=3]
+
+    [ext_resource type="Script" path="res://scripts/player_2d.gd" id="1_script"]
+    [ext_resource type="Texture2D" path="res://assets/sprites/chr_knight_sheet.png" id="2_tex"]
+
+    [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+    size = Vector2(14, 22)
+
+    [node name="Player" type="CharacterBody2D"]
+    script = ExtResource("1_script")
+
+    [node name="Sprite2D" type="Sprite2D" parent="."]
+    position = Vector2(0, -16)
+    texture = ExtResource("2_tex")
+    hframes = 4
+    vframes = 4
+
+    [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+    position = Vector2(0, -11)
+    shape = SubResource("RectangleShape2D_body")
+
+    [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+    [node name="AnimationTree" type="AnimationTree" parent="."]
+    anim_player = NodePath("../AnimationPlayer")
+
+gdscript_templates:
+  character_body_2d_topdown_8dir: |
+    extends CharacterBody2D
+    class_name TopDownPlayer2D
+
+    @export var move_speed: float = 120.0
+    @export var acceleration: float = 900.0
+    @export var friction: float = 1100.0
+
+    @onready var anim_tree: AnimationTree = $AnimationTree
+    @onready var state_playback: AnimationNodeStateMachinePlayback = (
+        anim_tree.get("parameters/playback") as AnimationNodeStateMachinePlayback
+    )
+
+    var last_facing: Vector2 = Vector2.DOWN
+
+    func _physics_process(delta: float) -> void:
+        var input_dir: Vector2 = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+        if input_dir != Vector2.ZERO:
+            last_facing = input_dir.normalized()
+            velocity = velocity.move_toward(last_facing * move_speed, acceleration * delta)
+            _update_blend_positions(last_facing)
+            if state_playback:
+                state_playback.travel("Walk")
+        else:
+            velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
+            if state_playback:
+                state_playback.travel("Idle")
+        move_and_slide()
+
+    func _update_blend_positions(dir: Vector2) -> void:
+        if not anim_tree or not anim_tree.active:
+            return
+        anim_tree.set("parameters/Idle/blend_position", dir)
+        anim_tree.set("parameters/Walk/blend_position", dir)
+        anim_tree.set("parameters/Attack/blend_position", dir)
+
+  character_body_3d_platformer: |
+    extends CharacterBody3D
+    class_name ThirdPersonActor3D
+
+    @export var speed: float = 5.5
+    @export var jump_velocity: float = 6.2
+    @export var turn_speed: float = 12.0
+
+    @onready var visual_pivot: Node3D = $VisualPivot
+
+    func _physics_process(delta: float) -> void:
+        if not is_on_floor():
+            velocity += get_gravity() * delta
+        if Input.is_action_just_pressed("jump") and is_on_floor():
+            velocity.y = jump_velocity
+
+        var raw_input: Vector2 = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+        var move_dir: Vector3 = Vector3(raw_input.x, 0.0, raw_input.y).normalized()
+        if move_dir != Vector3.ZERO:
+            velocity.x = move_dir.x * speed
+            velocity.z = move_dir.z * speed
+            var target_yaw: float = atan2(move_dir.x, move_dir.z)
+            visual_pivot.rotation.y = lerp_angle(visual_pivot.rotation.y, target_yaw, turn_speed * delta)
+        else:
+            velocity.x = move_toward(velocity.x, 0.0, speed * 8.0 * delta)
+            velocity.z = move_toward(velocity.z, 0.0, speed * 8.0 * delta)
+        move_and_slide()
+
+  tilemap_layer_terrain_autotile_4_3: |
+    extends TileMapLayer
+    class_name ProceduralDungeonLayer
+
+    # Godot 4.3+ TileMapLayer API (replaces deprecated TileMap multi-layer methods!)
+    func paint_autotiled_floor(cells: Array[Vector2i], terrain_set: int = 0, terrain_id: int = 0) -> void:
+        clear()
+        set_cells_terrain_connect(cells, terrain_set, terrain_id, true)
+
+headless_verification_commands:
+  register_global_classes_once: "godot --headless --editor --path . --quit"
+  smoke_test_60_frames: "godot --headless --path . --quit-after 60"
+  render_visual_proof_png: "godot --path . --write-movie .domyh/game-evidence/godot_frame.png --fixed-fps 60 --quit-after 60"

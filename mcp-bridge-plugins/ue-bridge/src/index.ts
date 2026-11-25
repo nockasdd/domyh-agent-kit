@@ -391,6 +391,191 @@ wrapTool("ue_python_status",
   },
 );
 
+wrapTool("ue_capture_viewport",
+  "Capture a high-resolution screenshot of the active Unreal Engine viewport via Remote Control AutomationLibrary (or Python executor fallback when HSA_UE_EXEC_CONSENT=1) and return { ok, path, resolutionX, resolutionY }",
+  {
+    resolutionX: z.number().int().min(64).max(4096).optional()
+      .describe("Viewport capture width in pixels (default: 1024, clamped 64..4096)"),
+    resolutionY: z.number().int().min(64).max(4096).optional()
+      .describe("Viewport capture height in pixels (default: 576, clamped 64..4096)"),
+    filename: z.string().optional()
+      .describe("Optional output PNG basename (e.g. 'viewport_check.png'). Defaults to timestamped filename."),
+  },
+  async ({ resolutionX, resolutionY, filename }) => {
+    const resX = Math.min(Math.max(64, Math.floor(resolutionX ?? 1024)), 4096);
+    const resY = Math.min(Math.max(64, Math.floor(resolutionY ?? 576)), 4096);
+
+    const rawName = filename?.trim() || `viewport_${Date.now()}.png`;
+    if (rawName.includes("..") || rawName.includes("/") || rawName.includes("\\") || rawName.includes(":")) {
+      throw new Error("filename must be a plain basename without path separators or '..'");
+    }
+    let safeName = rawName.replace(/[^a-zA-Z0-9._-]/g, "_");
+    if (!safeName.toLowerCase().endsWith(".png")) {
+      safeName += ".png";
+    }
+
+    let savedDir = "";
+    try {
+      const savedRes = await restClient.callFunction(
+        "/Script/Engine.Default__KismetSystemLibrary",
+        "GetProjectSavedDirectory",
+        {},
+      );
+      if (typeof savedRes?.ReturnValue === "string" && savedRes.ReturnValue.trim()) {
+        savedDir = path.resolve(savedRes.ReturnValue.trim());
+      }
+    } catch {
+      try {
+        const projRes = await restClient.callFunction(
+          "/Script/Engine.Default__KismetSystemLibrary",
+          "GetProjectDirectory",
+          {},
+        );
+        if (typeof projRes?.ReturnValue === "string" && projRes.ReturnValue.trim()) {
+          savedDir = path.join(path.resolve(projRes.ReturnValue.trim()), "Saved");
+        }
+      } catch {
+        // Saved directory lookup may be blocked by Remote Control allowlist; fall through.
+      }
+    }
+
+    const platformSubdir =
+      process.platform === "win32"
+        ? "WindowsEditor"
+        : process.platform === "darwin"
+          ? "MacEditor"
+          : "LinuxEditor";
+
+    let targetPathArg = safeName;
+    if (savedDir) {
+      const capturesDir = path.join(savedDir, "HSA", "captures");
+      try {
+        fs.mkdirSync(capturesDir, { recursive: true });
+        targetPathArg = path.join(capturesDir, safeName);
+      } catch {
+        targetPathArg = safeName;
+      }
+    }
+
+    const resolveSavedScreenshotPath = (fallbackPath: string): string => {
+      if (!savedDir) return fallbackPath;
+      const candidates = [
+        path.join(savedDir, "HSA", "captures", safeName),
+        path.join(savedDir, "Screenshots", platformSubdir, safeName),
+        path.join(savedDir, "Screenshots", "Windows", safeName),
+        path.join(savedDir, "Screenshots", safeName),
+      ];
+      for (const candidate of candidates) {
+        if (fs.existsSync(candidate)) return candidate;
+      }
+      return targetPathArg !== safeName
+        ? targetPathArg
+        : path.join(savedDir, "Screenshots", platformSubdir, safeName);
+    };
+
+    const automationTargets = [
+      "/Script/FunctionalTesting.Default__AutomationBlueprintFunctionLibrary",
+      "/Script/FunctionalTesting.Default__AutomationLibrary",
+      "/Script/Engine.Default__AutomationBlueprintFunctionLibrary",
+    ];
+
+    let rcLastError = "";
+    for (const cdoPath of automationTargets) {
+      try {
+        await restClient.callFunction(cdoPath, "TakeHighResScreenshot", {
+          ResX: resX,
+          ResY: resY,
+          Filename: targetPathArg,
+        });
+        for (let attempt = 0; attempt < 5; attempt++) {
+          if (savedDir && fs.existsSync(resolveSavedScreenshotPath(""))) break;
+          await new Promise((r) => setTimeout(r, 100));
+        }
+        return {
+          ok: true,
+          path: resolveSavedScreenshotPath(targetPathArg),
+          resolutionX: resX,
+          resolutionY: resY,
+        };
+      } catch (e: any) {
+        rcLastError = e?.message ?? String(e);
+      }
+    }
+
+    if (!CONSENT_GRANTED) {
+      logAttempt(`ue_capture_viewport(${resX},${resY},${safeName})`, "refused", rcLastError || CONSENT_REFUSED);
+      return {
+        ok: false,
+        error:
+          `Remote Control screenshot call failed (${rcLastError || "unavailable"}) and Python fallback is disabled ` +
+          `because HSA_UE_EXEC_CONSENT is not set. Allow TakeHighResScreenshot + GetProjectSavedDirectory in ` +
+          `<project>/Config/DefaultRemoteControl.ini, or set HSA_UE_EXEC_CONSENT=1 to enable the Python fallback.`,
+      };
+    }
+
+    const setup = await ensurePythonExecutor();
+    if (!setup.ready) {
+      logAttempt(`ue_capture_viewport(${resX},${resY},${safeName})`, "refused", setup.message);
+      return { ok: false, error: setup.message };
+    }
+
+    // Written without imports or leading-underscore identifiers so the snippet
+    // also passes when the user has enabled HSA_UE_SAFE_MODE=1 in init_unreal.py.
+    const pyCode = [
+      "saved_dir = unreal.Paths.convert_relative_path_to_full(unreal.Paths.project_saved_dir())",
+      `out_path = saved_dir + "HSA/captures/${safeName}"`,
+      `shot_task = unreal.AutomationLibrary.take_high_res_screenshot(${resX}, ${resY}, out_path)`,
+      "print(out_path)",
+    ].join("\n");
+
+    const codeBase64 = Buffer.from(pyCode, "utf-8").toString("base64");
+    try {
+      const response = await fetch(`${EXEC_URL}/execute`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${BRIDGE_TOKEN}`,
+        },
+        body: JSON.stringify({ code_base64: codeBase64 }),
+        signal: AbortSignal.timeout(60_000),
+      });
+
+      const responseData = await response.json();
+      if (response.status === 401) {
+        logAttempt(pyCode, "refused", "token rejected by the editor");
+        return {
+          ok: false,
+          error:
+            "UE Python server rejected the token. HSA_BRIDGE_TOKEN must be identical on the bridge and in the UE project (Saved/HSA/bridge_config.json).",
+        };
+      }
+
+      logResult(pyCode, responseData);
+      if (!responseData?.ok) {
+        return { ok: false, error: responseData?.error || "Unreal Python screenshot failed" };
+      }
+
+      const printedPath = String(responseData.output ?? "").trim().split(/\r?\n/)[0] || resolveSavedScreenshotPath(safeName);
+      if (printedPath) {
+        try {
+          fs.mkdirSync(path.dirname(printedPath), { recursive: true });
+        } catch {
+          // Directory may already exist or reside on a separate host.
+        }
+      }
+      return {
+        ok: true,
+        path: printedPath,
+        resolutionX: resX,
+        resolutionY: resY,
+      };
+    } catch (e: any) {
+      logAttempt(pyCode, "err", e.message);
+      return { ok: false, error: `Failed to connect to UE Python Server: ${e.message}` };
+    }
+  },
+);
+
 // ── Entry ─────────────────────────────────────────────────
 
 // On stderr, not stdout: stdout is the MCP transport, and a stray line there

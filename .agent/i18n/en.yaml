@@ -87,6 +87,11 @@ commands:
     short: "Visualize"
     desc: "Create mockups and wireframes"
     help: "Usage: /visualize [UI description] — style: glassmorphism, minimalist, etc."
+  asset:
+    name: "Asset Studio"
+    short: "Asset"
+    desc: "Create and validate technical 3D/2D/Pixel Assets, Characters, NPCs, VFX & Video"
+    help: "Usage: /asset [bible | spec | create | audit] [description]"
   generate:
     name: "Generate"
     short: "Generate"

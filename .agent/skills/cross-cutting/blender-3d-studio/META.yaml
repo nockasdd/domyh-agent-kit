@@ -1,0 +1,85 @@
+name: blender-3d-studio
+display: "Blender 3D & Cloud Asset Studio"
+category: cross-cutting
+tier: 1
+priority: 3
+
+desc: "Production 3D asset studio for Gemini, GPT, and Claude (Zero Local GPU): anti-blind 9-phase bpy modeling, Geometry Nodes, UV texel density, procedural PBR & ORM channel baking, 52-bone Humanoid Rigify + 52 Apple ARKit facial blendshapes, Cloud 3D REST cleanup (Meshy/Tripo/Rodin), deterministic QA, and Unity/UE5/Godot/Three.js export."
+
+caps:
+  - 9-Phase Anti-Blind 3D Modeling (Silhouette IoU Gates)
+  - Blender Live Bridge (HTTP 28782) & Headless CLI Execution
+  - Modifiers, SubD, Bevel Creases & Weighted Normals
+  - Seam/Smart UV Unwrapping & Texel Density Calibration
+  - Procedural PBR Node Graphs & Cycles ORM Channel Baking
+  - 52-Bone Game Humanoid Rigging & Weight Normalization
+  - Full 52 Apple ARKit Blendshapes & 15 Lip-Sync Visemes
+  - Cloud 3D API (Meshy / Tripo / Rodin) Retopo & Re-bake Cleanup
+  - Engine-Exact Export Profiles (Unity, UE5, Godot 4, Three.js)
+
+data_files:
+  - data/bpy-modeling-pbr.yaml
+  - data/rigging-arkit52.yaml
+  - data/engine-export-profiles.yaml
+
+triggers:
+  file_patterns:
+    - "*.blend"
+    - "*.fbx"
+    - "*.glb"
+    - "*.gltf"
+    - "*.obj"
+    - "*asset-spec*.yaml"
+  keywords:
+    - 3d
+    - blender
+    - bpy
+    - mesh
+    - 3d model
+    - 3d asset
+    - 3d character
+    - 3d prop
+    - pbr
+    - orm
+    - normal map
+    - ambient occlusion
+    - rigging
+    - rigify
+    - armature
+    - skinning
+    - arkit
+    - blendshapes
+    - shapekeys
+    - fbx
+    - glb
+    - gltf
+    - retopo
+    - quadriflow
+    - uv unwrap
+    - texel density
+    - geometry nodes
+    - lod
+    - meshy
+    - tripo
+    - rodin
+  intents:
+    - create 3d character
+    - model 3d prop in blender
+    - rig character with arkit blendshapes
+    - bake pbr orm textures
+    - export glb fbx for unity unreal godot threejs
+    - clean up cloud 3d mesh
+
+related_skills:
+  - game-development
+  - webgl-shader-godot
+  - character-npc-studio
+  - python
+
+prevent_confusion_with:
+  - pixel-art-studio: "Sprite stacking is 2D layered voxel rendering; use blender-3d-studio for true polygonal 3D meshes (.glb/.fbx)"
+
+links_to:
+  - game-development
+  - webgl-shader-godot
+  - character-npc-studio

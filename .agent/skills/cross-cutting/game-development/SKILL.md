@@ -55,7 +55,17 @@ Task → What game development action?
 - User mentions "game", "Unity game", "UE game", "tạo game", "gamedev"
 - Project contains `.unity`, `.uproject`, `.cs` game scripts
 
-**NOT for**: Web apps (→ react/nextjs), mobile apps (→ flutter/react-native), 3D art creation (needs artist)
+**NOT for**: Web apps (→ react/nextjs), mobile apps (→ flutter/react-native)
+
+### 🎨 Creative Asset Routing (Use `/asset` + Studio Skills)
+
+| Asset Need | Route To Skill / Command |
+|:-----------|:-------------------------|
+| 3D models, PBR/ORM baking, 52-bone Humanoid rig, 52 ARKit blendshapes | `blender-3d-studio` (`/asset create`) |
+| 2D Pixel Art, palettes, Wang/47-blob autotiles, Fake-3D sprite stacking | `pixel-art-studio` (`/asset create`) |
+| 2D Character turnarounds, SVG rigs, NPC TTS + viseme lipsync, cutscenes | `character-npc-studio` (`/asset create`) |
+| Three.js / R3F, GLSL/HLSL/gdshader combat VFX, Godot 4.x pipeline | `webgl-shader-godot` (`/asset create`) |
+| Project Art Bible, per-asset LOD/ORM specs, deterministic asset QA | `/asset bible` · `/asset spec` · `/asset audit` |
 
 **Starting point**: If the user has no project, or only an idea, route to
 `/game-start` — it detects state and tells them exactly what to create. Do not
@@ -116,7 +126,8 @@ User prompt → Parse intent → Select genre template → Generate GDD.json
 3. COMPILE   → unity_recompile() / UE build
 4. LOG CHECK → unity_get_logs() + Output Log
 5. FIX       → Match errors against gotchas.yaml
-6. RUN & LOOK → play mode, capture viewport, actually look at it
+6. RUN & LOOK → play mode, capture viewport via `unity_capture_viewport` /
+                `ue_capture_viewport` (or Godot `--write-movie`), actually look at it
                 (see references/run-and-observe.md)
 7. REPEAT    → Max 5 iterations (GCS_006)
 ```
@@ -141,6 +152,7 @@ User prompt → Parse intent → Select genre template → Generate GDD.json
 | New scene | `unity_new_scene(name)` | Create a fresh scene |
 | Save scene | `save_scene()` | Persist changes |
 | Compile | `compile_scripts()` | Trigger recompilation |
+| Capture viewport | `unity_capture_viewport(outputPath)` | Save Game/Scene viewport PNG for visual QA |
 | Menu item | `unity_execute_menu(menuPath)` | Trigger any Editor menu action |
 
 > The bridge has no `load_scene` and no `build_player`. To build, use
@@ -156,6 +168,7 @@ User prompt → Parse intent → Select genre template → Generate GDD.json
 | Call function | `PUT /remote/object/call` | Execute UFUNCTION |
 | Batch ops | `PUT /remote/batch` | Multiple ops at once |
 | Execute Python | `ue_execute_python(script)` | Run Python in editor |
+| Capture viewport | `ue_capture_viewport(outputPath)` | Capture high-res Editor/PIE viewport PNG |
 
 > 📚 Full API details: `hsa_search(action:'docs')` for `plugin-unity-editor` / `plugin-unreal-engine`
 > 📚 Setup from zero: `references/engine-scaffold.md`

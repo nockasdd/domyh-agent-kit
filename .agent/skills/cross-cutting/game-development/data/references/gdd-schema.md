@@ -22,9 +22,10 @@
           "type": "string",
           "enum": ["endless-runner", "platformer", "top-down-shooter", "puzzle", "rpg", "tower-defense", "card-game"]
         },
-        "engine": { "type": "string", "enum": ["unity", "unreal"] },
+        "engine": { "type": "string", "enum": ["unity", "unreal", "godot", "threejs"] },
         "target_platform": { "type": "string", "enum": ["pc", "mobile", "web", "console"] },
         "art_style": { "type": "string", "enum": ["2d-pixel", "2d-vector", "2d-hand-drawn", "3d-low-poly", "3d-realistic"] },
+        "art_bible_ref": { "type": "string", "description": "Optional path to .agent/specs/art-bible.yaml" },
         "estimated_dev_time": { "type": "string" }
       }
     },
@@ -67,6 +68,15 @@
         "models": { "type": "array", "items": { "type": "string" } },
         "tilemaps": { "type": "array", "items": { "type": "string" } }
       }
+    },
+    "art_bible_ref": {
+      "type": "string",
+      "description": "Optional path to .agent/specs/art-bible.yaml"
+    },
+    "asset_specs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional list of .agent/specs/*.spec.yaml or pixel-anchor.yaml contracts"
     },
     "milestones": {
       "type": "array",

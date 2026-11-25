@@ -1,0 +1,234 @@
+# =============================================================================
+# 52-Bone Game Humanoid Rigging + Complete 52 Apple ARKit Blendshapes & 15 Visemes
+# Compatible with Unity Humanoid Avatar, UE5 Mannequin Retargeter, Godot 4 SkeletonProfileHumanoid
+# =============================================================================
+
+version: "1.0"
+
+humanoid_52_skeleton:
+  total_bones: 52
+  root_origin: [0.0, 0.0, 0.0]
+  max_influences_per_vertex: 4
+  hierarchy:
+    core_8:
+      - { name: "Root",   parent: null,     head_ratio: [0.0, 0.0, 0.000], tail_ratio: [0.0, 0.0, 0.080] }
+      - { name: "Hips",   parent: "Root",   head_ratio: [0.0, 0.0, 0.522], tail_ratio: [0.0, 0.0, 0.585] }
+      - { name: "Spine",  parent: "Hips",   head_ratio: [0.0, 0.0, 0.585], tail_ratio: [0.0, 0.0, 0.665] }
+      - { name: "Spine1", parent: "Spine",  head_ratio: [0.0, 0.0, 0.665], tail_ratio: [0.0, 0.0, 0.745] }
+      - { name: "Spine2", parent: "Spine1", head_ratio: [0.0, 0.0, 0.745], tail_ratio: [0.0, 0.0, 0.822] }
+      - { name: "Neck",   parent: "Spine2", head_ratio: [0.0, 0.0, 0.822], tail_ratio: [0.0, 0.0, 0.868] }
+      - { name: "Head",   parent: "Neck",   head_ratio: [0.0, 0.0, 0.868], tail_ratio: [0.0, 0.0, 0.985] }
+      - { name: "Jaw",    parent: "Head",   head_ratio: [0.0, -0.02, 0.885], tail_ratio: [0.0, -0.06, 0.870] }
+    arms_8:
+      - "LeftShoulder / RightShoulder"
+      - "LeftArm / RightArm"
+      - "LeftForeArm / RightForeArm"
+      - "LeftHand / RightHand"
+    fingers_28:
+      left_14:
+        - "LeftHandThumb1..3 (3)"
+        - "LeftHandIndex1..3 (3)"
+        - "LeftHandMiddle1..3 (3)"
+        - "LeftHandRing1..3 (3)"
+        - "LeftHandPinky1..2 (2) [or Pinky1..3 if Jaw omitted -> keep exact 52]"
+      right_14:
+        - "RightHandThumb1..3 (3)"
+        - "RightHandIndex1..3 (3)"
+        - "RightHandMiddle1..3 (3)"
+        - "RightHandRing1..3 (3)"
+        - "RightHandPinky1..2 (2)"
+    legs_8:
+      - "LeftUpLeg / RightUpLeg"
+      - "LeftLeg / RightLeg"
+      - "LeftFoot / RightFoot"
+      - "LeftToeBase / RightToeBase"
+
+  bpy_humanoid_52_builder: |
+    import bpy
+
+    def build_humanoid_52_rig_and_bind(mesh_obj, height=1.80):
+        bpy.ops.object.select_all(action='DESELECT')
+        arm_data = bpy.data.armatures.new("Armature_Humanoid52")
+        arm_obj = bpy.data.objects.new("Armature", arm_data)
+        bpy.context.collection.objects.link(arm_obj)
+        bpy.context.view_layer.objects.active = arm_obj
+        bpy.ops.object.mode_set(mode='EDIT')
+        eb = arm_data.edit_bones
+
+        def add_bone(name, head, tail, parent_name=None, connect=False):
+            b = eb.new(name)
+            b.head = (head[0] * height, head[1] * height, head[2] * height)
+            b.tail = (tail[0] * height, tail[1] * height, tail[2] * height)
+            if parent_name and parent_name in eb:
+                b.parent = eb[parent_name]
+                b.use_connect = connect
+            return b
+
+        # Core Spine & Head (6 bones: Hips, Spine, Spine1, Spine2, Neck, Head)
+        add_bone("Hips",   (0, 0, 0.52), (0, 0, 0.58))
+        add_bone("Spine",  (0, 0, 0.58), (0, 0, 0.66), "Hips", True)
+        add_bone("Spine1", (0, 0, 0.66), (0, 0, 0.74), "Spine", True)
+        add_bone("Spine2", (0, 0, 0.74), (0, 0, 0.82), "Spine1", True)
+        add_bone("Neck",   (0, 0, 0.82), (0, 0, 0.87), "Spine2", True)
+        add_bone("Head",   (0, 0, 0.87), (0, 0, 0.99), "Neck", True)
+
+        # Symmetrical Arms (8), Fingers (30), Legs (8) -> 6 + 8 + 30 + 8 = 52 Game Humanoid Bones
+        for side, sx in (("Left", 1.0), ("Right", -1.0)):
+            add_bone(f"{side}Shoulder", (sx * 0.03, 0, 0.81), (sx * 0.10, 0, 0.81), "Spine2")
+            add_bone(f"{side}Arm",      (sx * 0.10, 0, 0.81), (sx * 0.25, 0, 0.81), f"{side}Shoulder", True)
+            add_bone(f"{side}ForeArm",  (sx * 0.25, 0, 0.81), (sx * 0.39, 0, 0.81), f"{side}Arm", True)
+            add_bone(f"{side}Hand",     (sx * 0.39, 0, 0.81), (sx * 0.44, 0, 0.81), f"{side}ForeArm", True)
+
+            finger_offsets = [("Thumb", -0.025), ("Index", -0.012), ("Middle", 0.0), ("Ring", 0.012), ("Pinky", 0.024)]
+            for fname, fy in finger_offsets:
+                prev = f"{side}Hand"
+                for idx in range(1, 4):
+                    x0 = sx * (0.44 + (idx - 1) * 0.018)
+                    x1 = sx * (0.44 + idx * 0.018)
+                    bname = f"{side}Hand{fname}{idx}"
+                    add_bone(bname, (x0, fy, 0.81), (x1, fy, 0.81), prev, idx > 1)
+                    prev = bname
+
+            add_bone(f"{side}UpLeg",   (sx * 0.09, 0, 0.52), (sx * 0.09, 0, 0.28), "Hips")
+            add_bone(f"{side}Leg",     (sx * 0.09, 0, 0.28), (sx * 0.09, 0, 0.05), f"{side}UpLeg", True)
+            add_bone(f"{side}Foot",    (sx * 0.09, 0, 0.05), (sx * 0.09, -0.08, 0.015), f"{side}Leg", True)
+            add_bone(f"{side}ToeBase", (sx * 0.09, -0.08, 0.015), (sx * 0.09, -0.13, 0.01), f"{side}Foot", True)
+
+        bpy.ops.object.mode_set(mode='OBJECT')
+
+        # Automatic Weights + 4-Bone Game Engine Normalization + Zero-Unweighted Fallback
+        bpy.ops.object.select_all(action='DESELECT')
+        mesh_obj.select_set(True)
+        arm_obj.select_set(True)
+        bpy.context.view_layer.objects.active = arm_obj
+        bpy.ops.object.parent_set(type='ARMATURE_AUTO')
+
+        bpy.context.view_layer.objects.active = mesh_obj
+        bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
+        bpy.ops.object.vertex_group_limit_total(group_select_mode='ALL', limit=4)
+        bpy.ops.object.vertex_group_normalize_all(group_select_mode='ALL', lock_active=False)
+        bpy.ops.object.mode_set(mode='OBJECT')
+
+        # Guarantee zero unweighted vertices (assign stray verts to Hips)
+        hips_vg = mesh_obj.vertex_groups.get("Hips") or mesh_obj.vertex_groups.new(name="Hips")
+        unweighted = [v.index for v in mesh_obj.data.vertices if sum(g.weight for g in v.groups) < 1e-4]
+        if unweighted:
+            hips_vg.add(unweighted, 1.0, 'REPLACE')
+        return arm_obj, len(arm_data.bones)
+
+arkit_52_blendshapes:
+  description: "Canonical 52 Apple ARKit Facial Blendshape names (exact camelCase required by LiveLink, VRM/VTuber, Unity FaceCapture, Godot XR)"
+  groups:
+    brow_5:
+      - { name: "browDownLeft",    region: "left_inner_brow",  delta_dir: "[0, 0, -Z]" }
+      - { name: "browDownRight",   region: "right_inner_brow", delta_dir: "[0, 0, -Z]" }
+      - { name: "browInnerUp",     region: "glabella_center",  delta_dir: "[0, 0, +Z]" }
+      - { name: "browOuterUpLeft", region: "left_outer_brow",  delta_dir: "[0, 0, +Z]" }
+      - { name: "browOuterUpRight",region: "right_outer_brow", delta_dir: "[0, 0, +Z]" }
+    eyes_14:
+      - { name: "eyeBlinkLeft",        region: "left_upper_lid",  delta_dir: "close_to_lower_lid" }
+      - { name: "eyeBlinkRight",       region: "right_upper_lid", delta_dir: "close_to_lower_lid" }
+      - { name: "eyeLookDownLeft",     region: "left_eyeball_lid", delta_dir: "pitch_down" }
+      - { name: "eyeLookDownRight",    region: "right_eyeball_lid",delta_dir: "pitch_down" }
+      - { name: "eyeLookInLeft",       region: "left_eyeball",     delta_dir: "yaw_medial" }
+      - { name: "eyeLookInRight",      region: "right_eyeball",    delta_dir: "yaw_medial" }
+      - { name: "eyeLookOutLeft",      region: "left_eyeball",     delta_dir: "yaw_lateral" }
+      - { name: "eyeLookOutRight",     region: "right_eyeball",    delta_dir: "yaw_lateral" }
+      - { name: "eyeLookUpLeft",       region: "left_eyeball_lid", delta_dir: "pitch_up" }
+      - { name: "eyeLookUpRight",      region: "right_eyeball_lid",delta_dir: "pitch_up" }
+      - { name: "eyeSquintLeft",       region: "left_lower_lid",   delta_dir: "[0, 0, +Z]" }
+      - { name: "eyeSquintRight",      region: "right_lower_lid",  delta_dir: "[0, 0, +Z]" }
+      - { name: "eyeWideLeft",         region: "left_upper_lid",   delta_dir: "[0, 0, +Z]" }
+      - { name: "eyeWideRight",        region: "right_upper_lid",  delta_dir: "[0, 0, +Z]" }
+    jaw_4:
+      - { name: "jawForward", region: "mandible_chin", delta_dir: "[0, -Y_forward, 0]" }
+      - { name: "jawLeft",    region: "mandible_chin", delta_dir: "[+X, 0, 0]" }
+      - { name: "jawOpen",    region: "mandible_lower_lip", delta_dir: "arc_hinge_down_back" }
+      - { name: "jawRight",   region: "mandible_chin", delta_dir: "[-X, 0, 0]" }
+    mouth_23:
+      - { name: "mouthClose",           region: "lips_seal",          delta_dir: "seal_lips_while_jawOpen" }
+      - { name: "mouthDimpleLeft",      region: "left_commissure",    delta_dir: "[+X, +Y_back, 0]" }
+      - { name: "mouthDimpleRight",     region: "right_commissure",   delta_dir: "[-X, +Y_back, 0]" }
+      - { name: "mouthFrownLeft",       region: "left_corner",        delta_dir: "[0, 0, -Z]" }
+      - { name: "mouthFrownRight",      region: "right_corner",       delta_dir: "[0, 0, -Z]" }
+      - { name: "mouthFunnel",          region: "orbicularis_oris",   delta_dir: "pucker_open_flare" }
+      - { name: "mouthLeft",            region: "full_mouth",         delta_dir: "[+X, 0, 0]" }
+      - { name: "mouthLowerDownLeft",   region: "left_lower_lip",     delta_dir: "[0, 0, -Z]" }
+      - { name: "mouthLowerDownRight",  region: "right_lower_lip",    delta_dir: "[0, 0, -Z]" }
+      - { name: "mouthPressLeft",       region: "left_lips",          delta_dir: "compress_vertical" }
+      - { name: "mouthPressRight",      region: "right_lips",         delta_dir: "compress_vertical" }
+      - { name: "mouthPucker",          region: "orbicularis_oris",   delta_dir: "narrow_protrude_forward" }
+      - { name: "mouthRight",           region: "full_mouth",         delta_dir: "[-X, 0, 0]" }
+      - { name: "mouthRollLower",       region: "lower_vermilion",    delta_dir: "curl_inward" }
+      - { name: "mouthRollUpper",       region: "upper_vermilion",    delta_dir: "curl_inward" }
+      - { name: "mouthShrugLower",      region: "chin_mentalis",      delta_dir: "[0, 0, +Z]" }
+      - { name: "mouthShrugUpper",      region: "upper_lip",          delta_dir: "[0, 0, +Z]" }
+      - { name: "mouthSmileLeft",       region: "left_zygomaticus",   delta_dir: "[+X, +Y_back, +Z]" }
+      - { name: "mouthSmileRight",      region: "right_zygomaticus",  delta_dir: "[-X, +Y_back, +Z]" }
+      - { name: "mouthStretchLeft",     region: "left_risorius",      delta_dir: "[+X, 0, 0]" }
+      - { name: "mouthStretchRight",    region: "right_risorius",     delta_dir: "[-X, 0, 0]" }
+      - { name: "mouthUpperUpLeft",     region: "left_levator_labii", delta_dir: "[0, 0, +Z]" }
+      - { name: "mouthUpperUpRight",    region: "right_levator_labii",delta_dir: "[0, 0, +Z]" }
+    cheek_nose_tongue_6:
+      - { name: "cheekPuff",        region: "buccinator_both", delta_dir: "inflate_outward_normals" }
+      - { name: "cheekSquintLeft",  region: "left_infraorbital",  delta_dir: "[0, 0, +Z]" }
+      - { name: "cheekSquintRight", region: "right_infraorbital", delta_dir: "[0, 0, +Z]" }
+      - { name: "noseSneerLeft",    region: "left_nasal_wing",    delta_dir: "[0, 0, +Z]" }
+      - { name: "noseSneerRight",   region: "right_nasal_wing",   delta_dir: "[0, 0, +Z]" }
+      - { name: "tongueOut",        region: "tongue_tip",         delta_dir: "[0, -Y_forward, 0]" }
+
+visemes_15_standard:
+  description: "15 Oculus / OVR / VRM Lip-Sync Visemes mapped to ARKit blendshape combinations"
+  list:
+    - { id: "viseme_sil", phonemes: ["silence"],     arkit_mix: { mouthClose: 0.2 } }
+    - { id: "viseme_PP",  phonemes: ["p", "b", "m"], arkit_mix: { mouthPressLeft: 0.85, mouthPressRight: 0.85, mouthRollUpper: 0.3 } }
+    - { id: "viseme_FF",  phonemes: ["f", "v"],      arkit_mix: { mouthRollLower: 0.75, mouthUpperUpLeft: 0.25, mouthUpperUpRight: 0.25 } }
+    - { id: "viseme_TH",  phonemes: ["th"],          arkit_mix: { jawOpen: 0.20, tongueOut: 0.35 } }
+    - { id: "viseme_DD",  phonemes: ["t", "d"],      arkit_mix: { jawOpen: 0.22, mouthStretchLeft: 0.25, mouthStretchRight: 0.25 } }
+    - { id: "viseme_kk",  phonemes: ["k", "g"],      arkit_mix: { jawOpen: 0.32, mouthShrugLower: 0.15 } }
+    - { id: "viseme_CH",  phonemes: ["ch", "j", "sh"], arkit_mix: { mouthFunnel: 0.65, jawOpen: 0.18 } }
+    - { id: "viseme_SS",  phonemes: ["s", "z"],      arkit_mix: { mouthSmileLeft: 0.25, mouthSmileRight: 0.25, jawOpen: 0.08 } }
+    - { id: "viseme_nn",  phonemes: ["n", "l"],      arkit_mix: { jawOpen: 0.20, mouthSmileLeft: 0.15, mouthSmileRight: 0.15 } }
+    - { id: "viseme_RR",  phonemes: ["r"],           arkit_mix: { mouthFunnel: 0.45, mouthPucker: 0.30 } }
+    - { id: "viseme_aa",  phonemes: ["a", "ah"],     arkit_mix: { jawOpen: 0.78, mouthLowerDownLeft: 0.35, mouthLowerDownRight: 0.35 } }
+    - { id: "viseme_E",   phonemes: ["e", "eh"],     arkit_mix: { jawOpen: 0.38, mouthSmileLeft: 0.40, mouthSmileRight: 0.40 } }
+    - { id: "viseme_I",   phonemes: ["i", "ee"],     arkit_mix: { jawOpen: 0.18, mouthSmileLeft: 0.55, mouthSmileRight: 0.55, mouthStretchLeft: 0.3 } }
+    - { id: "viseme_O",   phonemes: ["o", "oh"],     arkit_mix: { jawOpen: 0.52, mouthFunnel: 0.70 } }
+    - { id: "viseme_U",   phonemes: ["u", "oo", "w"],arkit_mix: { jawOpen: 0.18, mouthPucker: 0.85 } }
+
+bpy_arkit52_registration_helper: |
+  import bpy
+
+  ARKIT_52_NAMES = [
+      "browDownLeft", "browDownRight", "browInnerUp", "browOuterUpLeft", "browOuterUpRight",
+      "cheekPuff", "cheekSquintLeft", "cheekSquintRight",
+      "eyeBlinkLeft", "eyeBlinkRight", "eyeLookDownLeft", "eyeLookDownRight",
+      "eyeLookInLeft", "eyeLookInRight", "eyeLookOutLeft", "eyeLookOutRight",
+      "eyeLookUpLeft", "eyeLookUpRight", "eyeSquintLeft", "eyeSquintRight",
+      "eyeWideLeft", "eyeWideRight",
+      "jawForward", "jawLeft", "jawOpen", "jawRight",
+      "mouthClose", "mouthDimpleLeft", "mouthDimpleRight", "mouthFrownLeft", "mouthFrownRight",
+      "mouthFunnel", "mouthLeft", "mouthLowerDownLeft", "mouthLowerDownRight",
+      "mouthPressLeft", "mouthPressRight", "mouthPucker", "mouthRight",
+      "mouthRollLower", "mouthRollUpper", "mouthShrugLower", "mouthShrugUpper",
+      "mouthSmileLeft", "mouthSmileRight", "mouthStretchLeft", "mouthStretchRight",
+      "mouthUpperUpLeft", "mouthUpperUpRight",
+      "noseSneerLeft", "noseSneerRight", "tongueOut"
+  ]
+
+  VISEME_15_NAMES = [
+      "viseme_sil", "viseme_PP", "viseme_FF", "viseme_TH", "viseme_DD",
+      "viseme_kk", "viseme_CH", "viseme_SS", "viseme_nn", "viseme_RR",
+      "viseme_aa", "viseme_E", "viseme_I", "viseme_O", "viseme_U"
+  ]
+
+  def ensure_arkit52_and_visemes(head_mesh_obj, include_visemes=True):
+      if not head_mesh_obj.data.shape_keys:
+          head_mesh_obj.shape_key_add(name="Basis", from_mix=False)
+      existing = {sk.name for sk in head_mesh_obj.data.shape_keys.key_blocks}
+      for sk_name in ARKIT_52_NAMES + (VISEME_15_NAMES if include_visemes else []):
+          if sk_name not in existing:
+              sk = head_mesh_obj.shape_key_add(name=sk_name, from_mix=False)
+              sk.slider_min = 0.0
+              sk.slider_max = 1.0
+      return len(head_mesh_obj.data.shape_keys.key_blocks) - 1

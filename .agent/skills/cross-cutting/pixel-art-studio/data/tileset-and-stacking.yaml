@@ -1,0 +1,113 @@
+# =============================================================================
+# Wang 16-Tile & 47-Tile Blob Autotiles, Isometric 2:1 Math & Voxel Sprite Stacking
+# =============================================================================
+
+version: "1.0"
+
+autotile_standards:
+  wang_2_corner_dual_grid_16:
+    description: "16-tile Dual-Grid Corner Wang Tileset (4x4 atlas). Render grid is offset by (+0.5, +0.5) from logical collision grid — eliminates narrow 1-tile corridor complexity!"
+    bit_weights:
+      NW: 8
+      NE: 4
+      SW: 2
+      SE: 1
+    atlas_layout_4x4:
+      # Each cell is [col, row, mask_int, corners_active]
+      - [0, 0, 0,  "none (empty)"]
+      - [1, 0, 1,  "SE"]
+      - [2, 0, 2,  "SW"]
+      - [3, 0, 3,  "SW+SE (bottom edge)"]
+      - [0, 1, 4,  "NE"]
+      - [1, 1, 5,  "NE+SE (right edge)"]
+      - [2, 1, 6,  "NE+SW (saddle diagonal A)"]
+      - [3, 1, 7,  "NE+SW+SE (inner NW concave)"]
+      - [0, 2, 8,  "NW"]
+      - [1, 2, 9,  "NW+SE (saddle diagonal B)"]
+      - [2, 2, 10, "NW+SW (left edge)"]
+      - [3, 2, 11, "NW+SW+SE (inner NE concave)"]
+      - [0, 3, 12, "NW+NE (top edge)"]
+      - [1, 3, 13, "NW+NE+SE (inner SW concave)"]
+      - [2, 3, 14, "NW+NE+SW (inner SE concave)"]
+      - [3, 3, 15, "NW+NE+SW+SE (solid center)"]
+
+  blob_47_autotile_8_neighbor:
+    description: "Standard 47-tile 3x3 minimal autotile for Godot 4 TileMapLayer (Match Corners and Sides), Unity RuleTile, and Phaser 3"
+    cardinal_weights: { N: 1, E: 4, S: 16, W: 64 }
+    diagonal_weights:
+      NE: { bit: 2,   valid_only_if: "N and E are both set" }
+      SE: { bit: 8,   valid_only_if: "S and E are both set" }
+      SW: { bit: 32,  valid_only_if: "S and W are both set" }
+      NW: { bit: 128, valid_only_if: "N and W are both set" }
+    canonical_47_bitmasks:
+      [0, 1, 4, 5, 7, 16, 17, 20, 21, 23, 28, 29, 31, 64, 65, 68, 69, 71, 80, 81,
+       84, 85, 87, 92, 93, 95, 112, 113, 116, 117, 119, 124, 125, 127, 193, 197,
+       199, 209, 213, 215, 221, 223, 241, 245, 247, 253, 255]
+
+isometric_2_to_1_projection:
+  ratio: "2:1 (step 2px X per 1px Y -> 26.565 deg, NEVER 30 deg)"
+  standard_tile_sizes:
+    small:  { tile_w: 32, tile_h: 16, wall_z_h: 16 }
+    medium: { tile_w: 64, tile_h: 32, wall_z_h: 32 }
+  grid_to_screen_formula: |
+    // Grid (gx, gy, gz) -> Screen Pixel (sx, sy)
+    const sx = Math.round((gx - gy) * (TILE_W / 2));
+    const sy = Math.round((gx + gy) * (TILE_H / 2) - gz * WALL_Z_H);
+  screen_to_grid_formula: |
+    const gx = Math.floor((sx / (TILE_W / 2) + sy / (TILE_H / 2)) / 2);
+    const gy = Math.floor((sy / (TILE_H / 2) - sx / (TILE_W / 2)) / 2);
+
+sprite_stacking_templates:
+  description: "Ready-to-run voxel slice arrays (bottom Z=0 to top Z=N-1) for hsa_design({ action: 'sprite_stack' })"
+
+  treasure_chest_8x8x7:
+    palette:
+      "1": "#3e2731" # Dark Wood Outline
+      "2": "#733e39" # Mid Wood Plank
+      "3": "#b86f50" # Lit Wood Plank
+      "G": "#feae34" # Gold Band
+      "L": "#fee761" # Gold Lock Highlight
+    emissive_keys: ["L"]
+    layers:
+      # Z=0 Base Rim
+      - ["11111111", "1G2222G1", "12222221", "12222221", "1G2222G1", "11111111"]
+      # Z=1..2 Lower Box
+      - ["1G1111G1", "1G2222G1", "12111121", "12111121", "1G3333G1", "1G1111G1"]
+      - ["1G1111G1", "1G2222G1", "12111121", "12111121", "1G3333G1", "1G1111G1"]
+      # Z=3 Seam & Front Clasp Lock
+      - ["1G1111G1", "1G1111G1", "11111111", "111LL111", "1G1LL1G1", "1G1LL1G1"]
+      # Z=4..5 Curved Lid
+      - ["1G2222G1", "1G3333G1", "13333331", "13333331", "1G3333G1", "1G2222G1"]
+      - [".1G33G1.", ".1G33G1.", ".133331.", ".133331.", ".1G33G1.", ".1G33G1."]
+
+  cyber_hovercar_10x14:
+    palette:
+      "1": "#181425" # Chassis Dark
+      "2": "#3a4466" # Hull Steel
+      "3": "#e43b44" # Red Racing Fairing
+      "4": "#f77622" #Lit Fairing
+      "C": "#2ce8f5" # Thruster / Canopy Neon
+    emissive_keys: ["C"]
+    directions: 16
+    generate_normal_map: true
+    generate_emissive_map: true
+    layers:
+      # Z=0 Hover Thrusters
+      - ["..CC..CC..", ".12211221.", ".12222221.", "..122221..", "..122221..", ".12222221.", ".12211221.", "..CC..CC.."]
+      # Z=1 Main Body Lower
+      - [".13333331.", "1344444431", "1342222431", "1342112431", "1342112431", "1342222431", "1333333331", ".1CC11CC1."]
+      # Z=2 Cockpit & Fairing
+      - ["..144441..", ".13444431.", ".13CCCC31.", ".13CCCC31.", ".13222231.", ".13333331.", "..133331..", "...1111..."]
+      # Z=3 Roof Canopy
+      - ["..........", "...1441...", "..1CCCC1..", "..1CCCC1..", "...1221...", "..........", "..........", ".........."]
+
+  watchtower_10x10:
+    palette:
+      "1": "#262b44"
+      "2": "#5a6988"
+      "3": "#8b9bb4"
+      "W": "#b86f50"
+      "T": "#feae34"
+    emissive_keys: ["T"]
+    directions: 8
+    layers_summary: "Z=0..5 stone foundation (8x8), Z=6..7 overhanging wooden battlement (10x10), Z=8 crenellations with corner torch 'T' voxels"

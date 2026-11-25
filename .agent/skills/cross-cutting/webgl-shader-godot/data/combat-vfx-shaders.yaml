@@ -1,0 +1,140 @@
+# =============================================================================
+# Cross-Engine Combat VFX Shaders (GLSL for Three.js & .gdshader for Godot 4)
+# =============================================================================
+
+version: "1.0"
+
+shaders:
+  sword_slash_arc:
+    description: "Anime / Action-RPG curved ribbon slash with scrolling Voronoi erosion and HDR hot core"
+    godot4_gdshader: |
+      shader_type spatial;
+      render_mode unshaded, cull_disabled, blend_add, depth_draw_never;
+
+      uniform vec4 slash_color : source_color = vec4(0.15, 0.85, 1.0, 1.0);
+      uniform float hdr_intensity : hint_range(1.0, 10.0) = 3.5;
+      uniform float progress : hint_range(0.0, 1.0) = 0.35;
+
+      float hash21(vec2 p) {
+          p = fract(p * vec2(123.34, 456.21));
+          p += dot(p, p + 45.32);
+          return fract(p.x * p.y);
+      }
+
+      void fragment() {
+          float head_mask = smoothstep(progress + 0.12, progress, UV.x);
+          float tail_mask = smoothstep(max(0.0, progress - 0.55), progress, UV.x);
+          float radial_mask = sin(UV.y * 3.14159265);
+          float streak = hash21(floor(vec2(UV.x * 24.0 - TIME * 18.0, UV.y * 12.0)));
+          float alpha = clamp((head_mask * tail_mask * pow(radial_mask, 1.4)) - streak * 0.28, 0.0, 1.0);
+          ALBEDO = slash_color.rgb * hdr_intensity * (1.0 + pow(radial_mask, 4.0));
+          ALPHA = alpha;
+      }
+
+  edge_glow_dissolve:
+    description: "Noise-driven mesh dissolve with bright HDR emissive burn rim (death, teleport, phase-in)"
+    threejs_glsl_fragment: |
+      uniform sampler2D uBaseMap;
+      uniform float uDissolve;       // 0.0 = solid, 1.0 = fully dissolved
+      uniform float uEdgeWidth;      // e.g. 0.065
+      uniform vec3 uEdgeHdrColor;    // e.g. vec3(4.0, 1.1, 0.15)
+      varying vec2 vUv;
+
+      float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123); }
+      float noise(vec2 p) {
+        vec2 i = floor(p), f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), u.x),
+                   mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
+      }
+
+      void main() {
+        float n = 0.65 * noise(vUv * 12.0) + 0.35 * noise(vUv * 28.0);
+        if (n < uDissolve) discard;
+        float edge = 1.0 - smoothstep(uDissolve, uDissolve + uEdgeWidth, n);
+        vec4 base = texture2D(uBaseMap, vUv);
+        vec3 finalRgb = mix(base.rgb, uEdgeHdrColor, edge);
+        gl_FragColor = vec4(finalRgb, base.a);
+      }
+
+    godot4_gdshader: |
+      shader_type spatial;
+      render_mode cull_disabled;
+
+      uniform sampler2D albedo_tex : source_color;
+      uniform sampler2D noise_tex : hint_default_white;
+      uniform float dissolve : hint_range(0.0, 1.0) = 0.0;
+      uniform float edge_width : hint_range(0.01, 0.2) = 0.06;
+      uniform vec4 edge_color : source_color = vec4(1.0, 0.35, 0.05, 1.0);
+      uniform float emission_energy : hint_range(1.0, 12.0) = 5.0;
+
+      void fragment() {
+          float n = texture(noise_tex, UV * 2.5).r;
+          if (n < dissolve) { discard; }
+          float rim = 1.0 - smoothstep(dissolve, dissolve + edge_width, n);
+          vec4 col = texture(albedo_tex, UV);
+          ALBEDO = col.rgb;
+          EMISSION = edge_color.rgb * emission_energy * rim;
+      }
+
+  fresnel_forcefield_shield:
+    description: "Energy dome with Fresnel grazing glow, scrolling scanlines, and scene-depth intersection foam"
+    godot4_gdshader: |
+      shader_type spatial;
+      render_mode unshaded, blend_add, cull_back, depth_draw_never;
+
+      uniform sampler2D depth_tex : hint_depth_texture, filter_linear_mipmap;
+      uniform vec4 shield_color : source_color = vec4(0.1, 0.75, 1.0, 1.0);
+      uniform float fresnel_power : hint_range(1.0, 8.0) = 3.2;
+      uniform float intersect_dist : hint_range(0.05, 2.0) = 0.35;
+
+      void fragment() {
+          float fresnel = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), fresnel_power);
+          float raw_depth = texture(depth_tex, SCREEN_UV).r;
+          vec4 upos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0 - 1.0, raw_depth, 1.0);
+          float scene_z = -(upos.z / upos.w);
+          float frag_z = -VERTEX.z;
+          float contact = 1.0 - clamp((scene_z - frag_z) / intersect_dist, 0.0, 1.0);
+          float scan = 0.85 + 0.15 * sin(UV.y * 80.0 - TIME * 6.0);
+          float intensity = clamp(fresnel + pow(contact, 2.0) * 1.4, 0.0, 1.0) * scan;
+          ALBEDO = shield_color.rgb * 2.8;
+          ALPHA = intensity * 0.85;
+      }
+
+  stylized_toon_water:
+    description: "Gerstner vertex displacement + depth-buffer shoreline foam band"
+    godot4_gdshader: |
+      shader_type spatial;
+
+      uniform sampler2D depth_tex : hint_depth_texture, filter_linear_mipmap;
+      uniform vec4 shallow_color : source_color = vec4(0.18, 0.78, 0.82, 0.82);
+      uniform vec4 deep_color : source_color = vec4(0.04, 0.24, 0.46, 0.96);
+      uniform float foam_distance : hint_range(0.05, 1.5) = 0.28;
+      uniform float wave_height : hint_range(0.0, 0.5) = 0.08;
+
+      void vertex() {
+          VERTEX.y += sin(VERTEX.x * 2.2 + TIME * 2.4) * cos(VERTEX.z * 1.8 + TIME * 1.9) * wave_height;
+      }
+
+      void fragment() {
+          float d = texture(depth_tex, SCREEN_UV).r;
+          vec4 upos = INV_PROJECTION_MATRIX * vec4(SCREEN_UV * 2.0 - 1.0, d, 1.0);
+          float water_depth = max(0.0, -(upos.z / upos.w) - (-VERTEX.z));
+          float depth_blend = clamp(water_depth / 2.5, 0.0, 1.0);
+          float foam = step(water_depth, foam_distance + 0.04 * sin(UV.x * 40.0 + TIME * 4.0));
+          vec4 base = mix(shallow_color, deep_color, depth_blend);
+          ALBEDO = mix(base.rgb, vec3(1.0), foam);
+          ROUGHNESS = 0.12;
+          ALPHA = max(base.a, foam);
+      }
+
+  damage_hit_flash_2d_3d:
+    description: "Crisp 100ms white/red combat impact flash without duplicating textures"
+    godot4_2d_canvas_item: |
+      shader_type canvas_item;
+      uniform float flash_amount : hint_range(0.0, 1.0) = 0.0;
+      uniform vec4 flash_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+      void fragment() {
+          vec4 tex = texture(TEXTURE, UV);
+          COLOR = vec4(mix(tex.rgb, flash_color.rgb, flash_amount), tex.a);
+      }

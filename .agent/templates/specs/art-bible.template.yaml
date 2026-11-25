@@ -1,0 +1,80 @@
+# =============================================================================
+# Art Bible Contract — DOMYH Creative Asset Studio
+# =============================================================================
+# Copy to `.agent/specs/art-bible.yaml` via `/asset bible` to lock project-wide
+# visual style, coordinate axes, texel density, lighting, and color-space rules.
+# =============================================================================
+
+schema_version: "1.0"
+project_name: "Project Codename"
+
+visual_style:
+  archetype: "stylized_pbr" # stylized_pbr | realistic_pbr | cel_shaded_npr | handpainted_unlit | pixel_2d | vector_2d
+  mood_keywords:
+    - "crisp readable silhouettes"
+    - "hand-crafted surface wear"
+    - "high-contrast focal hierarchy"
+  forbidden_traits:
+    - "noisy micro-detail without silhouette value"
+    - "baked ambient shadows in base_color for PBR"
+    - "inconsistent outline thickness across same asset class"
+
+target_engine: "unity" # unity | unreal | godot | threejs
+
+coordinate_system:
+  handedness: "left_handed" # unity/unreal: left_handed | godot/threejs/blender: right_handed
+  up_axis: "+Y"             # unity/godot/threejs: +Y | unreal/blender_internal: +Z
+  forward_axis: "+Z"        # unity: +Z (export -Z in FBX) | unreal: +X | godot/threejs: -Z
+  engine_reference_matrix:
+    unity:   { up: "+Y", forward: "-Z_export_fbx", normal_green: "OpenGL_+Y" }
+    unreal:  { up: "+Z", forward: "+X",            normal_green: "DirectX_-Y" }
+    godot:   { up: "+Y", forward: "-Z_gltf",       normal_green: "OpenGL_+Y" }
+    threejs: { up: "+Y", forward: "+Z_viewer",     normal_green: "OpenGL_+Y" }
+
+unit_scale_meters: 1.0
+character_proportions_heads: 7.5 # heroic: 8.0 | realistic: 7.5 | stylized: 6.0 | chibi: 3.0
+texel_density_px_per_meter: 512
+
+lighting_setup:
+  preset: "three_point_neutral_studio"
+  key_light:
+    kelvin: 5600
+    intensity_lux: 1200
+    elevation_deg: 45
+    azimuth_deg: -35
+  fill_light:
+    kelvin: 6500
+    intensity_ratio: 0.35
+    azimuth_deg: 55
+  rim_light:
+    kelvin: 4800
+    intensity_ratio: 0.85
+    elevation_deg: 30
+    azimuth_deg: 165
+  environment_hdri: "studio_small_09_1k"
+  exposure_ev: 0.0
+  tone_mapping: "ACESFilmic"
+
+color_palette_hex:
+  primary:
+    - "#1F2A44"
+    - "#3A506B"
+  secondary:
+    - "#5BC0BE"
+    - "#8D99AE"
+  accent:
+    - "#FFB703"
+    - "#FB8500"
+  neutrals:
+    - "#121417"
+    - "#2B2F36"
+    - "#9AA3B2"
+    - "#F4F6F8"
+
+color_space_rules:
+  base_color: "sRGB"
+  emissive: "sRGB"
+  normal: "Linear"
+  orm_metallic_roughness_ao: "Linear"
+  height_displacement: "Linear"
+  opacity_mask: "Linear"

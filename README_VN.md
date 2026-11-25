@@ -8,9 +8,9 @@
   <a href="https://www.npmjs.com/package/@nockdev/agent-kit">
     <img src="https://img.shields.io/npm/v/@nockdev/agent-kit?style=for-the-badge&logo=npm&logoColor=white&labelColor=CB3837&color=000000" alt="npm">
   </a>
-  <img src="https://img.shields.io/badge/skills-118-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
+  <img src="https://img.shields.io/badge/skills-122-8B5CF6?style=for-the-badge&logo=bookstack&logoColor=white" alt="Skills">
   <img src="https://img.shields.io/badge/IDEs-26-3B82F6?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="IDEs">
-  <img src="https://img.shields.io/badge/commands-45-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
+  <img src="https://img.shields.io/badge/commands-46-F59E0B?style=for-the-badge&logo=windowsterminal&logoColor=white" alt="Commands">
   <a href="LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-10B981?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="License">
   </a>
@@ -214,7 +214,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 </table>
 
 <details>
-<summary><b>📋 Tất cả 45 Commands — Chi tiết & Ví dụ</b></summary>
+<summary><b>📋 Tất cả 46 Commands — Chi tiết & Ví dụ</b></summary>
 <br>
 
 ### 🔥 Chính (9 commands)
@@ -265,17 +265,18 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-### 🎯 Đặc biệt (10 commands)
+### 🎯 Đặc biệt (11 commands)
 
 | Cmd             | Mô tả                                                                 | Ví dụ                                                     |
 | :-------------- | :-------------------------------------------------------------------- | :-------------------------------------------------------- |
 | `/orchestrate`  | Multi-Agent: điều phối parallel tasks, delegate cho specialists       | `/orchestrate Refactor + Test + Deploy module auth`       |
 | `/revert`       | Rollback: git revert, deployment rollback, database rollback          | `/revert Undo 2 commits gần nhất`                         |
 | `/think`        | Deep reasoning: 6 methods, 5 tiers, multi-mode analysis               | `/think Kiến trúc microservices cho 10K concurrent users` |
-| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.6.8 across 15 files             |
+| `/sync-version` | Đồng bộ version từ VERSION.yaml SSoT sang tất cả files                | `/sync-version` → Sync v6.8.0 across project files        |
 | `/dev`          | Start dev server: detect stack, run dev commands, validate output     | `/dev` → `npm run dev` on port 3000                       |
 | `/fix`          | Quick-fix pipeline: capture error → identify → fix → verify (max 60s) | `/fix TypeError: Cannot read property 'id'`               |
-| `/game`         | Trợ lý phát triển game toàn diện (Unity/UE/HTML5)                     | `/game Tạo script di chuyển player 2D`    |
+| `/game`         | Trợ lý phát triển game toàn diện (Unity/UE/HTML5/Godot)               | `/game Tạo script di chuyển player 2D`                    |
+| `/asset`        | Pipeline chế tác & kiểm định tài nguyên 2D/3D/Pixel/NPC đa phương thức | `/asset create 3D rigged character với 52 ARKit blendshapes` |
 | `/lang`         | Chuyển ngôn ngữ agent (English ↔ Tiếng Việt)                          | `/lang vi` → Chuyển sang tiếng Việt                       |
 | `/workflow`     | Meta-command: workflow discovery, chaining, aliasing                  | `/workflow list` → Xem tất cả workflows                   |
 | `/clean`        | Dọn code: xóa dead code, sắp xếp imports, xóa deps không dùng         | `/clean src/utils/` → Xóa 12 unused exports               |
@@ -313,7 +314,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 
 ---
 
-## 🧠 Skills (118 tổng)
+## 🧠 Skills (122 tổng)
 
 <table>
 <tr>
@@ -346,7 +347,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
   <img src="https://skillicons.dev/icons?i=docker,kubernetes,aws,gcp,azure,terraform,githubactions&theme=dark" />
 </p>
 
-### 🔧 Core & Cross-cutting (45) + Governance (9)
+### 🔧 Core & Cross-cutting (48) + Governance (9)
 
 <p align="center">
   <img src="https://skillicons.dev/icons?i=postgres,redis,graphql,jest,webpack,vite,electron,bun&theme=dark" />
@@ -355,7 +356,7 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 <p align="center">
   <sub><b>Core (15):</b> Security, API Design, Error Handling, Logging, Observability, Auth, Context Engineering, Graph Patterns, Skill Creator, License Audit, Web Pentest, Network Recon, Vuln Intel, Windows Forensics, Android Pentest</sub>
   <br>
-  <sub><b>Cross-cutting (30):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection</sub>
+  <sub><b>Cross-cutting (33):</b> Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Blender 3D Studio, Pixel Art Studio, WebGL Shader & Godot, Reverse Engineering, Anti-Detection</sub>
 </p>
 
 ### 🛠️ Tooling (8)
@@ -364,10 +365,10 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
   <sub>MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit, Frida, Symbolic Execution</sub>
 </p>
 
-### 🤖 AI-ML (9)
+### 🤖 AI-ML (10)
 
 <p align="center">
-  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration</sub>
+  <sub>AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Character & NPC Studio, Agentic Orchestration</sub>
 </p>
 
 </td>
@@ -384,11 +385,11 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 | **Frameworks**    | 9        | React, Vue, Angular, Svelte, Next.js, Nuxt, Flutter, React Native, Streamlit                                                                                                                                        |
 | **Core**          | 15       | Security, API Design, Error Handling, Logging, Observability, Authentication, Context Engineering, Graph Patterns, Skill Creator, License Audit, Web Pentest, Network Recon, Vuln Intel, Windows Forensics, Android Pentest |
 | **DevOps**        | 7        | Docker, Kubernetes, AWS, CI/CD, Terraform, GCP, Azure                                                                                                                                                               |
-| **Cross-cutting** | 30       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Reverse Engineering, Anti-Detection |
+| **Cross-cutting** | 33       | Testing, Database, SQL, Tailwind, Electron, Coding Rules, DOMYH Design, Web Perf, Deno, Bun, Audit Pro, TDD Workflow, Accessibility, SEO, Microservices, Monorepo, Event-Driven, Tauri, Real-Time, Wasm, Playwright, Payment Integration, Delegation Review, Digital Marketing, Output Enforcement, Receiving Code Review, Game Development, Game Automation, Blender 3D Studio, Pixel Art Studio, WebGL Shader & Godot, Reverse Engineering, Anti-Detection |
 | **Tooling**       | 8        | MCP, API Protocols, IDE Extension, CLI Dev, Browser Agent, HSA Toolkit, Frida, Symbolic Execution                                                                                                                   |
-| **AI-ML**         | 9        | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Agentic Orchestration                                                                          |
+| **AI-ML**         | 10       | AI Agents, ML Pipelines, Prompt Engineering, RAG Patterns, Vector Search, Gemini Media Gen, Gemini TTS, Gemini Live, Character & NPC Studio, Agentic Orchestration                                                  |
 | **Governance**    | 9        | Drift Prevention, Session Governance, Context Integrity, Progressive Escalation, Stop Conditions, Edit Verification, Performance Optimization, Agent Delegation, Context Compaction                                  |
-| **Tổng**          | **118**  |                                                                                                                                                                                                                     |
+| **Tổng**          | **122**  |                                                                                                                                                                                                                     |
 
 </details>
 
@@ -456,16 +457,16 @@ Nhận thông báo qua Telegram khi AI agent hoàn thành task hoặc lưu sessi
 ```
 📦 .agent/
 ├── 📋 manifest.yaml          # Cấu hình Agent
-├── 🧠 skills/                # 118 skills chuyên biệt
+├── 🧠 skills/                # 122 skills chuyên biệt
 │   ├── languages/    (28)    # Go, Python, TypeScript, Rust...
 │   ├── frameworks/   (9)     # React, Vue, Next.js, Flutter, Streamlit...
 │   ├── core/         (15)    # Security, API Design, Auth, License Audit, Web Pentest...
 │   ├── devops/       (7)     # Docker, K8s, AWS, Terraform, GCP, Azure, CI/CD
-│   ├── cross-cutting/ (30)   # Testing, Database, Game Automation, Reverse Engineering...
+│   ├── cross-cutting/ (33)   # Testing, Database, Blender 3D, Pixel Art, WebGL/Godot...
 │   ├── tooling/      (8)     # MCP, API Protocols, IDE Extension, Frida...
-│   ├── ai-ml/        (9)     # AI Agents, ML Pipelines, Gemini, RAG...
+│   ├── ai-ml/        (10)    # AI Agents, ML Pipelines, Gemini, Character & NPC Studio...
 │   └── governance/   (9)     # Drift Prevention, Session Governance...
-├── 🔄 workflows/     (45)    # 45 command handlers
+├── 🔄 workflows/     (46)    # 46 command handlers (gồm /asset, /skill-create)
 ├── 📜 rules/                 # Constitutional AI rules
 ├── 👥 personas/              # Developer, Auditor, Debugger...
 └── ⚙️ core/                  # Cấu hình engine

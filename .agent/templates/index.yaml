@@ -156,6 +156,36 @@ templates:
     category: planning
     priority: 100
 
+  # ==========================================================================
+  # Creative Asset Studio Spec Templates
+  # ==========================================================================
+  - id: art-bible-spec
+    file: specs/art-bible.template.yaml
+    name: Art Bible Contract
+    description: Project-wide visual direction, coordinate axes, lighting, palette, and color-space rules
+    keywords: [art bible, visual style, color space, pbr, coordinate, lighting, asset]
+    workflows: ["/asset", "/game"]
+    category: creative
+    priority: 95
+
+  - id: asset-spec
+    file: specs/asset-spec.template.yaml
+    name: Technical Asset Spec
+    description: Per-asset LOD polycount budgets, ORM texture packing, ARKit 52 rig, and QA gates
+    keywords: [asset spec, lod, triangle budget, orm, rig, arkit, blendshapes, 3d, character]
+    workflows: ["/asset", "/game"]
+    category: creative
+    priority: 95
+
+  - id: pixel-anchor-spec
+    file: specs/pixel-anchor.template.yaml
+    name: Pixel Art Anchor Contract
+    description: Deterministic pixel canvas, palette lock, sel-out, light angle, and craft gates
+    keywords: [pixel anchor, pixel art, palette, endesga, pico-8, spritesheet, tileset]
+    workflows: ["/asset", "/game"]
+    category: creative
+    priority: 95
+
 # =============================================================================
 # Workflow Chains → Extracted to chains/index.yaml
 # =============================================================================

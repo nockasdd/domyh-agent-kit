@@ -1,0 +1,35 @@
+# =============================================================================
+# Pixel Art Style Anchor Contract — DOMYH Creative Asset Studio (SummerEngine)
+# =============================================================================
+# Copy to `.agent/specs/pixel-anchor.yaml` via `/asset bible` or `/asset spec`
+# to enforce deterministic grid quantization, palette lock, and pixel craft.
+# =============================================================================
+
+schema_version: "1.0"
+anchor_id: "pixel_topdown_32"
+
+canvas_size: [32, 32] # [width_px, height_px] — e.g. [16, 16], [32, 32], [48, 48], [64, 64]
+palette: "endesga-32" # gameboy-4 | pico-8 | sweetie-16 | endesga-32 | custom_hex_array
+outline_mode: "sel-out" # none | black_1px | sel-out | inner_dark
+light_angle_deg: 315 # 315 = Top-Left canonical 2D light source
+directions: 8 # 1 | 2 | 4 | 8 | 16 (16 for fake-3D sprite stacking)
+anti_aliasing: "forbidden" # forbidden | manual_internal_only
+dithering: "ordered_minimal" # forbidden | ordered_minimal | bayer_2x2
+alpha_mode: "binary" # binary (alpha = 0 or 255 only; no semi-transparent fringe)
+pivot: [0.5, 1.0] # [x_norm, y_norm] — [0.5, 1.0] = bottom-center foot anchor
+
+hue_shifting:
+  enabled: true
+  highlight_shift_towards: "warm_yellow"
+  shadow_shift_towards: "cool_purple_blue"
+  hue_step_deg: 12
+
+craft_gates:
+  pixel_aspect_ratio: 1
+  forbid_mixels: true
+  forbid_pillow_shading: true
+  forbid_banding: true
+  forbid_orphan_jaggies: true
+  remove_checkerboard_bg: true
+  min_walk_frame_diff: 0.04
+  min_direction_silhouette_iou: 0.72

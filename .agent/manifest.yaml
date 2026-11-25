@@ -59,13 +59,13 @@ semantic:
     patterns: 0.10
 
 # =============================================================================
-# COMMANDS (45 workflows) — Complete Command Set
+# COMMANDS (46 workflows) — Complete Command Set
 # Token-efficient with caching and categorization
 # =============================================================================
 
 commands:
   # ═══════════════════════════════════════════════════════════════════════════
-  # DEVELOPMENT (8 commands)
+  # DEVELOPMENT (10 commands)
   # ═══════════════════════════════════════════════════════════════════════════
 
   - id: code
@@ -142,6 +142,16 @@ commands:
     triggers: [game start, bắt đầu game, ý tưởng game, game idea, làm game, muốn làm game]
     skills:
       { required: [game-development], contextual: [csharp, python] }
+
+  - id: asset
+    file: workflows/asset.md
+    icon: "🎨"
+    category: development
+    persona: developer
+    cache: true
+    triggers: [asset, art-bible, asset-spec, asset-audit, 3d asset, pixel art, sprite, character, npc]
+    skills:
+      { required: [], contextual: [blender-3d-studio, pixel-art-studio, character-npc-studio, webgl-shader-godot, gemini-media-gen] }
 
   - id: loop
     file: workflows/loop.md
