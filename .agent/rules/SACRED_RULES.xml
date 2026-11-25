@@ -113,6 +113,7 @@
     Memory: hsa_memory for cross-session decisions/patterns/errors.
     Delegation: hsa_delegate(action:'prepare') builds the task contract and context packet; the platform's own subagent tool dispatches it.
     UI: hsa_design for design system. hsa_canvas for visual feedback (open, capture, diff, extract, inspect).
+    Code Mode &amp; Bridge: hsa_execute(action:'sdk'|'run') chains multi-step HSA + hsa_bridge (IDA/Ghidra/x64dbg/Unity/UE) calls and filters bulky intermediate payloads inside a QuickJS WASM sandbox in 1 turn (read-only default; use dry_run:true before allow_mutations:true).
     External: hsa_research for repo investigation. hsa_feedback after task to improve rankings.
     When MCP unavailable: see AGENT_RULES.md §11 MCP Fallback Schema.</text>
     <rationale>HSA tools provide 70-95% token savings vs manual operations. Delegation contracts let a sub-agent work from a bounded context instead of the full session. Without these, agents waste context on operations the engine handles natively.</rationale>

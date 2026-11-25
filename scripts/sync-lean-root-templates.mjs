@@ -27,7 +27,8 @@ const LEAN_TEMPLATE = `# DOMYH Agent Kit — NockDev
 3. \`hsa_search(query, action="skills")\` — find patterns before coding.
 4. \`hsa_search(query)\` — search codebase (never grep when MCP available).
 5. \`hsa_trace_flow(entry, direction:"both", detail:"summary")\` — before modifying functions; use \`detail="summary"\` first and paginate via \`view_id\`/\`page\` on large graphs.
-6. \`hsa_session(action="persist", task_summary, auto_notify:true)\` — persist state at end.
+6. \`hsa_execute(code)\` — Code Mode sandbox: chain multi-step HSA/Bridge (IDA/Ghidra/x64dbg) calls & filter intermediate payloads in 1 turn (\`action="sdk"\` for API; \`dry_run:true\` before \`allow_mutations:true\`).
+7. \`hsa_session(action="persist", task_summary, auto_notify:true)\` — persist state at end.
 
 ## 🛡️ Pre-Read, Trace Flow & Read-Back Mandate
 - **Before MODIFYING**: Read target file (\`view_file\`) + trace callers (\`hsa_trace_flow\`) in 1 parallel turn ➔ edit ➔ read back file to verify diff.
